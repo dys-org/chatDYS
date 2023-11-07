@@ -2,6 +2,12 @@
 import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { DButton, DTextarea } from 'deez-components';
+import MarkdownIt from 'markdown-it';
+import prism from 'markdown-it-prism';
+
+import 'prismjs/themes/prism-okaidia.css';
+
+const md = new MarkdownIt().use(prism);
 
 import AppHeader from '@/components/AppHeader.vue';
 import ChatSettings from '@/components/ChatSettings.vue';
@@ -46,9 +52,13 @@ async function handleSend() {
             <div class="basis-24">
               <span class="text-sm font-semibold uppercase">{{ message.role }}</span>
             </div>
-            <pre class="mx-auto max-w-lg overflow-auto rounded-md bg-black p-3 text-xs">
+            <!-- <pre class="mx-auto max-w-lg overflow-auto rounded-md bg-black p-3 text-xs">
               {{ message.content }}
-            </pre>
+            </pre> -->
+            <div
+              class="mx-auto max-w-lg overflow-auto [&>pre]:!my-4 [&>pre]:!text-xs"
+              v-html="md.render(message.content)"
+            />
           </div>
         </div>
         <div class="absolute bottom-0 flex w-full justify-center">
