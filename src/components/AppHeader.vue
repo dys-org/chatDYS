@@ -1,8 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterLink } from 'vue-router';
+</script>
 
 <template>
   <header class="bg-gray-900 py-2 sm:px-6 lg:px-8">
-    <div class="flex h-14 items-center">
+    <div class="flex h-14 items-center justify-between">
       <!-- DYS logo -->
       <svg class="h-12 w-12" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
         <g fill="currentColor">
@@ -17,6 +19,12 @@
           />
         </g>
       </svg>
+      <div class="flex gap-6 text-white/60">
+        <RouterLink to="/chat" class="text-sm font-medium hover:text-white">Chat</RouterLink>
+        <RouterLink to="/assistant" class="text-sm font-medium hover:text-white"
+          >Assistant</RouterLink
+        >
+      </div>
     </div>
   </header>
 </template>

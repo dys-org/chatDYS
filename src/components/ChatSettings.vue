@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { DRange, DSelect, DTextarea } from 'deez-components';
+import { DButton, DRange, DSelect, DTextarea } from 'deez-components';
 
-const models = ['gpt-3.5-turbo', 'gpt-4'];
+import { MODELS, useChatStore } from '@/stores/chat';
 
 const presets = [{ value: 'vue-3-convert', display: 'Vue Options to Composition conversion' }];
 
-const selectedPreset = ref('');
-const selectedModel = ref('');
-const systemMessage = ref('');
-const temp = ref(0);
+const chatStore = useChatStore();
 </script>
 
 <template>
@@ -17,7 +13,7 @@ const temp = ref(0);
     <h2 class="text-xl font-semibold">Settings</h2>
     <DSelect
       id="preset"
-      v-model="selectedPreset"
+      v-model="chatStore.preset"
       label="Preset"
       description="Use a group of pre-configured settings."
     >
@@ -27,13 +23,20 @@ const temp = ref(0);
       </option>
     </DSelect>
 
+    <DSelect id="model" v-model="chatStore.model" label="Model">
+      <option value="" disabled>Choose a LLM</option>
+      <option v-for="model in MODELS" :key="model">
+        {{ model }}
+      </option>
+    </DSelect>
+
     <div>
       <div class="mb-3 flex justify-between" aria-hidden="true">
-        <span class="text-sm leading-6">Temperature</span> <span>{{ temp }}</span>
+        <span class="text-sm leading-6">Temperature</span> <span>{{ chatStore.temperature }}</span>
       </div>
       <DRange
         id="temperature"
-        v-model="temp"
+        v-model="chatStore.temperature"
         label="Temperature"
         :min="0"
         :max="2"
@@ -42,13 +45,14 @@ const temp = ref(0);
       />
     </div>
 
-    <DSelect id="model" v-model="selectedModel" label="Model">
-      <option value="" disabled>Choose a LLM</option>
-      <option v-for="model in models" :key="model">
-        {{ model }}
-      </option>
-    </DSelect>
-
-    <DTextarea id="systemMessage" v-model="systemMessage" label="System Message" />
+    <DTextarea
+      id="systemMessage"
+      v-model="chatStore.systemMessage"
+      label="System Message"
+      :rows="6"
+    />
+    <div>
+      <DButton @click="chatStore.$reset">Clear</DButton>
+    </div>
   </div>
 </template>

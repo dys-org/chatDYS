@@ -16,23 +16,33 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // CHAT COMPLETION
 app.post('/chat', async (req, res) => {
-  const messages = req.body.messages;
-  console.log(messages);
+  const { model, messages } = req.body;
+  console.log(req.body);
   try {
-    if (messages == null) {
-      throw new Error('No prompt was provided');
-    }
+    if (messages == null) throw new Error('No prompt was provided');
+    if (model == null) throw new Error('No model was provided');
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model,
       messages,
     });
     console.dir(completion.choices[0]);
     const message = completion.choices[0].message;
 
     return res.status(200).json({ success: true, message });
+    // return res
+    //   .status(200)
+    //   .json({ success: true, message: { user: 'assistant', content: 'ass and titties' } });
   } catch (err: any) {
-    console.error(err.message);
+    if (err instanceof OpenAI.APIError) {
+      const { status, message, code, type } = err;
+      console.error(`API error: ${status}`);
+      console.error(message);
+      console.error(`code: ${code}} | type: ${type}}`);
+    } else {
+      // Non-API error
+      console.error(err);
+    }
   }
 });
 

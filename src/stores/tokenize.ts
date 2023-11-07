@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
-export const useCounterStore = defineStore('counter', () => {
+export const useTokenizeStore = defineStore('tokenize', () => {
   const tokenLength = ref(0);
 
   async function checkTokens(str: string) {
