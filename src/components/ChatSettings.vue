@@ -45,6 +45,17 @@ const chatStore = useChatStore();
       />
     </div>
 
+    <div>
+      <DRange
+        id="maxTokens"
+        v-model="chatStore.maxTokens"
+        label="Max Token Length"
+        :min="256"
+        :max="4096"
+        :step="256"
+      />
+    </div>
+
     <DTextarea
       id="systemMessage"
       v-model="chatStore.systemMessage"

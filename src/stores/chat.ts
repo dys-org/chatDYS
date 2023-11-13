@@ -1,4 +1,5 @@
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
+import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
 import { useTokenizeStore } from './tokenize';
@@ -12,14 +13,15 @@ export const MODELS = ['gpt-3.5-turbo', 'gpt-4'] as const;
 type Model = (typeof MODELS)[number];
 
 export const useChatStore = defineStore('chat', () => {
-  const userMessage = ref('');
+  const loading = ref(false);
+  const maxTokens = ref(1024);
   const messages = ref<Message[]>([]);
-  const systemMessage = ref('');
-  const prompt = ref<Message[]>([]);
   const model = ref<Model>('gpt-4');
-  const temperature = ref(0);
   const preset = ref('');
-  const assistantResponse = ref('asdfasdf');
+  const prompt = ref<Message[]>([]);
+  const systemMessage = ref('');
+  const temperature = ref(0);
+  const userMessage = ref('');
 
   const tokenizeStore = useTokenizeStore();
 
@@ -28,35 +30,56 @@ export const useChatStore = defineStore('chat', () => {
   }
   function createPrompt() {
     prompt.value = [{ role: 'system', content: systemMessage.value }, ...messages.value];
-    const str = prompt.value.map((m) => m.content).join();
+    const str = prompt.value.map((m) => m.content).join('');
     tokenizeStore.checkTokens(str);
   }
 
   async function sendPrompt() {
-    assistantResponse.value = '';
     addMessage('user', userMessage.value);
     createPrompt();
-    const res = await fetch('http://localhost:3000/chat', {
-      method: 'POST',
-      body: JSON.stringify({ model: model.value, messages: prompt.value }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const { message } = await res.json();
-    assistantResponse.value = message.content;
-    addMessage('assistant', assistantResponse.value);
     userMessage.value = '';
+    loading.value = true;
+    try {
+      const res = await fetch('http://localhost:3000/api/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          model: model.value,
+          messages: prompt.value,
+          temperature: temperature.value,
+          max_tokens: maxTokens.value,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const { message } = await res.json();
+      addMessage(message.role, message.content);
+    } catch (err) {
+      console.error(err);
+      if (err instanceof OpenAI.APIError) {
+        const { status, message, code, type } = err;
+        console.error(`API error: ${status}`);
+        console.error(message);
+        console.error(`code: ${code}} | type: ${type}}`);
+      } else {
+        // Non-API error
+        console.error(err);
+      }
+    } finally {
+      loading.value = false;
+    }
   }
 
   return {
-    userMessage,
-    messages,
-    systemMessage,
-    prompt,
-    model,
-    temperature,
-    preset,
     addMessage,
     createPrompt,
+    loading,
+    maxTokens,
+    messages,
+    model,
+    preset,
+    prompt,
     sendPrompt,
+    systemMessage,
+    temperature,
+    userMessage,
   };
 });

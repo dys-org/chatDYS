@@ -12,15 +12,15 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "init-server": "tsnd --project server/tsconfig.json --respawn --pretty --transpile-only server/index.ts",
-    "start": "npm-run-all --parallel init-server dev"
+    "start": "run-p init-server dev"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "cors": "^2.8.5",
-    "deez-components": "^0.2.5",
+    "deez-components": "^0.3.2",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "gpt-3-encoder": "^1.1.4",
+    "gpt-tokenizer": "^2.1.2",
     "lodash.clonedeep": "^4.5.0",
     "markdown-it": "^13.0.2",
     "markdown-it-prism": "^2.3.0",

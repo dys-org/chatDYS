@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
-import { DButton, DTextarea } from 'deez-components';
+import { DButton, DSpinner, DTextarea } from 'deez-components';
 import MarkdownIt from 'markdown-it';
 import prism from 'markdown-it-prism';
 
@@ -36,29 +36,35 @@ async function handleSend() {
 <template>
   <div class="flex min-h-full flex-col">
     <AppHeader class="shrink-0" />
-    <div class="flex w-full flex-1 items-stretch gap-x-8 px-4 py-6 sm:px-6 lg:px-8">
+    <div class="flex w-full flex-1 items-stretch">
       <main class="relative flex-1">
-        <h1 class="mb-8 text-xl font-semibold">Chat</h1>
-        <DButton class="lg:hidden" @click="sidebarOpen = true">
-          <span class="sr-only">Open sidebar</span>
-          <IconCog class="h-4 w-4" aria-hidden="true" />
-        </DButton>
+        <h1 class="my-4 px-4 text-xl font-semibold sm:px-6">
+          Chat
+          <DButton class="ml-3 lg:hidden" @click="sidebarOpen = true">
+            <span class="sr-only">Open sidebar</span>
+            <IconCog class="h-4 w-4" aria-hidden="true" />
+          </DButton>
+        </h1>
         <div class="pb-64">
           <div
             v-for="(message, i) in chatStore.messages"
             :key="i"
-            class="flex gap-4 border-b border-gray-600 py-6"
+            :class="[
+              'flex gap-4 border-b border-gray-700 px-4 py-6 sm:px-6',
+              message.role === 'assistant' && 'bg-white/5',
+            ]"
           >
             <div class="basis-24">
-              <span class="text-sm font-semibold uppercase">{{ message.role }}</span>
+              <span class="text-xs font-semibold uppercase">{{ message.role }}</span>
             </div>
-            <!-- <pre class="mx-auto max-w-lg overflow-auto rounded-md bg-black p-3 text-xs">
-              {{ message.content }}
-            </pre> -->
+
             <div
-              class="mx-auto max-w-lg overflow-auto [&>pre]:!my-4 [&>pre]:!text-xs"
+              class="mx-auto w-full max-w-[65ch] leading-7 [&>pre]:!my-4 [&>pre]:max-w-lg [&>pre]:overflow-auto [&>pre]:!text-xs"
               v-html="md.render(message.content)"
             />
+          </div>
+          <div v-if="chatStore.loading" class="mt-6 flex w-full justify-center">
+            <DSpinner />
           </div>
         </div>
         <div class="absolute bottom-0 flex w-full justify-center">
@@ -68,6 +74,7 @@ async function handleSend() {
               v-model="chatStore.userMessage"
               label="User Message"
               class="absolute inset-0 max-h-52 resize-none pr-10"
+              @keydown.enter.exact.prevent="handleSend()"
             >
               <template #before>
                 <div
@@ -89,7 +96,9 @@ async function handleSend() {
           </div>
         </div>
       </main>
-      <aside class="sticky top-8 hidden w-72 shrink-0 lg:block">
+      <aside
+        class="sticky top-8 hidden w-72 shrink-0 border-l border-gray-700 bg-gray-950/20 p-4 lg:block"
+      >
         <ChatSettings />
       </aside>
     </div>

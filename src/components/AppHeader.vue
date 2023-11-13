@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-  <header class="bg-gray-900 py-2 sm:px-6 lg:px-8">
+  <header class="bg-gray-900/70 px-4 py-2 shadow-sm shadow-gray-600 sm:px-6">
     <div class="flex h-14 items-center justify-between">
       <!-- DYS logo -->
       <svg class="h-12 w-12" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
