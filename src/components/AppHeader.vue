@@ -4,9 +4,9 @@ import { RouterLink } from 'vue-router';
 
 <template>
   <header class="bg-gray-900/70 px-4 py-2 shadow-sm shadow-gray-600 sm:px-6">
-    <div class="flex h-14 items-center justify-between">
+    <div class="flex items-center justify-between">
       <!-- DYS logo -->
-      <svg class="h-12 w-12" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <svg class="h-10 w-10" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
         <g fill="currentColor">
           <path
             d="m0 64v384h512v-384zm392.25 20.88c-41.19 53.13-81 107.33-118.18 158.46-44.53-54.03-90.49-107.34-136.67-158.46zm-372.52 342.24v-342.24h87.34c45.06 48.58 71.23 77.47 117.45 132.28 11.85 14 24.17 28.85 36.65 44-23.06 31.93-45.43 63.5-66.51 93.86-5.6 8.07-10.87 15.61-16 22.94-11.27 16.11-22 31.38-33.92 49.14zm472.53 0h-320.82c63.13-93.56 122.91-177.29 187.21-262.24 13.74-18.15 39.25-51.72 61.27-80h72.34z"

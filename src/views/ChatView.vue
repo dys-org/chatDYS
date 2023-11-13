@@ -67,7 +67,7 @@ async function handleSend() {
             <DSpinner />
           </div>
         </div>
-        <div class="absolute bottom-0 flex w-full justify-center">
+        <div class="fixed bottom-8 flex w-full justify-center px-4 sm:px-6 lg:pr-[20rem]">
           <div class="w-full max-w-[75ch] overflow-y-scroll">
             <DTextarea
               id="userMessage"
