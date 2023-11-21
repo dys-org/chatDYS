@@ -29,7 +29,10 @@ export const useChatStore = defineStore('chat', () => {
     messages.value.push({ role, content });
   }
   function createPrompt() {
-    prompt.value = [{ role: 'system', content: systemMessage.value }, ...messages.value];
+    prompt.value = [
+      { role: 'system', content: systemMessage.value || 'You are a helpful assistant.' },
+      ...messages.value,
+    ];
     const str = prompt.value.map((m) => m.content).join('');
     tokenizeStore.checkTokens(str);
   }

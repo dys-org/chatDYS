@@ -3,15 +3,15 @@ import { DButton, DRange, DSelect, DTextarea } from 'deez-components';
 
 import { MODELS, useChatStore } from '@/stores/chat';
 
-const presets = [{ value: 'vue-3-convert', display: 'Vue Options to Composition conversion' }];
+// const presets = [{ value: 'vue-3-convert', display: 'Vue Options to Composition conversion' }];
 
 const chatStore = useChatStore();
 </script>
 
 <template>
-  <div class="flex flex-col gap-8">
+  <div class="flex w-full flex-col gap-8 p-4">
     <h2 class="text-xl font-semibold">Settings</h2>
-    <DSelect
+    <!-- <DSelect
       id="preset"
       v-model="chatStore.preset"
       label="Preset"
@@ -21,19 +21,16 @@ const chatStore = useChatStore();
       <option v-for="preset in presets" :key="preset.value" :value="preset.value">
         {{ preset.display }}
       </option>
-    </DSelect>
+    </DSelect> -->
 
     <DSelect id="model" v-model="chatStore.model" label="Model">
-      <option value="" disabled>Choose a LLM</option>
+      <option value="" disabled>Choose an LLM</option>
       <option v-for="model in MODELS" :key="model">
         {{ model }}
       </option>
     </DSelect>
 
     <div>
-      <div class="mb-3 flex justify-between" aria-hidden="true">
-        <span class="text-sm leading-6">Temperature</span> <span>{{ chatStore.temperature }}</span>
-      </div>
       <DRange
         id="temperature"
         v-model="chatStore.temperature"
@@ -41,7 +38,6 @@ const chatStore = useChatStore();
         :min="0"
         :max="2"
         :step="0.1"
-        hide-label
       />
     </div>
 
@@ -61,6 +57,7 @@ const chatStore = useChatStore();
       v-model="chatStore.systemMessage"
       label="System Message"
       :rows="6"
+      placeholder="You are a helpful assistant."
     />
     <div>
       <DButton @click="chatStore.$reset">Clear</DButton>

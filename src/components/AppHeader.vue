@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-  <header class="bg-gray-900/70 px-4 py-2 shadow-sm shadow-gray-600 sm:px-6">
+  <header class="bg-gray-900 px-4 py-2 shadow-sm shadow-gray-600 sm:px-6">
     <div class="flex items-center justify-between">
       <!-- DYS logo -->
       <svg class="h-10 w-10" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
@@ -21,9 +21,9 @@ import { RouterLink } from 'vue-router';
       </svg>
       <div class="flex gap-6 text-white/60">
         <RouterLink to="/chat" class="text-sm font-medium hover:text-white">Chat</RouterLink>
-        <RouterLink to="/assistant" class="text-sm font-medium hover:text-white"
-          >Assistant</RouterLink
-        >
+        <RouterLink to="/assistant" class="text-sm font-medium hover:text-white">
+          Assistant
+        </RouterLink>
       </div>
     </div>
   </header>
