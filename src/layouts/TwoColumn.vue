@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { DButton } from 'deez-components';
 
 import IconClose from '~icons/majesticons/close';
+import IconCog from '~icons/majesticons/settings-cog';
+
+const props = withDefaults(
+  defineProps<{
+    h1: string;
+  }>(),
+  { h1: 'Page Heading' },
+);
 
 const sidebarOpen = ref(false);
-
-function toggleSidebar() {
-  sidebarOpen.value = !sidebarOpen.value;
-}
 </script>
 
 <template>
@@ -16,7 +21,16 @@ function toggleSidebar() {
     <!-- MAIN LEFT COLUMN -->
     <main class="relative flex-1">
       <div class="h-full overflow-auto">
-        <slot name="main" :toggle-sidebar="toggleSidebar" />
+        <slot name="heading">
+          <h1 class="my-4 px-4 text-xl font-semibold sm:px-6">
+            {{ props.h1 }}
+            <DButton class="ml-3 lg:hidden" @click="sidebarOpen = true">
+              <span class="sr-only">Open sidebar</span>
+              <IconCog class="h-4 w-4" aria-hidden="true" />
+            </DButton>
+          </h1>
+        </slot>
+        <slot name="main" />
       </div>
     </main>
 

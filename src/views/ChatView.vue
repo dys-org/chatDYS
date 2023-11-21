@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { DButton, DSpinner } from 'deez-components';
+import { DSpinner } from 'deez-components';
 import MarkdownIt from 'markdown-it';
 import prism from 'markdown-it-prism';
 
@@ -13,7 +13,6 @@ import 'prismjs/themes/prism-okaidia.css';
 
 import IconClipboardCheck from '~icons/majesticons/clipboard-check-line';
 import IconClipboard from '~icons/majesticons/clipboard-line';
-import IconCog from '~icons/majesticons/settings-cog';
 
 const md = new MarkdownIt().use(prism, { defaultLanguageForUnknown: 'js' });
 
@@ -46,16 +45,9 @@ async function handleCopy(content: string, idx: number) {
 </script>
 
 <template>
-  <TwoColumn>
+  <TwoColumn h1="Chat">
     <!-- CHAT -->
-    <template #main="{ toggleSidebar }">
-      <h1 class="my-4 px-4 text-xl font-semibold sm:px-6">
-        Chat
-        <DButton class="ml-3 lg:hidden" @click="toggleSidebar">
-          <span class="sr-only">Open sidebar</span>
-          <IconCog class="h-4 w-4" aria-hidden="true" />
-        </DButton>
-      </h1>
+    <template #main>
       <div class="flex-1 pb-32">
         <div
           v-for="(message, i) in chatStore.messages"

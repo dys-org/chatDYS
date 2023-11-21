@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TwoColumn from '@/layouts/TwoColumn.vue';
+</script>
 
 <template>
-  <div>
-    <h1 class="text-xl font-semibold">Assistant</h1>
-  </div>
+  <TwoColumn h1="Assistant">
+    <template #main> </template>
+    <template #side> </template>
+  </TwoColumn>
 </template>
