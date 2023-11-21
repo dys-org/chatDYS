@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterView } from 'vue-router';
 
 import AppHeader from './components/AppHeader.vue';
 </script>
 
 <template>
-  <div class="flex min-h-full flex-col">
+  <div class="flex h-screen flex-1 flex-col overflow-hidden">
     <AppHeader />
     <RouterView />
   </div>

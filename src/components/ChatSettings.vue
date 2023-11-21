@@ -9,7 +9,7 @@ const chatStore = useChatStore();
 </script>
 
 <template>
-  <div class="flex w-full flex-col gap-8 p-4">
+  <div class="flex flex-col gap-8 p-4 pb-12">
     <h2 class="text-xl font-semibold">Settings</h2>
     <!-- <DSelect
       id="preset"

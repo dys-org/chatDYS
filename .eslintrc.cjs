@@ -14,7 +14,7 @@ module.exports = {
   },
   plugins: ['simple-import-sort'],
   rules: {
-    'vue/require-default-prop': 'off',
+    'vue/no-undef-components': ['error', { ignorePatterns: [] }],
     'vue/v-on-event-hyphenation': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
