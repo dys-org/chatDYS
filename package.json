@@ -14,6 +14,10 @@
     "init-server": "tsnd --project server/tsconfig.json --respawn --pretty --transpile-only server/index.ts",
     "start": "run-p init-server dev"
   },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
     "cors": "^2.8.5",
