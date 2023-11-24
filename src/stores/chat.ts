@@ -43,7 +43,7 @@ export const useChatStore = defineStore('chat', () => {
     userMessage.value = '';
     loading.value = true;
     try {
-      const res = await fetch('http://localhost:3000/api/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         body: JSON.stringify({
           model: model.value,

@@ -2,6 +2,7 @@
   "name": "chat-dys",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -11,15 +12,17 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "init-server": "tsnd --project server/tsconfig.json --respawn --pretty --transpile-only server/index.ts",
-    "start": "run-p init-server dev"
+    "init-server": "tsnd --project server/tsconfig.json --respawn --pretty --transpile-only server/functions/api.ts",
+    "start": "netlify dev"
   },
   "engines": {
     "node": ">=18",
     "pnpm": ">=8"
   },
+  "packageManager": "pnpm@8.10.5",
   "dependencies": {
     "@headlessui/vue": "^1.7.16",
+    "@netlify/functions": "^2.4.0",
     "cors": "^2.8.5",
     "deez-components": "^0.3.5",
     "dotenv": "^16.3.1",
@@ -31,6 +34,7 @@
     "openai": "^4.16.1",
     "pinia": "^2.1.7",
     "prismjs": "^1.29.0",
+    "serverless-http": "^3.2.0",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },

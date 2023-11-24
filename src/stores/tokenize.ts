@@ -7,7 +7,7 @@ export const useTokenizeStore = defineStore('tokenize', () => {
   async function checkTokens(str: string) {
     tokenLength.value = 0;
     try {
-      const res = await fetch('http://localhost:3000/api/tokenize', {
+      const res = await fetch('/api/tokenize', {
         method: 'POST',
         body: JSON.stringify({ stringToTokenize: str }),
         headers: { 'Content-Type': 'application/json' },

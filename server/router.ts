@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { encode } from 'gpt-tokenizer';
-
-import { openai } from '.';
+import OpenAI from 'openai';
 
 const router: Router = Router();
+
+export const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // CHAT COMPLETION
 router.post('/chat', async (req, res, next) => {
