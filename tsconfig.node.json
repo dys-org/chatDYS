@@ -1,6 +1,6 @@
 {
   "extends": "@tsconfig/node20/tsconfig.json",
-  "include": ["vite.config.*", "vitest.config.*", "playwright.config.*", "server/**/*"],
+  "include": ["vite.config.*", "vitest.config.*", "playwright.config.*"],
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",

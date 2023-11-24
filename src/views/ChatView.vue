@@ -8,6 +8,7 @@ import ChatSettings from '@/components/ChatSettings.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
+import { useTokenizeStore } from '@/stores/tokenize';
 
 import 'prismjs/themes/prism-okaidia.css';
 
@@ -17,6 +18,7 @@ import IconClipboard from '~icons/majesticons/clipboard-line';
 const md = new MarkdownIt().use(prism, { defaultLanguageForUnknown: 'js' });
 
 const chatStore = useChatStore();
+const tokenizeStore = useTokenizeStore();
 
 const loading = ref(false);
 const copiedIndex = ref<number | null>(null);
@@ -82,8 +84,11 @@ async function handleCopy(content: string, idx: number) {
             </div>
           </div>
         </div>
-        <div v-if="chatStore.loading" class="mt-6 flex w-full justify-center">
+        <div v-if="chatStore.loading" class="mt-6 flex w-full flex-col items-center gap-2">
           <DSpinner />
+          <div v-if="tokenizeStore.tokenLength" class="text-xs">
+            {{ tokenizeStore.tokenLength }} tokens
+          </div>
         </div>
       </div>
       <!-- INPUT -->
