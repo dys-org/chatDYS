@@ -2,6 +2,8 @@ import { ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
+import { $http } from '../utils/http';
+
 import { useTokenizeStore } from './tokenize';
 
 export interface Message {
@@ -43,24 +45,15 @@ export const useChatStore = defineStore('chat', () => {
     userMessage.value = '';
     loading.value = true;
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
+      const { message } = await $http.post('/api/chat', {
         body: JSON.stringify({
           model: model.value,
           messages: prompt.value,
           temperature: temperature.value,
           max_tokens: maxTokens.value,
         }),
-        headers: { 'Content-Type': 'application/json' },
       });
 
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(error || res.statusText);
-      }
-
-      const { message } = await res.json();
-      console.log('message', message); // TODO remove
       addMessage(message.role, message.content);
     } catch (err) {
       if (err instanceof OpenAI.APIError) {
