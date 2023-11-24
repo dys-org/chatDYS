@@ -12,9 +12,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  // server: {
-  //   proxy: {
-  //     '/api': 'http://localhost:3000',
-  //   },
-  // },
+  define: {
+    // enable devtools in prod https://github.com/vuejs/core/tree/main/packages/vue#bundler-build-feature-flags
+    __VUE_PROD_DEVTOOLS__: true,
+  },
 });

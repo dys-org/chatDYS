@@ -53,10 +53,16 @@ export const useChatStore = defineStore('chat', () => {
         }),
         headers: { 'Content-Type': 'application/json' },
       });
+
+      if (!res.ok) {
+        const error = await res.text();
+        throw new Error(error || res.statusText);
+      }
+
       const { message } = await res.json();
+      console.log('message', message); // TODO remove
       addMessage(message.role, message.content);
     } catch (err) {
-      console.error(err);
       if (err instanceof OpenAI.APIError) {
         const { status, message, code, type } = err;
         console.error(`API error: ${status}`);

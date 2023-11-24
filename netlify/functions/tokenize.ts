@@ -15,10 +15,10 @@ export const handler: Handler = async (event) => {
       statusCode: 200,
     };
   } catch (err: any) {
+    console.error('tokenize error: ', err);
+    const { errorType, errorMessage, stack } = err;
     return {
-      body: JSON.stringify({
-        message: err.message ?? 'There was a problem calculating the tokens.',
-      }),
+      body: JSON.stringify({ message: errorMessage, type: errorType, stack }),
       statusCode: err.statusCode ?? err.status ?? 500,
     };
   }

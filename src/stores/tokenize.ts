@@ -12,6 +12,12 @@ export const useTokenizeStore = defineStore('tokenize', () => {
         body: JSON.stringify({ stringToTokenize: str }),
         headers: { 'Content-Type': 'application/json' },
       });
+
+      if (!res.ok) {
+        const error = await res.text();
+        throw new Error(error || res.statusText);
+      }
+
       const { tokens } = await res.json();
       tokenLength.value = tokens;
     } catch (err) {
