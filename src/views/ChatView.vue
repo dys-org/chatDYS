@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import { DSpinner } from 'deez-components';
 import MarkdownIt from 'markdown-it';
 import prism from 'markdown-it-prism';
@@ -44,6 +44,23 @@ async function handleCopy(content: string, idx: number) {
     console.error('Failed to copy: ', err);
   }
 }
+
+chatStore.$subscribe((mutation, state) => {
+  // persist the whole state to the local storage whenever it changes
+  localStorage.setItem('chat', JSON.stringify(state));
+});
+
+onBeforeMount(() => {
+  // load the persisted state from the local storage
+  const persistedState = localStorage.getItem('chat');
+  if (persistedState) {
+    chatStore.$patch(JSON.parse(persistedState));
+  }
+});
+onMounted(() => {
+  const input: HTMLElement | null = document.querySelector('#userMessage');
+  if (input) input.focus();
+});
 </script>
 
 <template>
