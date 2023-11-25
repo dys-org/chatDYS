@@ -3,26 +3,12 @@ import { DButton, DRange, DSelect, DTextarea } from 'deez-components';
 
 import { MODELS, useChatStore } from '@/stores/chat';
 
-// const presets = [{ value: 'vue-3-convert', display: 'Vue Options to Composition conversion' }];
-
 const chatStore = useChatStore();
 </script>
 
 <template>
   <div class="flex flex-col gap-8 p-4 pb-12">
     <h2 class="text-xl font-semibold">Settings</h2>
-    <!-- <DSelect
-      id="preset"
-      v-model="chatStore.preset"
-      label="Preset"
-      description="Use a group of pre-configured settings."
-    >
-      <option value="" disabled>Choose a preset</option>
-      <option v-for="preset in presets" :key="preset.value" :value="preset.value">
-        {{ preset.display }}
-      </option>
-    </DSelect> -->
-
     <DSelect id="model" v-model="chatStore.model" label="Model">
       <option value="" disabled>Choose an LLM</option>
       <option v-for="model in MODELS" :key="model">

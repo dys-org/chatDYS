@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
-import { useLocalStorage } from '@vueuse/core';
+import { useStorage } from '@vueuse/core';
 import { DButton } from 'deez-components';
 
 import IconChevronRight from '~icons/majesticons/chevron-right';
@@ -16,7 +16,7 @@ const props = withDefaults(
 );
 
 const sidebarOpen = ref(false);
-const isSidebarCollapsed = useLocalStorage('isSidebarCollapsed', false);
+const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
 </script>
 
 <template>
