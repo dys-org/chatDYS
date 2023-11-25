@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { DButton } from 'deez-components';
 
+import IconChevronRight from '~icons/majesticons/chevron-right';
 import IconClose from '~icons/majesticons/close';
 import IconCog from '~icons/majesticons/settings-cog';
 
@@ -14,6 +15,7 @@ const props = withDefaults(
 );
 
 const sidebarOpen = ref(false);
+const isSidebarCollapsed = ref(false);
 </script>
 
 <template>
@@ -31,12 +33,24 @@ const sidebarOpen = ref(false);
           </h1>
         </slot>
         <slot name="main" />
+        <div class="absolute right-0 top-0 flex justify-center pt-3.5">
+          <DButton class="rounded-r-none px-0" @click="isSidebarCollapsed = !isSidebarCollapsed">
+            <span class="sr-only">{{ isSidebarCollapsed ? 'Expand' : 'Collapse' }} Settings</span>
+            <IconChevronRight
+              :class="['h-5 w-5', isSidebarCollapsed && 'rotate-180']"
+              aria-hidden="true"
+            />
+          </DButton>
+        </div>
       </div>
     </main>
 
     <!-- DESKTOP STATIC LEFT COLUMN -->
     <aside
-      class="hidden h-full w-72 overflow-auto border-l border-gray-700 bg-gray-950/20 lg:block"
+      :class="[
+        'relative hidden h-full transform-gpu overflow-auto border-l border-gray-700 bg-gray-950/20 transition-[width_transform] duration-300 lg:block',
+        isSidebarCollapsed ? 'w-0 translate-x-full' : 'w-72',
+      ]"
     >
       <slot name="side" />
     </aside>
