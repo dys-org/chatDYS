@@ -30,9 +30,9 @@ export const handler: Handler = async (event) => {
       };
     }
     console.error('chat error: ', err);
-    const { errorType, errorMessage, stack } = err;
+    const { errorType, errorMessage, stack, message } = err;
     return {
-      body: JSON.stringify({ message: errorMessage, type: errorType, stack }),
+      body: JSON.stringify({ message, errorMessage, errorType, stack }),
       statusCode: err.statusCode ?? err.status ?? 500,
     };
   }

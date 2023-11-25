@@ -1,9 +1,9 @@
-async function get(url: string) {
+export async function get(url: string) {
   const res = await fetch(url);
   return handleResponse(res);
 }
 
-async function post(url: string, body: {}, { ...customConfig } = {}) {
+export async function post(url: string, body: {}, { ...customConfig } = {}) {
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -13,7 +13,7 @@ async function post(url: string, body: {}, { ...customConfig } = {}) {
   return handleResponse(res);
 }
 
-async function put(url: string, body: {}, { ...customConfig } = {}) {
+export async function put(url: string, body: {}, { ...customConfig } = {}) {
   const res = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -24,7 +24,7 @@ async function put(url: string, body: {}, { ...customConfig } = {}) {
 }
 
 // prefixed with underscored because delete is a reserved word in javascript
-async function _delete(url: string) {
+export async function _delete(url: string) {
   const res = await fetch(url, { method: 'DELETE' });
   return handleResponse(res);
 }
@@ -38,4 +38,4 @@ async function handleResponse(res: Response) {
   return await res.json();
 }
 
-export const $http = { get, post, put, delete: _delete };
+export default { get, post, put, delete: _delete };

@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
-import { $http } from '../utils/http';
+import $http from '../utils/http';
 
 import { useTokenizeStore } from './tokenize';
 
@@ -46,12 +46,10 @@ export const useChatStore = defineStore('chat', () => {
     loading.value = true;
     try {
       const { message } = await $http.post('/api/chat', {
-        body: JSON.stringify({
-          model: model.value,
-          messages: prompt.value,
-          temperature: temperature.value,
-          max_tokens: maxTokens.value,
-        }),
+        model: model.value,
+        messages: prompt.value,
+        temperature: temperature.value,
+        max_tokens: maxTokens.value,
       });
 
       addMessage(message.role, message.content);
