@@ -23,8 +23,8 @@ export async function put(url: string, body: {}, { ...customConfig } = {}) {
   return handleResponse(res);
 }
 
-// prefixed with underscored because delete is a reserved word in javascript
-export async function _delete(url: string) {
+// delete is a reserved word in javascript
+export async function remove(url: string) {
   const res = await fetch(url, { method: 'DELETE' });
   return handleResponse(res);
 }
@@ -38,4 +38,4 @@ async function handleResponse(res: Response) {
   return await res.json();
 }
 
-export default { get, post, put, delete: _delete };
+export default { get, post, put, delete: remove };

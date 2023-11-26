@@ -5,7 +5,6 @@ import { defineStore } from 'pinia';
 import $http from '../utils/http';
 
 import { useTokenizeStore } from './tokenize';
-
 export interface Message {
   role: 'user' | 'system' | 'assistant';
   content: string;
@@ -44,13 +43,15 @@ export const useChatStore = defineStore('chat', () => {
     createPrompt();
     userMessage.value = '';
     loading.value = true;
+
+    const params: OpenAI.ChatCompletionCreateParams = {
+      model: model.value,
+      messages: prompt.value,
+      temperature: temperature.value,
+      max_tokens: maxTokens.value,
+    };
     try {
-      const { message } = await $http.post('/api/chat', {
-        model: model.value,
-        messages: prompt.value,
-        temperature: temperature.value,
-        max_tokens: maxTokens.value,
-      });
+      const { message } = await $http.post('/api/chat', params);
 
       addMessage(message.role, message.content);
     } catch (err) {
