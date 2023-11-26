@@ -59,9 +59,9 @@ export const useChatStore = defineStore('chat', () => {
         const { status, message, code, type } = err;
         console.error(`API error: ${status}`);
         console.error(message);
-        console.error(`code: ${code}} | type: ${type}}`);
+        console.error(`code: ${code} | type: ${type}`);
       } else {
-        // Non-API error
+        // Non-OpenAI error
         console.error(err);
       }
     } finally {
