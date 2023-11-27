@@ -34,7 +34,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
           </h1>
         </slot>
         <slot name="main" />
-        <div class="absolute right-0 top-0 flex justify-center pt-3.5">
+        <div class="absolute right-0 top-0 hidden justify-center pt-3.5 lg:flex">
           <DButton class="rounded-r-none px-0" @click="isSidebarCollapsed = !isSidebarCollapsed">
             <span class="sr-only">{{ isSidebarCollapsed ? 'Expand' : 'Collapse' }} Settings</span>
             <IconChevronRight

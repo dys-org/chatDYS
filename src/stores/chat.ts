@@ -10,7 +10,7 @@ export interface Message {
   content: string;
 }
 
-export const MODELS = ['gpt-3.5-turbo', 'gpt-4'] as const;
+export const MODELS = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-1106-preview'] as const;
 type Model = (typeof MODELS)[number];
 
 export const useChatStore = defineStore('chat', () => {
@@ -37,7 +37,6 @@ export const useChatStore = defineStore('chat', () => {
     const str = prompt.value.map((m) => m.content).join('');
     tokenizeStore.checkTokens(str);
   }
-
   async function sendPrompt() {
     addMessage('user', userMessage.value);
     createPrompt();

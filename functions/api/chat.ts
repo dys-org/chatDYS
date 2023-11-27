@@ -1,6 +1,10 @@
 import type { PagesFunction } from '@cloudflare/workers-types';
 import OpenAI from 'openai';
 
+interface Env {
+  OPENAI_API_KEY: string;
+}
+
 // @ts-ignore
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
