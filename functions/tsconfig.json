@@ -1,9 +1,9 @@
 {
-  "include": ["functions/**/*"],
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
     "lib": ["esnext"],
-    "types": ["@cloudflare/workers-types"]
+    "types": ["@cloudflare/workers-types"],
+    "moduleResolution": "nodenext"
   }
 }
