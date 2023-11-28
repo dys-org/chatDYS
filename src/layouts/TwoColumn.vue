@@ -23,7 +23,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
   <div class="flex h-full overflow-hidden">
     <!-- MAIN LEFT COLUMN -->
     <main class="relative flex-1">
-      <div class="h-full overflow-auto">
+      <div id="chatArea" class="h-full overflow-auto">
         <slot name="heading">
           <h1 class="my-4 px-4 text-xl font-semibold sm:px-6">
             {{ props.h1 }}

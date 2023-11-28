@@ -2,8 +2,6 @@ import { ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
-import $http from '../utils/http';
-
 import { useTokenizeStore } from './tokenize';
 export interface Message {
   role: 'user' | 'system' | 'assistant';
@@ -22,6 +20,7 @@ export const useChatStore = defineStore('chat', () => {
   const prompt = ref<Message[]>([]);
   const systemMessage = ref('');
   const temperature = ref(0);
+  const textStream = ref('');
   const userMessage = ref('');
 
   const tokenizeStore = useTokenizeStore();
@@ -37,22 +36,49 @@ export const useChatStore = defineStore('chat', () => {
     const str = prompt.value.map((m) => m.content).join('');
     tokenizeStore.checkTokens(str);
   }
+  async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    });
+    if (!res.ok) {
+      const error = await res.text();
+      return Promise.reject(new Error(error || res.statusText));
+    }
+    if (!(res.body instanceof ReadableStream)) {
+      return Promise.reject(new Error('Response is not a stream'));
+    }
+    loading.value = false;
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value);
+      console.log(chunk);
+      textStream.value += chunk;
+    }
+    addMessage('assistant', textStream.value);
+    textStream.value = '';
+  }
   async function sendPrompt() {
     addMessage('user', userMessage.value);
     createPrompt();
     userMessage.value = '';
     loading.value = true;
 
-    const params: OpenAI.ChatCompletionCreateParams = {
+    // const params: OpenAI.ChatCompletionCreateParams = {
+    const params = {
       model: model.value,
       messages: prompt.value,
       temperature: temperature.value,
       max_tokens: maxTokens.value,
     };
     try {
-      const { message } = await $http.post('/api/chat', params);
-
-      addMessage(message.role, message.content);
+      streamResponse(params);
     } catch (err) {
       if (err instanceof OpenAI.APIError) {
         const { status, message, code, type } = err;
@@ -80,6 +106,7 @@ export const useChatStore = defineStore('chat', () => {
     sendPrompt,
     systemMessage,
     temperature,
+    textStream,
     userMessage,
   };
 });
