@@ -11,12 +11,12 @@ const router = createRouter({
       component: HomeView,
       meta: { requiresAuth: true },
     },
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/LoginView.vue'),
-      meta: { requiresAuth: false },
-    },
+    // {
+    //   path: '/login',
+    //   name: 'login',
+    //   component: () => import('../views/LoginView.vue'),
+    //   meta: { requiresAuth: false },
+    // },
     {
       path: '/chat',
       name: 'chat',
