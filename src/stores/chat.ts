@@ -58,7 +58,7 @@ export const useChatStore = defineStore('chat', () => {
       if (done) break;
 
       const chunk = decoder.decode(value);
-      console.log(chunk);
+      // console.log(chunk);
       textStream.value += chunk;
     }
     addMessage('assistant', textStream.value);
