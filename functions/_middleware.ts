@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+
 interface Env {
   USERNAME_PASSWORD: string;
 }
@@ -9,20 +10,6 @@ function getUnauthorizedResponse(message: string) {
     headers: { 'WWW-Authenticate': 'Basic realm="chatDYS, charset="UTF-8"' },
   });
 }
-
-export const checkBasicAuth: PagesFunction<Env> = async ({ request, env, next }) => {
-  const { headers } = request;
-  const authString = 'Basic ' + btoa(env.USERNAME_PASSWORD);
-
-  const authHeader = headers.get('authorization');
-  if (!authHeader) {
-    return getUnauthorizedResponse('Provide Username and Password to access this page.');
-  }
-  if (authHeader !== authString) {
-    return getUnauthorizedResponse('The Username and Password combination you entered is invalid.');
-  }
-  return next();
-};
 
 const errorHandling: PagesFunction = async ({ next }) => {
   try {
@@ -41,4 +28,18 @@ const errorHandling: PagesFunction = async ({ next }) => {
   }
 };
 
-export const onRequest = [checkBasicAuth, errorHandling];
+export const authenticationBasic: PagesFunction<Env> = async ({ request, env, next }) => {
+  const { headers } = request;
+  const authString = 'Basic ' + btoa(env.USERNAME_PASSWORD);
+
+  const authHeader = headers.get('authorization');
+  if (!authHeader) {
+    return getUnauthorizedResponse('Provide Username and Password to access this page.');
+  }
+  if (authHeader !== authString) {
+    return getUnauthorizedResponse('The Username and Password combination you entered is invalid.');
+  }
+  return next();
+};
+
+export const onRequest = [errorHandling, authenticationBasic];

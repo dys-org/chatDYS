@@ -16,11 +16,11 @@ function onSubmit() {
 
 <template>
   <div
-    class="bg-radial-glow flex min-h-full flex-1 flex-col justify-center bg-gray-900 px-6 py-12 lg:px-8"
+    class="flex min-h-full flex-1 flex-col justify-center bg-gray-900 bg-radial-glow px-6 py-12 lg:px-8"
   >
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <ChatLogoSVG class="mx-auto h-12" />
-      <h2 class="mt-6 text-center text-3xl font-bold leading-9 tracking-tight text-white">
+      <h2 class="mt-8 text-center text-3xl font-bold leading-9 tracking-tight text-white">
         You Shall Not Pass!
       </h2>
       <div class="text-center text-sm text-white/60">
