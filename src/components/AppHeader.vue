@@ -10,7 +10,7 @@ import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
       <!-- DYS logo -->
       <RouterLink to="/">
         <span class="sr-only">Home</span>
-        <ChatLogoSVG class="h-10 p-1.5" />
+        <ChatLogoSVG class="h-10 p-1.5 text-gray-300" />
       </RouterLink>
       <div class="flex gap-6 text-white/60">
         <RouterLink to="/chat" class="text-sm font-medium hover:text-white">Chat</RouterLink>

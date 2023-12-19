@@ -1,12 +1,25 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+
+import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
 </script>
 
 <template>
-  <div class="bg-radial-glow h-full overflow-hidden">
+  <header class="bg-gray-900 px-4 py-2 sm:px-6">
+    <div class="flex items-center justify-between text-gray-300">
+      <ChatLogoSVG class="h-10 p-1.5" />
+      <!-- <RouterLink to="/chat" class="text-sm font-medium hover:text-white">Login</RouterLink> -->
+    </div>
+  </header>
+  <div class="h-full overflow-hidden bg-radial-glow">
     <div class="grid h-full place-content-center px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
       <div class="max-w-2xl text-center">
-        <h2 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">Move Faster.</h2>
+        <h2
+          class="mt-8 flex items-center text-4xl font-semibold tracking-tight text-white sm:text-6xl"
+        >
+          Move faster with
+          <ChatLogoSVG class="ml-4 inline-block h-12" />
+        </h2>
         <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
           Slowness anywhere justifies slowness everywhere.
           <br />
