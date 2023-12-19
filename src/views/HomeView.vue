@@ -7,7 +7,9 @@ import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
 <template>
   <header class="bg-gray-900 px-4 py-2 sm:px-6">
     <div class="flex items-center justify-between text-gray-300">
-      <ChatLogoSVG class="h-10 p-1.5" />
+      <div>
+        <ChatLogoSVG class="block h-10 p-1.5" />
+      </div>
       <!-- <RouterLink
         to="/chat"
         class="rounded px-3 py-1.5 text-sm font-medium transition-colors hover:bg-white/5 hover:text-white"
