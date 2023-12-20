@@ -29,7 +29,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
             {{ props.h1 }}
             <DButton class="ml-3 lg:hidden" @click="sidebarOpen = true">
               <span class="sr-only">Open sidebar</span>
-              <IconCog class="h-4 w-4" aria-hidden="true" />
+              <IconCog class="size-4" aria-hidden="true" />
             </DButton>
           </h1>
         </slot>
@@ -38,7 +38,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
           <DButton class="rounded-r-none px-0" @click="isSidebarCollapsed = !isSidebarCollapsed">
             <span class="sr-only">{{ isSidebarCollapsed ? 'Expand' : 'Collapse' }} Settings</span>
             <IconChevronRight
-              :class="['h-5 w-5', isSidebarCollapsed && 'rotate-180']"
+              :class="['size-5', isSidebarCollapsed && 'rotate-180']"
               aria-hidden="true"
             />
           </DButton>
@@ -95,7 +95,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
               <div class="absolute right-full top-0 flex w-16 justify-center pt-5">
                 <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
                   <span class="sr-only">Close sidebar</span>
-                  <IconClose class="h-6 w-6 text-white" aria-hidden="true" />
+                  <IconClose class="size-6 text-white" aria-hidden="true" />
                 </button>
               </div>
             </TransitionChild>

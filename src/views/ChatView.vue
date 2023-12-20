@@ -107,10 +107,10 @@ onMounted(() => {
                 <span class="sr-only">{{ copiedIndex === i ? 'Copied' : 'Copy' }}</span>
                 <IconClipboardCheck
                   v-if="copiedIndex === i"
-                  class="h-5 w-5 text-green-400"
+                  class="size-5 text-green-400"
                   aria-hidden="true"
                 />
-                <IconClipboard v-else class="h-5 w-5" aria-hidden="true" />
+                <IconClipboard v-else class="size-5" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -139,7 +139,7 @@ onMounted(() => {
                 class="-mt-1 p-1 text-white/60 transition-colors hover:text-white disabled:pointer-events-none disabled:text-white/30"
                 disabled
               >
-                <IconClipboard class="h-5 w-5" aria-hidden="true" />
+                <IconClipboard class="size-5" aria-hidden="true" />
               </button>
             </div>
           </div>

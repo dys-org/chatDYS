@@ -48,7 +48,7 @@ const message = computed({
           @click="emit('send')"
         >
           <span class="sr-only">Send</span>
-          <IconSend class="h-5 w-5" />
+          <IconSend class="size-5" />
         </DButton>
       </template>
     </DTextarea>
