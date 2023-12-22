@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, ref, watch } from 'vue';
 import { DSpinner } from 'deez-components';
+import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
-import prism from 'markdown-it-prism';
 
 import ChatSettings from '@/components/ChatSettings.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
@@ -10,12 +10,26 @@ import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
 
 // import { useTokenizeStore } from '@/stores/tokenize';
-import 'prismjs/themes/prism-okaidia.css';
-
 import IconClipboardCheck from '~icons/majesticons/clipboard-check-line';
 import IconClipboard from '~icons/majesticons/clipboard-line';
 
-const md = new MarkdownIt().use(prism, { defaultLanguageForUnknown: 'js' });
+const md: MarkdownIt = new MarkdownIt({
+  highlight: (code, language) => {
+    if (language && hljs.getLanguage(language)) {
+      try {
+        return (
+          '<pre class="hljs"><code>' +
+          hljs.highlight(code, { language, ignoreIllegals: true }).value +
+          '</code></pre>'
+        );
+      } catch (err) {
+        console.warn('Error highlighting code block.', err);
+      }
+    }
+
+    return '<pre class="hljs"><code>' + md.utils.escapeHtml(code) + '</code></pre>';
+  },
+});
 
 const chatStore = useChatStore();
 // const tokenizeStore = useTokenizeStore();
@@ -177,11 +191,8 @@ onMounted(() => {
     margin-bottom: 1rem;
   }
 
-  & pre {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    overflow: auto;
-    @apply max-w-lg text-xs;
+  & .hljs {
+    @apply my-4 max-w-lg overflow-auto p-3 text-xs;
   }
 }
 </style>
