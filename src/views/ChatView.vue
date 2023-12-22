@@ -8,8 +8,8 @@ import ChatSettings from '@/components/ChatSettings.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
-import { useTokenizeStore } from '@/stores/tokenize';
 
+// import { useTokenizeStore } from '@/stores/tokenize';
 import 'prismjs/themes/prism-okaidia.css';
 
 import IconClipboardCheck from '~icons/majesticons/clipboard-check-line';
@@ -18,7 +18,7 @@ import IconClipboard from '~icons/majesticons/clipboard-line';
 const md = new MarkdownIt().use(prism, { defaultLanguageForUnknown: 'js' });
 
 const chatStore = useChatStore();
-const tokenizeStore = useTokenizeStore();
+// const tokenizeStore = useTokenizeStore();
 
 const loading = ref(false);
 const copiedIndex = ref<number | null>(null);
@@ -117,9 +117,9 @@ onMounted(() => {
         </div>
         <div v-if="chatStore.loading" class="mt-6 flex w-full flex-col items-center gap-2">
           <DSpinner />
-          <div v-if="tokenizeStore.tokenLength" class="text-xs">
+          <!-- <div v-if="tokenizeStore.tokenLength" class="text-xs">
             {{ tokenizeStore.tokenLength }} tokens
-          </div>
+          </div> -->
         </div>
         <!-- TODO make this a component -->
         <div

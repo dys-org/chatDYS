@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
-import { useTokenizeStore } from './tokenize';
+// import { useTokenizeStore } from './tokenize';
 export interface Message {
   role: 'user' | 'system' | 'assistant';
   content: string;
@@ -23,7 +23,7 @@ export const useChatStore = defineStore('chat', () => {
   const textStream = ref('');
   const userMessage = ref('');
 
-  const tokenizeStore = useTokenizeStore();
+  // const tokenizeStore = useTokenizeStore();
 
   function addMessage(role: Message['role'], content: string) {
     messages.value.push({ role, content });
@@ -34,7 +34,7 @@ export const useChatStore = defineStore('chat', () => {
       ...messages.value,
     ];
     const str = prompt.value.map((m) => m.content).join('');
-    tokenizeStore.checkTokens(str);
+    // tokenizeStore.checkTokens(str);
   }
   async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
     const res = await fetch('/api/chat', {
