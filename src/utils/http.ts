@@ -31,11 +31,11 @@ export async function remove(url: string) {
 
 // helper functions
 async function handleResponse(res: Response) {
+  const data = await res.json();
   if (!res.ok) {
-    const error = await res.text();
-    return Promise.reject(new Error(error || res.statusText));
+    return Promise.reject(data || res.statusText);
   }
-  return await res.json();
+  return data;
 }
 
 export default { get, post, put, delete: remove };

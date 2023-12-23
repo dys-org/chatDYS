@@ -33,7 +33,7 @@ export const useChatStore = defineStore('chat', () => {
       { role: 'system', content: systemMessage.value || 'You are a helpful assistant.' },
       ...messages.value,
     ];
-    const str = prompt.value.map((m) => m.content).join('');
+    // const str = prompt.value.map((m) => m.content).join('');
     // tokenizeStore.checkTokens(str);
   }
   async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
@@ -43,7 +43,7 @@ export const useChatStore = defineStore('chat', () => {
       body: JSON.stringify(params),
     });
     if (!res.ok) {
-      const error = await res.text();
+      const error = await res.json();
       return Promise.reject(new Error(error || res.statusText));
     }
     if (!(res.body instanceof ReadableStream)) {
@@ -79,16 +79,8 @@ export const useChatStore = defineStore('chat', () => {
     };
     try {
       streamResponse(params);
-    } catch (err) {
-      if (err instanceof OpenAI.APIError) {
-        const { status, message, code, type } = err;
-        console.error(`API error: ${status}`);
-        console.error(message);
-        console.error(`code: ${code} | type: ${type}`);
-      } else {
-        // Non-OpenAI error
-        console.error(err);
-      }
+    } catch (err: any) {
+      console.error(err.message);
     } finally {
       loading.value = false;
     }
