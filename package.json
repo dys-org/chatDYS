@@ -20,6 +20,7 @@
     "pnpm": ">=8"
   },
   "dependencies": {
+    "@auth0/auth0-vue": "^2.3.3",
     "@headlessui/vue": "^1.7.16",
     "@vueuse/core": "^10.7.0",
     "cors": "^2.8.5",

@@ -2,6 +2,8 @@
 import { RouterLink } from 'vue-router';
 
 import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
+
+import LoginButton from './LoginButton.vue';
 </script>
 
 <template>
@@ -12,9 +14,10 @@ import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
         <span class="sr-only">Home</span>
         <ChatLogoSVG class="h-10 p-1.5 text-gray-300" />
       </RouterLink>
-      <div class="flex gap-6 text-white/60">
+      <div class="flex items-center gap-6 text-white/60">
         <RouterLink to="/chat" class="text-sm font-medium hover:text-white">Chat</RouterLink>
         <RouterLink to="/vision" class="text-sm font-medium hover:text-white">Vision</RouterLink>
+        <LoginButton />
       </div>
     </div>
   </header>

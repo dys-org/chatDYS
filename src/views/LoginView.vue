@@ -20,20 +20,20 @@ function onSubmit() {
   >
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <ChatLogoSVG class="mx-auto h-12" />
-      <h2 class="mt-8 text-center text-3xl font-bold leading-9 tracking-tight text-white">
+      <!-- <h2 class="mt-8 text-center text-3xl font-bold leading-9 tracking-tight text-white">
         You Shall Not Pass!
       </h2>
       <div class="text-center text-sm text-white/60">
         (unless you know the username and password)
-      </div>
+      </div> -->
     </div>
 
-    <div class="mt-12 sm:mx-auto sm:w-full sm:max-w-sm">
+    <!-- <div class="mt-12 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="flex flex-col gap-y-6" @submit.prevent="onSubmit">
         <DInput id="name" v-model.trim="loginForm.name" label="Username" required />
         <DInput id="password" v-model.trim="loginForm.password" label="Password" type="password" />
         <DButton type="submit" class="w-full justify-center" variant="primary">Sign in</DButton>
       </form>
-    </div>
+    </div> -->
   </div>
 </template>

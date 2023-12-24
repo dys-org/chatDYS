@@ -2,6 +2,7 @@
 import { RouterLink } from 'vue-router';
 
 import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
+import LoginButton from '@/components/LoginButton.vue';
 </script>
 
 <template>
@@ -16,6 +17,7 @@ import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
       >
         Login
       </RouterLink> -->
+      <LoginButton />
     </div>
   </header>
   <div class="h-full overflow-hidden bg-radial-glow">
