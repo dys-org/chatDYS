@@ -33,7 +33,7 @@ export async function remove(url: string) {
 async function handleResponse(res: Response) {
   const data = await res.json();
   if (!res.ok) {
-    return Promise.reject(data || res.statusText);
+    return Promise.reject(data);
   }
   return data;
 }

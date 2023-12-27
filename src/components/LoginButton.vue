@@ -2,7 +2,7 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { DButton } from 'deez-components';
 
-const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
 
 function login() {
   loginWithRedirect();
@@ -16,8 +16,5 @@ function logoutAndReturn() {
   <div>
     <DButton v-if="isAuthenticated" @click="logoutAndReturn">Logout</DButton>
     <DButton v-else variant="primary" @click="login">Login</DButton>
-    <pre v-if="isAuthenticated">
-      <code>{{ user }}</code>
-    </pre>
   </div>
 </template>

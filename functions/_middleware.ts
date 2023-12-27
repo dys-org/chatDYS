@@ -40,4 +40,4 @@ export const authenticationBasic: PagesFunction<Env> = async ({ request, env, ne
   return next();
 };
 
-export const onRequest = [errorHandling, authenticationBasic];
+export const onRequest = [errorHandling];
