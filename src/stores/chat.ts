@@ -2,6 +2,8 @@ import { ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
+import http from '@/utils/http';
+
 // import { useTokenizeStore } from './tokenize';
 export interface Message {
   role: 'user' | 'system' | 'assistant';
@@ -33,18 +35,14 @@ export const useChatStore = defineStore('chat', () => {
       { role: 'system', content: systemMessage.value || 'You are a helpful assistant.' },
       ...messages.value,
     ];
-    const str = prompt.value.map((m) => m.content).join('');
+    // const str = prompt.value.map((m) => m.content).join('');
     // tokenizeStore.checkTokens(str);
   }
   async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
-    const res = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(params),
-    });
+    const res = await http.post<OpenAI.ChatCompletionCreateParams, Response>('/api/chat', params);
     if (!res.ok) {
-      const error = await res.text();
-      return Promise.reject(new Error(error || res.statusText));
+      const error = await res.json();
+      return Promise.reject(error);
     }
     if (!(res.body instanceof ReadableStream)) {
       return Promise.reject(new Error('Response is not a stream'));
@@ -78,17 +76,9 @@ export const useChatStore = defineStore('chat', () => {
       max_tokens: maxTokens.value,
     };
     try {
-      streamResponse(params);
-    } catch (err) {
-      if (err instanceof OpenAI.APIError) {
-        const { status, message, code, type } = err;
-        console.error(`API error: ${status}`);
-        console.error(message);
-        console.error(`code: ${code} | type: ${type}`);
-      } else {
-        // Non-OpenAI error
-        console.error(err);
-      }
+      await streamResponse(params);
+    } catch (err: any) {
+      console.error(err);
     } finally {
       loading.value = false;
     }

@@ -1,45 +1,71 @@
 import OpenAI from 'openai';
 
+import { HTTPError } from '../src/common/exceptions.js';
+
 interface Env {
-  USERNAME_PASSWORD: string;
+  AUTH0_DOMAIN: string;
 }
 
-function getUnauthorizedResponse(message: string) {
-  return new Response(message, {
-    status: 401,
-    headers: { 'WWW-Authenticate': 'Basic realm="chatDYS, charset="UTF-8"' },
-  });
+type JWK = {
+  alg: string;
+  kty: string;
+  use: string;
+  n: string;
+  e: string;
+  kid: string;
+  x5t: string;
+  x5c: string[];
+};
+
+type JWKS = { keys: JWK[] };
+
+async function validateToken({ token, domain }: { token: string; domain: string }) {
+  const [rawHeader, rawBody, rawSignature] = token.split('.');
+  const jwks = await fetch(`https://${domain}/.well-known/jwks.json`);
+  const { keys } = (await jwks.json()) as JWKS;
+  const { kid } = JSON.parse(atob(rawHeader));
+  const signingKey = keys.find((key) => key.kid === kid);
+  const cryptoKey = await crypto.subtle.importKey(
+    'jwk',
+    signingKey,
+    { name: 'RSASSA-PKCS1-v1_5', hash: { name: 'SHA-256' } },
+    false,
+    ['verify'],
+  );
+  const signature = new Uint8Array(
+    Array.from(atob(rawSignature.replace(/_/g, '/').replace(/-/g, '+')), (c) => c.charCodeAt(0)),
+  );
+  const data = new TextEncoder().encode([rawHeader, rawBody].join('.'));
+  return crypto.subtle.verify('RSASSA-PKCS1-v1_5', cryptoKey, signature, data);
 }
 
 const errorHandling: PagesFunction = async ({ next }) => {
   try {
     return await next();
   } catch (err) {
-    console.error('chat error: ', err);
     if (err instanceof OpenAI.APIError) {
       const { status, message, code, type } = err;
-      return new Response(JSON.stringify({ message, code, type }), { status });
+      return new Response(JSON.stringify({ status, message, code, type }), { status });
     }
-    const { statusText, status, message, stack } = err;
-    return new Response(JSON.stringify({ message, stack }), {
+    const { status, message, stack } = err;
+    return new Response(JSON.stringify({ status, message, stack }), {
       status: status ?? 500,
-      statusText: statusText || 'Internal PagesFunction Error',
     });
   }
 };
 
-export const authenticationBasic: PagesFunction<Env> = async ({ request, env, next }) => {
-  const { headers } = request;
-  const authString = 'Basic ' + btoa(env.USERNAME_PASSWORD);
+export const authentication: PagesFunction<Env> = async ({ request, env, next }) => {
+  const url = new URL(request.url);
+  if (url.pathname.startsWith('/api/')) {
+    const token = request.headers.get('Authorization')?.split(' ')[1];
+    if (!token) throw new HTTPError(401, 'Authorization header is missing or invalid');
 
-  const authHeader = headers.get('authorization');
-  if (!authHeader) {
-    return getUnauthorizedResponse('Provide Username and Password to access this page.');
-  }
-  if (authHeader !== authString) {
-    return getUnauthorizedResponse('The Username and Password combination you entered is invalid.');
+    if (!env.AUTH0_DOMAIN) throw new Error('AUTH0_DOMAIN is not set');
+
+    const isValid = await validateToken({ token, domain: env.AUTH0_DOMAIN });
+    if (!isValid) throw new HTTPError(401, 'Invalid token');
   }
   return next();
 };
 
-export const onRequest = [errorHandling, authenticationBasic];
+export const onRequest = [errorHandling, authentication];

@@ -10,7 +10,7 @@ import IconCog from '~icons/majesticons/settings-cog';
 
 const props = withDefaults(
   defineProps<{
-    h1: string;
+    h1?: string;
   }>(),
   { h1: 'Page Heading' },
 );

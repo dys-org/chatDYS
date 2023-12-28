@@ -5,19 +5,6 @@ import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
 </script>
 
 <template>
-  <header class="bg-gray-900 px-4 py-2 sm:px-6">
-    <div class="flex items-center justify-between text-gray-300">
-      <div>
-        <ChatLogoSVG class="block h-10 p-1.5" />
-      </div>
-      <!-- <RouterLink
-        to="/chat"
-        class="rounded px-3 py-1.5 text-sm font-medium transition-colors hover:bg-white/5 hover:text-white"
-      >
-        Login
-      </RouterLink> -->
-    </div>
-  </header>
   <div class="h-full overflow-hidden bg-radial-glow">
     <div class="grid h-full place-content-center px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
       <div class="max-w-2xl text-center">

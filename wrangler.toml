@@ -1,0 +1,6 @@
+# used for local dev with D1 only atm
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "local-chatdys-db"
+database_id = "xxxx-xxxx-xxxx-xxxx-xxxx"
+preview_database_id = "DB"
