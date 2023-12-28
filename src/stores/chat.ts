@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
-// import { auth0 } from '@/main';
+import { auth0 } from '@/main';
 
 // import { useTokenizeStore } from './tokenize';
 export interface Message {
@@ -39,12 +39,12 @@ export const useChatStore = defineStore('chat', () => {
     // tokenizeStore.checkTokens(str);
   }
   async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
-    // const token = await auth0.getAccessTokenSilently();
+    const token = await auth0.getAccessTokenSilently();
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: 'Bearer ' + token,
+        Authorization: 'Bearer ' + token,
       },
       body: JSON.stringify(params),
     });
