@@ -1,17 +1,11 @@
-DROP TABLE IF EXISTS Users;
-
-CREATE TABLE IF NOT EXISTS Users (
+CREATE TABLE Users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT NOT NULL UNIQUE,
-  first_name TEXT,
-  last_name TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  sub_id TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  name TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO
-  Users (email, first_name, last_name)
-VALUES
-  ('david@example.com', 'David', 'Soards'),
-  ('gretel@example.com', 'Gretel', 'Soards'),
-  ('sebby@example.com', 'Gretel', 'Soards');
+-- Create an index on the sub_id column for faster lookups
+CREATE INDEX idx_users_sub_id ON users (sub_id);

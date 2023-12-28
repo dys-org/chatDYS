@@ -1,5 +1,8 @@
+import { auth0 } from '@/main';
+
 async function http<T>(path: string, config: RequestInit): Promise<T> {
-  const req = new Request(path, config);
+  const token = await auth0.getAccessTokenSilently();
+  const req = new Request(path, { headers: { Authorization: 'Bearer ' + token }, ...config });
   const res = await fetch(req);
   // may error if there is no body, return empty array
   const data = await res.json().catch(() => ({}));

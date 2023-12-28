@@ -4,7 +4,7 @@ import { DSpinner } from 'deez-components';
 
 import OneColumn from '@/layouts/OneColumn.vue';
 
-const { isAuthenticated, user, isLoading } = useAuth0();
+const { isAuthenticated, user, isLoading, idTokenClaims } = useAuth0();
 </script>
 
 <template>
