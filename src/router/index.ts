@@ -40,6 +40,12 @@ const router = createRouter({
       // meta: { requiresAuth: true },
       beforeEnter: authGuard,
     },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'notFound',
+      component: () => import('../views/NotFoundView.vue'),
+      // meta: { requiresAuth: false },
+    },
   ],
 });
 
