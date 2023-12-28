@@ -5,13 +5,9 @@ interface Env {
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const headers = new Headers({
-    'Content-Type': 'text/event-stream',
-  });
-  const init = { status: 200, statusText: 'ok', headers: headers };
-
+  const headers = new Headers({ 'Content-Type': 'text/event-stream' });
+  const init = { status: 200, statusText: 'ok', headers };
   const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-
   const params = (await request.json()) as OpenAI.ChatCompletionCreateParams;
 
   if (params.messages == null) throw new Error('No prompt was provided');
@@ -24,7 +20,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   // Using our readable and writable to handle streaming data
   const { readable, writable } = new TransformStream();
-
   writeToStream(writable, stream);
 
   // Send readable back to the browser so it can read the stream content
@@ -42,6 +37,7 @@ async function writeToStream(writable: WritableStream, stream) {
     console.log(content);
     await writer.write(encoder.encode(content));
   }
+
   writer.close();
 }
 
