@@ -5,7 +5,7 @@ import { DButton } from 'deez-components';
 const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
 
 function login() {
-  loginWithRedirect();
+  loginWithRedirect({ appState: { target: '/chat' } });
 }
 function logoutAndReturn() {
   logout({ logoutParams: { returnTo: window.location.origin } });
@@ -13,8 +13,6 @@ function logoutAndReturn() {
 </script>
 
 <template>
-  <div>
-    <DButton v-if="isAuthenticated" @click="logoutAndReturn">Logout</DButton>
-    <DButton v-else variant="primary" @click="login">Login</DButton>
-  </div>
+  <DButton v-if="isAuthenticated" @click="logoutAndReturn">Logout</DButton>
+  <DButton v-else variant="primary" @click="login">Login</DButton>
 </template>
