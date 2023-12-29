@@ -4,6 +4,7 @@ import { RouterView } from 'vue-router';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 import AppHeader from './components/AppHeader.vue';
+import PageLoader from './components/PageLoader.vue';
 import http from './utils/http';
 const { isAuthenticated, user, isLoading } = useAuth0();
 
@@ -36,7 +37,8 @@ watch(
 </script>
 
 <template>
-  <div class="flex h-screen flex-1 flex-col overflow-hidden">
+  <div class="relative flex h-screen flex-1 flex-col overflow-hidden">
+    <PageLoader :show="isLoading" />
     <AppHeader />
     <RouterView />
   </div>

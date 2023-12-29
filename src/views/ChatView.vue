@@ -88,6 +88,7 @@ onBeforeMount(() => {
 onMounted(() => {
   const input: HTMLElement | null = document.querySelector('#userMessage');
   if (input) input.focus();
+  scrollToBottom();
 });
 </script>
 

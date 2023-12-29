@@ -16,20 +16,27 @@ const { isAuthenticated, isLoading } = useAuth0();
         <span class="sr-only">Home</span>
         <ChatLogoSVG class="h-10 p-1.5 text-gray-300" />
       </RouterLink>
-      <div class="flex items-center gap-6 text-white/60">
-        <RouterLink to="/chat" class="text-sm font-medium hover:text-white">Chat</RouterLink>
-        <RouterLink to="/vision" class="text-sm font-medium hover:text-white">Vision</RouterLink>
-        <template v-if="!isLoading">
-          <RouterLink
-            v-if="isAuthenticated"
-            to="/profile"
-            class="text-sm font-medium hover:text-white"
-          >
-            Profile
-          </RouterLink>
-          <LoginButton />
-        </template>
-      </div>
+      <Transition
+        enter-from-class="opacity-0"
+        leave-to-class="opacity-0"
+        enter-active-class="transition-opacity duration-300"
+        leave-active-class="transition-opacity duration-300"
+      >
+        <div v-if="!isLoading" class="flex items-center gap-6 text-white/60">
+          <RouterLink to="/chat" class="text-sm font-medium hover:text-white">Chat</RouterLink>
+          <RouterLink to="/vision" class="text-sm font-medium hover:text-white">Vision</RouterLink>
+          <template v-if="!isLoading">
+            <RouterLink
+              v-if="isAuthenticated"
+              to="/profile"
+              class="text-sm font-medium hover:text-white"
+            >
+              Profile
+            </RouterLink>
+            <LoginButton />
+          </template>
+        </div>
+      </Transition>
     </div>
   </header>
 </template>
