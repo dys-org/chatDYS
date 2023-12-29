@@ -13,13 +13,6 @@ const router = createRouter({
       // meta: { requiresAuth: false },
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/LoginView.vue'),
-      // meta: { requiresAuth: false },
-      beforeEnter: authGuard,
-    },
-    {
       path: '/chat',
       name: 'chat',
       component: () => import('../views/ChatView.vue'),
@@ -38,6 +31,13 @@ const router = createRouter({
       name: 'vision',
       component: () => import('../views/VisionView.vue'),
       // meta: { requiresAuth: true },
+      beforeEnter: authGuard,
+    },
+    {
+      path: '/callback',
+      name: 'callback',
+      component: () => import('../views/CallbackView.vue'),
+      // meta: { requiresAuth: false },
       beforeEnter: authGuard,
     },
     {
