@@ -38,7 +38,12 @@ const router = createRouter({
       name: 'callback',
       component: () => import('../views/CallbackView.vue'),
       // meta: { requiresAuth: false },
-      beforeEnter: authGuard,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+      // meta: { requiresAuth: false },
     },
     {
       path: '/:pathMatch(.*)*',

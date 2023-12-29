@@ -9,11 +9,11 @@ import router from './router';
 import './assets/main.css';
 
 export const auth0 = createAuth0({
-  domain: 'dev-lnt7gfcfv1ftlm5y.us.auth0.com',
-  clientId: 'vRkFcEgUwMGYgnm2qN4JAqIwcBc5h3xd',
+  domain: import.meta.env.VITE_AUTH0_DOMAIN,
+  clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
   authorizationParams: {
-    redirect_uri: window.location.origin,
-    audience: 'https://chatdys.pages.dev/api',
+    redirect_uri: import.meta.env.VITE_AUTH0_CALLBACK_URL,
+    audience: import.meta.env.VITE_AUTH0_API_AUDIENCE,
   },
 });
 

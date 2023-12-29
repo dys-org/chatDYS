@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { HTTPError } from '../src/common/exceptions.js';
 
 interface Env {
-  AUTH0_DOMAIN: string;
+  VITE_AUTH0_DOMAIN: string;
 }
 
 type JWK = {
@@ -60,9 +60,9 @@ export const authentication: PagesFunction<Env> = async ({ request, env, next })
     const token = request.headers.get('Authorization')?.split(' ')[1];
     if (!token) throw new HTTPError(401, 'Authorization header is missing or invalid');
 
-    if (!env.AUTH0_DOMAIN) throw new Error('AUTH0_DOMAIN is not set');
+    if (!env.VITE_AUTH0_DOMAIN) throw new Error('VITE_AUTH0_DOMAIN is not set');
 
-    const isValid = await validateToken({ token, domain: env.AUTH0_DOMAIN });
+    const isValid = await validateToken({ token, domain: env.VITE_AUTH0_DOMAIN });
     if (!isValid) throw new HTTPError(401, 'Invalid token');
   }
   return next();
