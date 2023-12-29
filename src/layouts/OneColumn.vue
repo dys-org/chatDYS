@@ -10,7 +10,7 @@ const props = withDefaults(
 <template>
   <main class="my-4 px-4 sm:px-6">
     <div class="mx-auto h-full max-w-screen-md">
-      <h1 class="mb-4 text-3xl font-semibold">{{ props.h1 }}</h1>
+      <h1 class="mb-4 text-xl font-semibold">{{ props.h1 }}</h1>
       <slot />
     </div>
   </main>
