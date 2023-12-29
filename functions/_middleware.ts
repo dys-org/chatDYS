@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-import { HTTPError } from '../src/common/exceptions.js';
+import { HTTPError } from '../src/utils/exceptions.js';
 
 interface Env {
   VITE_AUTH0_DOMAIN: string;

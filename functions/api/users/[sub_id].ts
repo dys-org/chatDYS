@@ -1,6 +1,6 @@
 import { type User } from '@auth0/auth0-vue';
 
-import { HTTPError } from '../../../src/common/exceptions.js';
+import { HTTPError } from '../../../src/utils/exceptions.js';
 interface Env {
   DB: D1Database;
 }
