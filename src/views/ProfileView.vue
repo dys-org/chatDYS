@@ -16,7 +16,7 @@ const { isAuthenticated, user, isLoading, idTokenClaims } = useAuth0();
       <img :src="user?.picture" :alt="user?.name" class="mt-6 size-24 rounded-full" />
       <h2 class="mt-2 text-2xl">{{ user?.name }}</h2>
       <h3 class="text-lg text-white/60">{{ user?.email }}</h3>
-      <pre class="hljs mt-6 max-w-lg overflow-auto p-3 text-xs"><code>{{ user }}</code></pre>
+      <pre class="mt-6 max-w-lg overflow-auto bg-gray-950 p-3 text-xs"><code>{{ user }}</code></pre>
     </div>
   </OneColumn>
 </template>
