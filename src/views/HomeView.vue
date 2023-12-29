@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-
-import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
 </script>
 
 <template>
@@ -12,7 +10,7 @@ import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
           class="mt-8 flex flex-wrap items-center justify-center gap-4 text-5xl font-semibold tracking-tight text-white sm:text-6xl"
         >
           Move faster with
-          <ChatLogoSVG class="inline-block h-9 sm:h-12" />
+          <img src="@/assets/img/chat-dys.svg" alt="chat DYS" class="inline-block h-9 sm:h-12" />
         </h2>
         <p class="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
           Slowness anywhere justifies slowness everywhere.

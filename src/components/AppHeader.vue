@@ -2,8 +2,6 @@
 import { RouterLink } from 'vue-router';
 import { useAuth0 } from '@auth0/auth0-vue';
 
-import ChatLogoSVG from '@/components/ChatLogoSVG.vue';
-
 import LoginButton from './LoginButton.vue';
 const { isAuthenticated, isLoading } = useAuth0();
 </script>
@@ -14,7 +12,11 @@ const { isAuthenticated, isLoading } = useAuth0();
       <!-- DYS logo -->
       <RouterLink to="/">
         <span class="sr-only">Home</span>
-        <ChatLogoSVG class="h-10 p-1.5 text-gray-300" />
+        <img
+          src="@/assets/img/chat-dys.svg"
+          alt="chat DYS"
+          class="h-10 p-1.5 opacity-80 transition-opacity hover:opacity-100"
+        />
       </RouterLink>
       <Transition
         enter-from-class="opacity-0"
