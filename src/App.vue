@@ -2,11 +2,16 @@
 import { watch } from 'vue';
 import { RouterView } from 'vue-router';
 import { useAuth0 } from '@auth0/auth0-vue';
+import { DToastList } from 'deez-components';
+
+import { useToastStore } from '@/stores/toast';
 
 import AppHeader from './components/AppHeader.vue';
 import PageLoader from './components/PageLoader.vue';
 import http from './utils/http';
+
 const { isAuthenticated, user, isLoading } = useAuth0();
+const toastStore = useToastStore();
 
 async function createNewUser() {
   await http.post(`/api/users/${user.value?.sub}`, {
@@ -41,5 +46,6 @@ watch(
     <PageLoader :show="isLoading" />
     <AppHeader />
     <RouterView />
+    <DToastList :notifications="toastStore.notifications" @dismiss="toastStore.remove" />
   </div>
 </template>
