@@ -8,10 +8,12 @@ import ChatSettings from '@/components/ChatSettings.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
+import { useToastStore } from '@/stores/toast';
 
 // import { useTokenizeStore } from '@/stores/tokenize';
 import IconClipboardCheck from '~icons/majesticons/clipboard-check-line';
 import IconClipboard from '~icons/majesticons/clipboard-line';
+const toastStore = useToastStore();
 
 const md: MarkdownIt = new MarkdownIt({
   highlight: (code, language) => {
@@ -34,7 +36,6 @@ const md: MarkdownIt = new MarkdownIt({
 const chatStore = useChatStore();
 // const tokenizeStore = useTokenizeStore();
 
-const loading = ref(false);
 const copiedIndex = ref<number | null>(null);
 
 async function handleSend() {
@@ -42,9 +43,14 @@ async function handleSend() {
     alert('You have not added any text to analyze.');
     return;
   }
-  loading.value = true;
-  await chatStore.sendPrompt().catch(console.error);
-  loading.value = false;
+  await chatStore.sendPrompt().catch((err) => {
+    console.error(err);
+    toastStore.add({
+      variant: 'error',
+      title: 'Failed to send prompt',
+      description: err.message,
+    });
+  });
 }
 async function handleCopy(content: string, idx: number) {
   try {
@@ -67,9 +73,7 @@ async function scrollToBottom() {
 
 watch(
   () => chatStore.textStream,
-  (newValue, oldValue) => {
-    scrollToBottom();
-  },
+  () => scrollToBottom(),
 );
 
 chatStore.$subscribe((mutation, state) => {

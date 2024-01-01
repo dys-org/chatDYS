@@ -4,7 +4,6 @@ import { defineStore } from 'pinia';
 
 import { auth0 } from '@/main';
 
-// import { useTokenizeStore } from './tokenize';
 export interface Message {
   role: 'user' | 'system' | 'assistant';
   content: string;
@@ -25,8 +24,6 @@ export const useChatStore = defineStore('chat', () => {
   const textStream = ref('');
   const userMessage = ref('');
 
-  // const tokenizeStore = useTokenizeStore();
-
   function addMessage(role: Message['role'], content: string) {
     messages.value.push({ role, content });
   }
@@ -35,8 +32,8 @@ export const useChatStore = defineStore('chat', () => {
       { role: 'system', content: systemMessage.value || 'You are a helpful assistant.' },
       ...messages.value,
     ];
+    // TODO use to check # of tokens used with tokenize endpoint
     // const str = prompt.value.map((m) => m.content).join('');
-    // tokenizeStore.checkTokens(str);
   }
   async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
     const token = await auth0.getAccessTokenSilently();
@@ -71,27 +68,19 @@ export const useChatStore = defineStore('chat', () => {
     addMessage('user', userMessage.value);
     createPrompt();
     userMessage.value = '';
-    loading.value = true;
 
-    // const params: OpenAI.ChatCompletionCreateParams = {
-    const params = {
+    loading.value = true;
+    const params: OpenAI.ChatCompletionCreateParams = {
       model: model.value,
       messages: prompt.value,
       temperature: temperature.value,
       max_tokens: maxTokens.value,
     };
-    try {
-      await streamResponse(params);
-    } catch (err: any) {
-      console.error(err);
-    } finally {
-      loading.value = false;
-    }
+    await streamResponse(params);
+    loading.value = false;
   }
 
   return {
-    addMessage,
-    createPrompt,
     loading,
     maxTokens,
     messages,
