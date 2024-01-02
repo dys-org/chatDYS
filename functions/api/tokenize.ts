@@ -1,4 +1,4 @@
-import { encode } from 'gpt-tokenizer';
+import { encodingForModel } from 'js-tiktoken';
 
 import { type TokenizeRequest } from '../../src/composables/useTokenize.js';
 
@@ -7,7 +7,8 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
 
   if (stringToTokenize == null) throw new Error('No string was provided');
 
-  const encoded = encode(stringToTokenize);
+  const encoder = encodingForModel('gpt-4');
+  const encoded = encoder.encode(stringToTokenize);
   const length = encoded.length;
   console.log('Token count is ' + length);
 
