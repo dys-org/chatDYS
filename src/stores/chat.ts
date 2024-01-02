@@ -35,8 +35,8 @@ export const useChatStore = defineStore('chat', () => {
       { role: 'system', content: systemMessage.value || 'You are a helpful assistant.' },
       ...messages.value,
     ];
-    const str = prompt.value.map((m) => m.content).join('');
-    checkTokens(str);
+    const stringToTokenize = prompt.value.map((m) => m.content).join('');
+    checkTokens({ stringToTokenize, model: model.value });
   }
   async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
     const token = await auth0.getAccessTokenSilently();
