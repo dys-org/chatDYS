@@ -10,9 +10,10 @@ import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
 import { useToastStore } from '@/stores/toast';
 
-// import { useTokenizeStore } from '@/stores/tokenize';
 import IconClipboardCheck from '~icons/majesticons/clipboard-check-line';
 import IconClipboard from '~icons/majesticons/clipboard-line';
+
+const chatStore = useChatStore();
 const toastStore = useToastStore();
 
 const md: MarkdownIt = new MarkdownIt({
@@ -32,9 +33,6 @@ const md: MarkdownIt = new MarkdownIt({
     return '<pre class="hljs"><code>' + md.utils.escapeHtml(code) + '</code></pre>';
   },
 });
-
-const chatStore = useChatStore();
-// const tokenizeStore = useTokenizeStore();
 
 const copiedIndex = ref<number | null>(null);
 
@@ -136,9 +134,7 @@ onMounted(() => {
         </div>
         <div v-if="chatStore.loading" class="mt-6 flex w-full flex-col items-center gap-2">
           <DSpinner />
-          <!-- <div v-if="tokenizeStore.tokenLength" class="text-xs">
-            {{ tokenizeStore.tokenLength }} tokens
-          </div> -->
+          <div v-if="chatStore.tokenLength" class="text-xs">{{ chatStore.tokenLength }} tokens</div>
         </div>
         <!-- TODO make this a component -->
         <div

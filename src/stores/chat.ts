@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
+import { useTokenize } from '@/composables/useTokenize';
 import { auth0 } from '@/main';
 
 export interface Message {
@@ -24,6 +25,8 @@ export const useChatStore = defineStore('chat', () => {
   const textStream = ref('');
   const userMessage = ref('');
 
+  const { checkTokens, tokenLength } = useTokenize();
+
   function addMessage(role: Message['role'], content: string) {
     messages.value.push({ role, content });
   }
@@ -32,8 +35,8 @@ export const useChatStore = defineStore('chat', () => {
       { role: 'system', content: systemMessage.value || 'You are a helpful assistant.' },
       ...messages.value,
     ];
-    // TODO use to check # of tokens used with tokenize endpoint
-    // const str = prompt.value.map((m) => m.content).join('');
+    const str = prompt.value.map((m) => m.content).join('');
+    checkTokens(str);
   }
   async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
     const token = await auth0.getAccessTokenSilently();
@@ -91,6 +94,7 @@ export const useChatStore = defineStore('chat', () => {
     systemMessage,
     temperature,
     textStream,
+    tokenLength, // from useTokenize
     userMessage,
   };
 });
