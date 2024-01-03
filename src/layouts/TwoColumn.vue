@@ -35,7 +35,10 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
         </slot>
         <slot name="main" />
         <div class="absolute right-0 top-0 hidden justify-center pt-3.5 lg:flex">
-          <DButton class="rounded-r-none px-0" @click="isSidebarCollapsed = !isSidebarCollapsed">
+          <DButton
+            class="rounded-r-none px-0 dark:bg-gray-600 hover:dark:bg-gray-500"
+            @click="isSidebarCollapsed = !isSidebarCollapsed"
+          >
             <span class="sr-only">{{ isSidebarCollapsed ? 'Expand' : 'Collapse' }} Settings</span>
             <IconChevronRight
               :class="['size-5', isSidebarCollapsed && 'rotate-180']"
@@ -49,11 +52,18 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
     <!-- DESKTOP STATIC LEFT COLUMN -->
     <aside
       :class="[
-        'relative hidden h-full transform-gpu overflow-auto border-l border-gray-700 bg-gray-950/20 transition-[width_transform] duration-300 lg:block',
+        'scrollbar-x-hide relative hidden h-full transform-gpu overflow-auto border-l border-gray-700 bg-gray-950/20 transition-[width_transform] duration-300 lg:block',
         isSidebarCollapsed ? 'w-0 translate-x-full' : 'w-72',
       ]"
     >
-      <slot name="side" />
+      <Transition
+        enter-from-class="opacity-0"
+        leave-to-class="opacity-0"
+        enter-active-class="transition-opacity delay-200 duration-300"
+        leave-active-class="transition-opacity duration-100"
+      >
+        <slot v-if="!isSidebarCollapsed" name="side" />
+      </Transition>
     </aside>
   </div>
 

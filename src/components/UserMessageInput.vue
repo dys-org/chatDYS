@@ -27,7 +27,7 @@ const message = computed({
 </script>
 
 <template>
-  <div class="mx-auto w-full max-w-[72ch] overflow-y-scroll">
+  <div class="scrollbar-hide mx-auto w-full max-w-[72ch] overflow-y-scroll">
     <DTextarea
       id="userMessage"
       v-model="message"
