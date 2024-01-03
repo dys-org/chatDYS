@@ -4,7 +4,7 @@ async function http<T>(path: string, config: RequestInit): Promise<T> {
   const token = await auth0.getAccessTokenSilently();
   const req = new Request(path, { headers: { Authorization: 'Bearer ' + token }, ...config });
   const res = await fetch(req);
-  // may error if there is no body, return empty array
+  // if no body, return empty object
   const data = await res.json().catch(() => ({}));
   if (!res.ok) return Promise.reject(data);
   return data;
