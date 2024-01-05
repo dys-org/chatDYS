@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, ref, watch } from 'vue';
-import { DSpinner } from 'deez-components';
+import { DButton, DSpinner } from 'deez-components';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
 
-import ChatSettings from '@/components/ChatSettings.vue';
+import ChatSidebar from '@/components/ChatSidebar.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
@@ -116,9 +116,9 @@ onMounted(() => {
               v-html="md.render(message.content)"
             />
             <div>
-              <button
+              <DButton
                 v-if="message.role === 'assistant'"
-                class="-mt-1 p-1 text-white/60 transition-colors hover:text-white"
+                class="-mt-1 p-1 hover:text-white dark:bg-transparent dark:text-white/60 dark:hover:bg-white/5"
                 @click="handleCopy(message.content, i)"
               >
                 <span class="sr-only">{{ copiedIndex === i ? 'Copied' : 'Copy' }}</span>
@@ -128,7 +128,7 @@ onMounted(() => {
                   aria-hidden="true"
                 />
                 <IconClipboard v-else class="size-5" aria-hidden="true" />
-              </button>
+              </DButton>
             </div>
           </div>
         </div>
@@ -150,12 +150,12 @@ onMounted(() => {
               v-html="md.render(chatStore.textStream)"
             />
             <div>
-              <button
-                class="-mt-1 p-1 text-white/60 transition-colors hover:text-white disabled:pointer-events-none disabled:text-white/30"
+              <DButton
+                class="-mt-1 p-1 hover:text-white dark:bg-transparent dark:text-white/60 dark:hover:bg-white/5"
                 disabled
               >
                 <IconClipboard class="size-5" aria-hidden="true" />
-              </button>
+              </DButton>
             </div>
           </div>
         </div>
@@ -170,7 +170,7 @@ onMounted(() => {
 
     <!-- SETTINGS -->
     <template #side>
-      <ChatSettings />
+      <ChatSidebar />
     </template>
   </TwoColumn>
 </template>

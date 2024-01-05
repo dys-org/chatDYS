@@ -4,7 +4,7 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 import { useStorage } from '@vueuse/core';
 import { DButton } from 'deez-components';
 
-import IconChevronRight from '~icons/majesticons/chevron-right';
+import IconPanelRight from '~icons/lucide/panel-right-close';
 import IconClose from '~icons/majesticons/close';
 import IconCog from '~icons/majesticons/settings-cog';
 
@@ -36,11 +36,11 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
         <slot name="main" />
         <div class="absolute right-0 top-0 hidden justify-center pt-3.5 lg:flex">
           <DButton
-            class="rounded-r-none px-0 dark:bg-gray-600 hover:dark:bg-gray-500"
+            class="rounded-r-none p-2 dark:bg-gray-700 hover:dark:bg-gray-600"
             @click="isSidebarCollapsed = !isSidebarCollapsed"
           >
             <span class="sr-only">{{ isSidebarCollapsed ? 'Expand' : 'Collapse' }} Settings</span>
-            <IconChevronRight
+            <IconPanelRight
               :class="['size-5', isSidebarCollapsed && 'rotate-180']"
               aria-hidden="true"
             />
