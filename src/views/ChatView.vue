@@ -74,14 +74,16 @@ watch(
   () => scrollToBottom(),
 );
 
+const CHAT_STORAGE_KEY = 'chatDYS.currentChat';
+
 chatStore.$subscribe((mutation, state) => {
   // persist the whole state to the local storage whenever it changes
-  localStorage.setItem('chat', JSON.stringify(state));
+  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(state));
 });
 
 onBeforeMount(() => {
   // load the persisted state from the local storage
-  const persistedState = localStorage.getItem('chat');
+  const persistedState = localStorage.getItem(CHAT_STORAGE_KEY);
   if (persistedState) {
     chatStore.$patch(JSON.parse(persistedState));
   }

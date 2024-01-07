@@ -16,7 +16,7 @@ const props = withDefaults(
 );
 
 const sidebarOpen = ref(false);
-const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
+const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
 </script>
 
 <template>
@@ -37,11 +37,11 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
         <div class="absolute right-0 top-0 hidden justify-center pt-3.5 lg:flex">
           <DButton
             class="rounded-r-none p-2 dark:bg-gray-700 hover:dark:bg-gray-600"
-            @click="isSidebarCollapsed = !isSidebarCollapsed"
+            @click="isSidebarExpanded = !isSidebarExpanded"
           >
-            <span class="sr-only">{{ isSidebarCollapsed ? 'Expand' : 'Collapse' }} Settings</span>
+            <span class="sr-only">{{ isSidebarExpanded ? 'Collapse' : 'Expand' }} Settings</span>
             <IconPanelRight
-              :class="['size-5', isSidebarCollapsed && 'rotate-180']"
+              :class="['size-5', !isSidebarExpanded && 'rotate-180']"
               aria-hidden="true"
             />
           </DButton>
@@ -53,7 +53,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
     <aside
       :class="[
         'scrollbar-x-hide relative hidden h-full transform-gpu overflow-auto border-l border-gray-700 bg-gray-950/20 transition-[width_transform] duration-300 lg:block',
-        isSidebarCollapsed ? 'w-0 translate-x-full' : 'w-72',
+        !isSidebarExpanded ? 'w-0 translate-x-full' : 'w-72',
       ]"
     >
       <Transition
@@ -62,7 +62,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false);
         enter-active-class="transition-opacity delay-200 duration-300"
         leave-active-class="transition-opacity duration-100"
       >
-        <slot v-if="!isSidebarCollapsed" name="side" />
+        <slot v-if="isSidebarExpanded" name="side" />
       </Transition>
     </aside>
   </div>

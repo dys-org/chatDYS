@@ -1,13 +1,16 @@
 <script setup lang="ts">
+import { useStorage } from '@vueuse/core';
 import { DButton, DCollapse, DRange, DSelect, DTextarea } from 'deez-components';
 
 import { MODELS, useChatStore } from '@/stores/chat';
 
 const chatStore = useChatStore();
+
+const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
 </script>
 
 <template>
-  <DCollapse button-text="Settings">
+  <DCollapse v-model:defaultOpen="isExpanded" button-text="Settings">
     <div class="flex flex-col gap-8 px-4 pb-6 pt-3">
       <DSelect id="model" v-model="chatStore.model" label="Model">
         <option value="" disabled>Choose an LLM</option>

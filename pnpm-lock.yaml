@@ -18,8 +18,8 @@ dependencies:
     specifier: ^2.8.5
     version: 2.8.5
   deez-components:
-    specifier: ^0.3.16
-    version: 0.3.16(@headlessui/vue@1.7.16)(@tailwindcss/forms@0.5.7)(tailwind-merge@2.2.0)(tailwindcss@3.4.0)(vue-router@4.2.5)(vue@3.3.13)
+    specifier: ^0.3.17
+    version: 0.3.17(@headlessui/vue@1.7.16)(@tailwindcss/forms@0.5.7)(tailwind-merge@2.2.0)(tailwindcss@3.4.0)(vue-router@4.2.5)(vue@3.3.13)
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
@@ -2311,8 +2311,8 @@ packages:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
     dev: true
 
-  /deez-components@0.3.16(@headlessui/vue@1.7.16)(@tailwindcss/forms@0.5.7)(tailwind-merge@2.2.0)(tailwindcss@3.4.0)(vue-router@4.2.5)(vue@3.3.13):
-    resolution: {integrity: sha512-3IwgoeKI+RHhXQcEiMyxLgs8kGDGDFdl5C7fA3WP0uOBKWH82Sm6/gxP30N0gdbRb9dDz8AKTS9m3Osbbveg4Q==}
+  /deez-components@0.3.17(@headlessui/vue@1.7.16)(@tailwindcss/forms@0.5.7)(tailwind-merge@2.2.0)(tailwindcss@3.4.0)(vue-router@4.2.5)(vue@3.3.13):
+    resolution: {integrity: sha512-/ELHzaCQ+BTbGRTxSgoT+/xruW77E2P9jKtAH5tT8SnJN7I2x3lcqctov+Y+MN76bPGQG6gG/HtFplt6KbHWEA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@headlessui/vue': ^1.7.16
