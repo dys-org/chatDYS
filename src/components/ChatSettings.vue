@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DCollapse, DRange, DSelect, DTextarea } from 'deez-components';
+import { DButton, DCollapse, DRange, DSelect, DTextarea } from 'deez-components';
 
 import { MODELS, useChatStore } from '@/stores/chat';
 
@@ -45,9 +45,9 @@ const chatStore = useChatStore();
         :rows="6"
         placeholder="You are a helpful assistant."
       />
-      <!-- <div>
-            <DButton @click="chatStore.$reset">Clear</DButton>
-          </div> -->
+      <div>
+        <DButton @click="chatStore.$reset">Clear</DButton>
+      </div>
     </div>
   </DCollapse>
 </template>
