@@ -52,7 +52,7 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
     <!-- DESKTOP STATIC LEFT COLUMN -->
     <aside
       :class="[
-        'scrollbar-x-hide relative hidden h-full transform-gpu overflow-auto border-l border-gray-700 bg-gray-950/20 transition-[width_transform] duration-300 lg:block',
+        'relative hidden h-full transform-gpu overflow-auto border-l border-gray-700 bg-gray-950/20 transition-[width_transform] duration-300 lg:block',
         !isSidebarExpanded ? 'w-0 translate-x-full' : 'w-72',
       ]"
     >

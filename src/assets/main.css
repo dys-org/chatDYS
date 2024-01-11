@@ -9,17 +9,12 @@
 }
 
 @layer utilities {
+  /* Safari & Chrome */
   .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Chrome */
+    display: none;
   }
+  /* Firefox */
   .scrollbar-hide {
-    -ms-overflow-style: none; /* Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-  .scrollbar-x-hide::-webkit-scrollbar {
-    height: 0; /* Chrome */
-  }
-  .scrollbar-x-hide {
-    overflow-x: hidden; /* Edge and Firefox */
+    scrollbar-width: none;
   }
 }
