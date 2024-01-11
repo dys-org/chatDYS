@@ -7,7 +7,8 @@ export interface TokenizeRequest {
   stringToTokenize: string;
   model?: TiktokenModel;
 }
-export interface TokenizeResponse {
+
+interface TokenizeResponse {
   tokens: number;
 }
 

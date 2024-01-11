@@ -4,10 +4,20 @@ import { defineStore } from 'pinia';
 
 import { useTokenize } from '@/composables/useTokenize';
 import { auth0 } from '@/main';
+import http from '@/utils/http';
 
 export interface Message {
   role: 'user' | 'system' | 'assistant';
   content: string;
+}
+export interface ConversationDetail {
+  id: number;
+  user_id: string;
+  model: Model;
+  temperature: number;
+  max_tokens: number;
+  system_message: string;
+  messages: string;
 }
 
 export const MODELS = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-1106-preview'] as const;
@@ -18,7 +28,6 @@ export const useChatStore = defineStore('chat', () => {
   const maxTokens = ref(1024);
   const messages = ref<Message[]>([]);
   const model = ref<Model>('gpt-4');
-  const preset = ref('');
   const prompt = ref<Message[]>([]);
   const systemMessage = ref('');
   const temperature = ref(0);
@@ -83,12 +92,21 @@ export const useChatStore = defineStore('chat', () => {
     loading.value = false;
   }
 
+  async function fetchConversation(id: number) {
+    loading.value = true;
+    const convo = await http.get<ConversationDetail>(`/api/conversations/${id}`);
+    messages.value = JSON.parse(convo.messages);
+    model.value = convo.model;
+    systemMessage.value = convo.system_message;
+    temperature.value = convo.temperature;
+    loading.value = false;
+  }
+
   return {
     loading,
     maxTokens,
     messages,
     model,
-    preset,
     prompt,
     sendPrompt,
     systemMessage,
@@ -96,5 +114,6 @@ export const useChatStore = defineStore('chat', () => {
     textStream,
     tokenLength, // from useTokenize
     userMessage,
+    fetchConversation,
   };
 });

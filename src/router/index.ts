@@ -10,48 +10,45 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      // meta: { requiresAuth: false },
     },
     {
-      path: '/chat',
+      path: '/chat/:id?',
       name: 'chat',
       component: () => import('../views/ChatView.vue'),
-      // meta: { requiresAuth: true },
       beforeEnter: authGuard,
     },
     {
       path: '/profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
-      // meta: { requiresAuth: true },
       beforeEnter: authGuard,
     },
     {
       path: '/vision',
       name: 'vision',
       component: () => import('../views/VisionView.vue'),
-      // meta: { requiresAuth: true },
       beforeEnter: authGuard,
     },
     {
       path: '/callback',
       name: 'callback',
       component: () => import('../views/CallbackView.vue'),
-      // meta: { requiresAuth: false },
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-      // meta: { requiresAuth: false },
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'notFound',
       component: () => import('../views/NotFoundView.vue'),
-      // meta: { requiresAuth: false },
     },
   ],
+  // scrollBehavior(to, from, savedPosition) {
+  //   if (savedPosition) return savedPosition;
+  //   else return { top: 0 };
+  // },
 });
 
 export default router;

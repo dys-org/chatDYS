@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-  <div class="h-full overflow-hidden bg-radial-glow">
+  <div class="h-full bg-radial-glow">
     <div class="grid h-full place-content-center px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
       <div class="max-w-2xl text-center">
         <h2

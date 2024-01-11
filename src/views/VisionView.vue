@@ -8,14 +8,9 @@ import http from '@/utils/http';
 
 const toastStore = useToastStore();
 
-const { getAccessTokenSilently } = useAuth0();
-
 async function getUsers() {
-  const token = await getAccessTokenSilently();
   try {
-    const data = await http.get('/api/users', {
-      headers: { Authorization: 'Bearer ' + token },
-    });
+    const data = await http.get('/api/users');
     console.log(data);
   } catch (err: any) {
     console.error(err);
@@ -26,12 +21,26 @@ async function getUsers() {
     });
   }
 }
+async function getConvos() {
+  try {
+    const data = await http.get('/api/conversations');
+    console.log(data);
+  } catch (err: any) {
+    console.error(err);
+    toastStore.add({
+      variant: 'error',
+      title: 'Failed to get conversations',
+      description: err.message,
+    });
+  }
+}
 </script>
 
 <template>
   <TwoColumn h1="Vision">
     <template #main>
       <DButton @click="getUsers">Get Users</DButton>
+      <DButton @click="getConvos">Get Conversations</DButton>
     </template>
     <template #side> </template>
   </TwoColumn>

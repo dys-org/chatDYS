@@ -2,11 +2,27 @@
 import { useStorage } from '@vueuse/core';
 import { DButton, DCollapse, DRange, DSelect, DTextarea } from 'deez-components';
 
+import router from '@/router';
 import { MODELS, useChatStore } from '@/stores/chat';
+import { useUserStore } from '@/stores/user';
+import http from '@/utils/http';
 
 const chatStore = useChatStore();
+const userStore = useUserStore();
 
 const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
+
+async function saveChat() {
+  const post: any = await http.post('/api/conversations', {
+    user_id: userStore.user?.id,
+    model: chatStore.model,
+    temperature: chatStore.temperature,
+    max_tokens: chatStore.maxTokens,
+    system_message: chatStore.systemMessage,
+    messages: JSON.stringify(chatStore.messages),
+  });
+  router.push({ name: 'chat', params: { id: post.meta.last_row_id } });
+}
 </script>
 
 <template>
@@ -48,8 +64,9 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
         :rows="6"
         placeholder="You are a helpful assistant."
       />
-      <div>
-        <DButton @click="chatStore.$reset">Clear</DButton>
+      <div class="flex justify-between">
+        <DButton danger @click="chatStore.$reset">Clear</DButton>
+        <DButton @click="saveChat">Save</DButton>
       </div>
     </div>
   </DCollapse>

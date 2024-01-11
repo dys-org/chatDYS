@@ -8,4 +8,4 @@ CREATE TABLE Users (
 );
 
 -- Create an index on the sub_id column for faster lookups
-CREATE INDEX idx_users_sub_id ON users (sub_id);
+CREATE INDEX idx_users_sub_id ON Users (sub_id);

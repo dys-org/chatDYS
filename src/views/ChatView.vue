@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, ref, watch } from 'vue';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { DButton, DSpinner } from 'deez-components';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
@@ -12,6 +13,8 @@ import { useToastStore } from '@/stores/toast';
 
 import IconClipboardCheck from '~icons/majesticons/clipboard-check-line';
 import IconClipboard from '~icons/majesticons/clipboard-line';
+
+const route = useRoute();
 
 const chatStore = useChatStore();
 const toastStore = useToastStore();
@@ -69,6 +72,10 @@ async function scrollToBottom() {
   }
 }
 
+function logId(id: string) {
+  console.log(id || 'no id');
+}
+
 watch(
   () => chatStore.textStream,
   () => scrollToBottom(),
@@ -86,6 +93,17 @@ onBeforeMount(() => {
   const persistedState = localStorage.getItem(CHAT_STORAGE_KEY);
   if (persistedState) {
     chatStore.$patch(JSON.parse(persistedState));
+  }
+  // fetch the chat if there is an id in the route params
+  logId(route.params.id as string);
+});
+
+onBeforeRouteUpdate((to, from) => {
+  // fetch the chat if there is an id in the route params
+  if (to.params.id) {
+    const id = typeof to.params.id === 'string' ? to.params.id : to.params.id[0];
+    chatStore.$reset();
+    chatStore.fetchConversation(parseInt(id));
   }
 });
 

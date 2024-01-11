@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS Conversations;
+
+CREATE TABLE Conversations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  model TEXT NOT NULL,
+  temperature INTEGER NOT NULL,
+  max_tokens INTEGER NOT NULL,
+  system_message TEXT NOT NULL,
+  messages TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES Users (id)
+);

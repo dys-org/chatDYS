@@ -1,25 +1,20 @@
 <script setup lang="ts">
-import { watch } from 'vue';
+import { computed, watch } from 'vue';
 import { RouterView } from 'vue-router';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { DToastList } from 'deez-components';
 
 import { useToastStore } from '@/stores/toast';
+import { useUserStore } from '@/stores/user';
 
 import AppHeader from './components/AppHeader.vue';
 import PageLoader from './components/PageLoader.vue';
-import http from './utils/http';
 
 const { isAuthenticated, user, isLoading } = useAuth0();
 const toastStore = useToastStore();
+const userStore = useUserStore();
 
-async function createNewUser() {
-  await http.post(`/api/users/${user.value?.sub}`, {
-    sub: user.value?.sub,
-    name: user.value?.name,
-    email: user.value?.email,
-  });
-}
+const showLoader = computed(() => isLoading.value);
 
 watch(
   () => !isLoading.value && isAuthenticated.value,
@@ -28,12 +23,16 @@ watch(
       // check database for user
       if (!user.value) return;
       try {
-        await http.get(`api/users/${user.value.sub}`);
+        await userStore.fetchUser(user.value.sub ?? '');
       } catch (err: any) {
         console.error(err.message);
         // if user not found, create new user
         if (err.status === 404) {
-          createNewUser();
+          userStore.createNewUser({
+            sub_id: user.value.sub ?? '',
+            name: user.value.name ?? '',
+            email: user.value.email ?? '',
+          });
         }
       }
     }
@@ -43,7 +42,7 @@ watch(
 
 <template>
   <div class="relative flex h-screen flex-1 flex-col overflow-hidden">
-    <PageLoader :show="isLoading" />
+    <PageLoader :show="showLoader" />
     <AppHeader />
     <RouterView />
     <DToastList :notifications="toastStore.notifications" @dismiss="toastStore.remove" />
