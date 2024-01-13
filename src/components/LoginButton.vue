@@ -13,6 +13,8 @@ function logoutAndReturn() {
 </script>
 
 <template>
-  <DButton v-if="isAuthenticated" @click="logoutAndReturn">Logout</DButton>
+  <DButton v-if="isAuthenticated" variant="link" class="px-0" @click="logoutAndReturn">
+    Logout
+  </DButton>
   <DButton v-else variant="primary" @click="login">Login</DButton>
 </template>

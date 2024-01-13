@@ -65,7 +65,7 @@ async function saveChat() {
         placeholder="You are a helpful assistant."
       />
       <div class="flex justify-between">
-        <DButton danger @click="chatStore.$reset">Clear</DButton>
+        <!-- <DButton danger @click="chatStore.$reset">Clear</DButton> -->
         <DButton @click="saveChat">Save</DButton>
       </div>
     </div>

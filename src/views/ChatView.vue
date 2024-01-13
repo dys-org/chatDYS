@@ -72,8 +72,10 @@ async function scrollToBottom() {
   }
 }
 
-function logId(id: string) {
-  console.log(id || 'no id');
+async function fetchConversation(paramsId: string | string[]) {
+  const id = typeof paramsId === 'string' ? paramsId : paramsId[0];
+  chatStore.$reset();
+  await chatStore.fetchConversation(parseInt(id));
 }
 
 watch(
@@ -81,36 +83,29 @@ watch(
   () => scrollToBottom(),
 );
 
-const CHAT_STORAGE_KEY = 'chatDYS.currentChat';
-
-chatStore.$subscribe((mutation, state) => {
-  // persist the whole state to the local storage whenever it changes
-  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(state));
-});
+watch(
+  () => chatStore.messages,
+  () => scrollToBottom(),
+);
 
 onBeforeMount(() => {
-  // load the persisted state from the local storage
-  const persistedState = localStorage.getItem(CHAT_STORAGE_KEY);
-  if (persistedState) {
-    chatStore.$patch(JSON.parse(persistedState));
-  }
   // fetch the chat if there is an id in the route params
-  logId(route.params.id as string);
+  if (route.params.id) {
+    fetchConversation(route.params.id);
+    return;
+  }
 });
 
 onBeforeRouteUpdate((to, from) => {
   // fetch the chat if there is an id in the route params
   if (to.params.id) {
-    const id = typeof to.params.id === 'string' ? to.params.id : to.params.id[0];
-    chatStore.$reset();
-    chatStore.fetchConversation(parseInt(id));
+    fetchConversation(to.params.id);
   }
 });
 
 onMounted(() => {
   const input: HTMLElement | null = document.querySelector('#userMessage');
   if (input) input.focus();
-  scrollToBottom();
 });
 </script>
 

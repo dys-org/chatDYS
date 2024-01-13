@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, onBeforeMount, watch } from 'vue';
 import { RouterView } from 'vue-router';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { DToastList } from 'deez-components';
 
+import { useChatStore } from '@/stores/chat';
 import { useToastStore } from '@/stores/toast';
 import { useUserStore } from '@/stores/user';
 
@@ -11,6 +12,8 @@ import AppHeader from './components/AppHeader.vue';
 import PageLoader from './components/PageLoader.vue';
 
 const { isAuthenticated, user, isLoading } = useAuth0();
+
+const chatStore = useChatStore();
 const toastStore = useToastStore();
 const userStore = useUserStore();
 
@@ -38,6 +41,21 @@ watch(
     }
   },
 );
+
+const CHAT_STORAGE_KEY = 'chatDYS.currentChat';
+
+chatStore.$subscribe((mutation, state) => {
+  // persist the whole state to the local storage whenever it changes
+  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(state));
+});
+
+onBeforeMount(() => {
+  // otherwise load the persisted state from the local storage
+  const persistedState = localStorage.getItem(CHAT_STORAGE_KEY);
+  if (persistedState) {
+    chatStore.$patch(JSON.parse(persistedState));
+  }
+});
 </script>
 
 <template>
