@@ -27,7 +27,7 @@ export const useUserStore = defineStore('user', () => {
       console.error('sub_id given to fetchUser is empty');
       return;
     }
-    user.value = await http.get(`api/users/${sub_id}`);
+    user.value = await http.get(`/api/users/${sub_id}`);
   }
 
   async function createNewUser(userInfo: { sub_id: string; email: string; name: string }) {
