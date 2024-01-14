@@ -14,17 +14,18 @@ async function get<T>(path: string, config?: RequestInit): Promise<T> {
   const init = { method: 'GET', ...config };
   return await http<T>(path, init);
 }
-
 async function post<T, U>(path: string, body: T, config?: RequestInit): Promise<U> {
   const init = { method: 'POST', body: JSON.stringify(body), ...config };
   return await http<U>(path, init);
 }
-
 async function put<T, U>(path: string, body: T, config?: RequestInit): Promise<U> {
   const init = { method: 'PUT', body: JSON.stringify(body), ...config };
   return await http<U>(path, init);
 }
-
+async function patch<T, U>(path: string, body: T, config?: RequestInit): Promise<U> {
+  const init = { method: 'PATCH', body: JSON.stringify(body), ...config };
+  return await http<U>(path, init);
+}
 // delete is a reserved word in javascript
 async function remove<T>(path: string, config?: RequestInit): Promise<T> {
   const init = { method: 'DELETE', ...config };
