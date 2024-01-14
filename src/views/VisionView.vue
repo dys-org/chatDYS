@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useAuth0 } from '@auth0/auth0-vue';
 import { DButton } from 'deez-components';
 
 import TwoColumn from '@/layouts/TwoColumn.vue';

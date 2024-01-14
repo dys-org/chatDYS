@@ -10,7 +10,7 @@ export interface Message {
   role: 'user' | 'system' | 'assistant';
   content: string;
 }
-export interface ConversationDetail {
+export interface Conversation {
   id: number;
   user_id: string;
   model: Model;
@@ -94,7 +94,7 @@ export const useChatStore = defineStore('chat', () => {
 
   async function fetchConversation(id: number) {
     loading.value = true;
-    const convo = await http.get<ConversationDetail>(`/api/conversations/${id}`);
+    const convo = await http.get<Conversation>(`/api/conversations/${id}`);
     messages.value = JSON.parse(convo.messages);
     model.value = convo.model;
     systemMessage.value = convo.system_message;

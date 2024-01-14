@@ -12,7 +12,7 @@ interface User {
   updated_at: Date;
 }
 
-export interface Conversation {
+interface ConversationPreview {
   id: number;
   user_id: string;
   title: string;
@@ -20,7 +20,7 @@ export interface Conversation {
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null);
-  const conversations = ref<Conversation[] | null>(null);
+  const conversations = ref<ConversationPreview[] | null>(null);
 
   async function fetchUser(sub_id: string) {
     if (sub_id === '') {
