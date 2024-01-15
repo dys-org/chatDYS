@@ -72,10 +72,10 @@ async function scrollToBottom() {
   }
 }
 
-async function fetchConversation(paramsId: string | string[]) {
+async function fetchChat(paramsId: string | string[]) {
   const id = typeof paramsId === 'string' ? paramsId : paramsId[0];
   chatStore.$reset();
-  await chatStore.fetchConversation(parseInt(id));
+  await chatStore.fetchChat(parseInt(id));
 }
 
 watch(
@@ -91,7 +91,7 @@ watch(
 onBeforeMount(() => {
   // fetch the chat if there is an id in the route params
   if (route.params.id) {
-    fetchConversation(route.params.id);
+    fetchChat(route.params.id);
     return;
   }
 });
@@ -99,7 +99,7 @@ onBeforeMount(() => {
 onBeforeRouteUpdate((to, from) => {
   // fetch the chat if there is an id in the route params
   if (to.params.id) {
-    fetchConversation(to.params.id);
+    fetchChat(to.params.id);
   }
 });
 

@@ -6,10 +6,6 @@ import { useTokenize } from '@/composables/useTokenize';
 import { auth0 } from '@/main';
 import http from '@/utils/http';
 
-export interface Message {
-  role: 'user' | 'system' | 'assistant';
-  content: string;
-}
 export interface Conversation {
   id: number;
   sub: string;
@@ -21,10 +17,17 @@ export interface Conversation {
   title?: string;
 }
 
+export interface Message {
+  role: 'user' | 'system' | 'assistant';
+  content: string;
+}
+
 export const MODELS = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-1106-preview'] as const;
 type Model = (typeof MODELS)[number];
 
 export const useChatStore = defineStore('chat', () => {
+  const { checkTokens, tokenLength } = useTokenize();
+
   const loading = ref(false);
   const maxTokens = ref(1024);
   const messages = ref<Message[]>([]);
@@ -35,11 +38,8 @@ export const useChatStore = defineStore('chat', () => {
   const textStream = ref('');
   const userMessage = ref('');
 
-  const { checkTokens, tokenLength } = useTokenize();
-
   const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
-
-  const currentConversation = computed(() => ({
+  const currentChat = computed(() => ({
     model: model.value,
     temperature: temperature.value,
     max_tokens: maxTokens.value,
@@ -101,7 +101,7 @@ export const useChatStore = defineStore('chat', () => {
     loading.value = false;
   }
 
-  async function fetchConversation(id: number) {
+  async function fetchChat(id: number) {
     loading.value = true;
     const convo = await http.get<Conversation>(`/api/conversations/${id}`);
     if (convo.messages) messages.value = JSON.parse(convo.messages);
@@ -123,7 +123,7 @@ export const useChatStore = defineStore('chat', () => {
     textStream,
     tokenLength, // from useTokenize
     userMessage,
-    currentConversation,
-    fetchConversation,
+    currentChat,
+    fetchChat,
   };
 });

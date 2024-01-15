@@ -12,7 +12,7 @@ const userStore = useUserStore();
 
 onBeforeMount(() => {
   if (userStore.user !== null) return;
-  userStore.fetchUser(user.value?.sub ?? '');
+  userStore.fetchCurrentUser();
 });
 </script>
 

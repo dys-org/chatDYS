@@ -1,43 +1,29 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import type { D1Result } from '@cloudflare/workers-types';
+import { useRoute, useRouter } from 'vue-router';
 import { useStorage } from '@vueuse/core';
 import { DButton, DCollapse, DRange, DSelect, DTextarea } from 'deez-components';
 
-import router from '@/router';
 import { MODELS, useChatStore } from '@/stores/chat';
+import { useConversationStore } from '@/stores/conversation';
 import { useToastStore } from '@/stores/toast';
-import { useUserStore } from '@/stores/user';
-import http from '@/utils/http';
 
 const chatStore = useChatStore();
-const userStore = useUserStore();
+const conversationStore = useConversationStore();
 const toastStore = useToastStore();
 
 const route = useRoute();
+const router = useRouter();
 
 const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
-
-async function createConversation() {
-  const post: D1Result<Record<string, unknown>> = await http.post(
-    '/api/conversations',
-    chatStore.currentConversation,
-  );
-  router.push({ name: 'chat', params: { id: post.meta.last_row_id } });
-}
-async function updateConversation(paramsId: string | string[]) {
-  const id = typeof paramsId === 'string' ? paramsId : paramsId[0];
-  await http.put(`/api/conversations/${id}`, chatStore.currentConversation);
-}
 
 async function handleSave() {
   if (chatStore.messages.length === 0) return;
   try {
     if (route.params.id) {
-      await updateConversation(route.params.id);
+      await conversationStore.updateConversation(route.params.id);
     } else {
-      await createConversation();
-      await userStore.fetchConversations();
+      const post = await conversationStore.createConversation();
+      router.push({ name: 'chat', params: { id: post.meta.last_row_id } });
     }
     toastStore.add({ variant: 'success', title: 'Conversation saved!' });
   } catch (err: any) {

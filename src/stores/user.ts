@@ -3,8 +3,6 @@ import { defineStore } from 'pinia';
 
 import http from '@/utils/http';
 
-import type { Conversation } from './chat';
-
 interface User {
   id: number;
   sub: string;
@@ -16,7 +14,6 @@ interface User {
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null);
-  const conversations = ref<Conversation[] | null>(null);
 
   async function fetchCurrentUser() {
     user.value = await http.get(`/api/user/info`);
@@ -32,9 +29,9 @@ export const useUserStore = defineStore('user', () => {
     await http.post(`/api/users`, userInfo);
   }
 
-  async function fetchConversations() {
-    conversations.value = await http.get(`/api/conversations`);
-  }
-
-  return { fetchCurrentUser, createNewUser, user, fetchConversations, conversations };
+  return {
+    user,
+    fetchCurrentUser,
+    createNewUser,
+  };
 });
