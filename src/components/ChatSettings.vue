@@ -18,12 +18,12 @@ const route = useRoute();
 const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
 
 const conversation = computed(() => ({
-  user_id: userStore.user?.id,
   model: chatStore.model,
   temperature: chatStore.temperature,
   max_tokens: chatStore.maxTokens,
   system_message: chatStore.systemMessage,
   messages: JSON.stringify(chatStore.messages),
+  title: chatStore.messages[0].content,
 }));
 
 async function createConversation() {
@@ -39,6 +39,7 @@ async function updateConversation(paramsId: string | string[]) {
 }
 
 async function handleSave() {
+  if (chatStore.messages.length === 0) return;
   try {
     if (route.params.id) {
       await updateConversation(route.params.id);

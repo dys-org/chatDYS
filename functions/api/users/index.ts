@@ -1,5 +1,7 @@
 import { type User } from '@auth0/auth0-vue';
 
+import { getSubject } from '../_middleware.js';
+
 interface Env {
   DB: D1Database;
 }
@@ -13,15 +15,13 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
 };
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const { name, email, sub } = (await request.json()) as User;
-  if (!sub) throw new Error('Missing sub value for new user');
+  const subject = getSubject(request);
+  const { name, email } = (await request.json()) as User;
   if (!name) throw new Error('Missing name value for new user');
   if (!email) throw new Error('Missing email value for new user');
 
-  const { success } = await env.DB.prepare(
-    'INSERT INTO Users (sub_id, name, email) VALUES (?, ?, ?)',
-  )
-    .bind(sub, name, email)
+  const { success } = await env.DB.prepare('INSERT INTO Users (sub, name, email) VALUES (?, ?, ?)')
+    .bind(subject, name, email)
     .run();
   if (success) {
     return new Response('User created successfully', { status: 201 });

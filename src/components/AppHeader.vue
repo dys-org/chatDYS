@@ -35,7 +35,7 @@ const { isAuthenticated, isLoading } = useAuth0();
             >
               Profile
             </RouterLink>
-            <NewChatButton />
+            <NewChatButton v-if="isAuthenticated" />
             <LoginButton />
           </template>
         </div>

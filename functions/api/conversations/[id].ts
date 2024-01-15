@@ -1,5 +1,7 @@
 import { type Conversation } from '../../../src/stores/chat.js';
 import { HTTPError } from '../../../src/utils/exceptions.js';
+import { getSubject } from '../_middleware.js';
+
 interface Env {
   DB: D1Database;
 }
@@ -17,20 +19,23 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
 };
 
 export const onRequestPut: PagesFunction<Env> = async ({ request, env, params }) => {
+  const subject = getSubject(request);
   const id = typeof params.id === 'string' ? params.id : params.id[0];
-  const { user_id, model, temperature, max_tokens, system_message, messages } =
+  const { model, temperature, max_tokens, system_message, messages } =
     (await request.json()) as Omit<Conversation, 'id'>;
-  if (!user_id) throw new Error('Missing user_id value');
   if (!model) throw new Error('Missing model value');
   if (!temperature === undefined) throw new Error('Missing temperature value');
   if (!max_tokens === undefined) throw new Error('Missing max_tokens value');
   if (!system_message) throw new Error('Missing system_message value');
   if (!messages) throw new Error('Missing messages value');
 
+  const data = await env.DB.prepare('SELECT sub from Conversations WHERE id = ?').bind(id).first();
+  if (data.sub !== subject) throw new HTTPError(403, 'User does not own this conversation');
+
   const info = await env.DB.prepare(
-    'UPDATE Conversations SET user_id = ?, model = ?, temperature = ?, max_tokens = ?, system_message = ?, messages = ? WHERE id = ?',
+    'UPDATE Conversations SET model = ?, temperature = ?, max_tokens = ?, system_message = ?, messages = ? WHERE id = ?',
   )
-    .bind(user_id, model, temperature, max_tokens, system_message, messages, id)
+    .bind(model, temperature, max_tokens, system_message, messages, id)
     .run();
   if (info.success) {
     return new Response(JSON.stringify(info), { status: 200 });

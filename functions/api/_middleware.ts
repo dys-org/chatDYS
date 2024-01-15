@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-import { HTTPError } from '../src/utils/exceptions.js';
+import { HTTPError } from '../../src/utils/exceptions.js';
 
 interface Env {
   VITE_AUTH0_DOMAIN: string;
@@ -18,6 +18,11 @@ type JWK = {
 };
 
 type JWKS = { keys: JWK[] };
+
+export function getSubject(req: Request) {
+  const rawTokenBody = req.headers.get('Authorization')?.split(' ')[1].split('.')[1];
+  return JSON.parse(atob(rawTokenBody)).sub;
+}
 
 async function validateToken({ token, domain }: { token: string; domain: string }) {
   const [rawHeader, rawBody, rawSignature] = token.split('.');
@@ -55,16 +60,13 @@ const errorHandling: PagesFunction = async ({ next }) => {
 };
 
 export const authentication: PagesFunction<Env> = async ({ request, env, next }) => {
-  const url = new URL(request.url);
-  if (url.pathname.startsWith('/api/')) {
-    const token = request.headers.get('Authorization')?.split(' ')[1];
-    if (!token) throw new HTTPError(401, 'Authorization header is missing or invalid');
+  const token = request.headers.get('Authorization')?.split(' ')[1];
+  if (!token) throw new HTTPError(401, 'Authorization header is missing or invalid');
 
-    if (!env.VITE_AUTH0_DOMAIN) throw new Error('VITE_AUTH0_DOMAIN is not set');
+  if (!env.VITE_AUTH0_DOMAIN) throw new Error('VITE_AUTH0_DOMAIN is not set');
 
-    const isValid = await validateToken({ token, domain: env.VITE_AUTH0_DOMAIN });
-    if (!isValid) throw new HTTPError(401, 'Invalid token');
-  }
+  const isValid = await validateToken({ token, domain: env.VITE_AUTH0_DOMAIN });
+  if (!isValid) throw new HTTPError(401, 'Invalid token');
   return next();
 };
 

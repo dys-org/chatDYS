@@ -12,12 +12,13 @@ export interface Message {
 }
 export interface Conversation {
   id: number;
-  user_id: string;
+  sub: string;
   model: Model;
   temperature: number;
   max_tokens: number;
   system_message: string;
-  messages: string;
+  messages?: string;
+  title?: string;
 }
 
 export const MODELS = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-1106-preview'] as const;
@@ -95,7 +96,7 @@ export const useChatStore = defineStore('chat', () => {
   async function fetchConversation(id: number) {
     loading.value = true;
     const convo = await http.get<Conversation>(`/api/conversations/${id}`);
-    messages.value = JSON.parse(convo.messages);
+    if (convo.messages) messages.value = JSON.parse(convo.messages);
     model.value = convo.model;
     systemMessage.value = convo.system_message;
     temperature.value = convo.temperature;

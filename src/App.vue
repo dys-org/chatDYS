@@ -26,13 +26,12 @@ watch(
       // check database for user
       if (!user.value) return;
       try {
-        await userStore.fetchUser(user.value.sub ?? '');
+        await userStore.fetchCurrentUser();
       } catch (err: any) {
         console.error(err.message);
         // if user not found, create new user
         if (err.status === 404) {
           userStore.createNewUser({
-            sub_id: user.value.sub ?? '',
             name: user.value.name ?? '',
             email: user.value.email ?? '',
           });
