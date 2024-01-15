@@ -41,10 +41,19 @@ onBeforeMount(() => {
         :key="chat.id"
         class="group relative -mx-2"
       >
+        <DLink
+          class="flex rounded px-2 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:bg-transparent dark:group-hover:bg-white/5"
+          :to="{ name: 'chat', params: { id: chat.id } }"
+          :title="chat.title"
+          active-class="text-white font-bold dark:bg-white/5"
+        >
+          <span class="max-w-56 truncate">{{ chat.title }}</span>
+        </DLink>
         <div class="absolute right-1 top-1">
           <DDropdown
             minimal
             label="Action Menu"
+            button-class="dark:bg-transparent"
             :options="[
               {
                 key: 'delete_conversation',
@@ -56,14 +65,6 @@ onBeforeMount(() => {
             ]"
           ></DDropdown>
         </div>
-        <DLink
-          class="flex rounded px-2 py-1.5 text-sm dark:bg-transparent dark:group-hover:bg-white/5"
-          :to="{ name: 'chat', params: { id: chat.id } }"
-          :title="chat.title"
-          active-class="text-white font-bold dark:bg-white/5"
-        >
-          <span class="max-w-56 truncate">{{ chat.title }}</span>
-        </DLink>
       </li>
     </ul>
   </nav>
