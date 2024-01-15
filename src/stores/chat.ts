@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
@@ -37,14 +37,22 @@ export const useChatStore = defineStore('chat', () => {
 
   const { checkTokens, tokenLength } = useTokenize();
 
+  const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
+
+  const currentConversation = computed(() => ({
+    model: model.value,
+    temperature: temperature.value,
+    max_tokens: maxTokens.value,
+    system_message: getSystemMessage.value,
+    messages: JSON.stringify(messages.value),
+    title: messages.value[0].content,
+  }));
+
   function addMessage(role: Message['role'], content: string) {
     messages.value.push({ role, content });
   }
   function createPrompt() {
-    prompt.value = [
-      { role: 'system', content: systemMessage.value || 'You are a helpful assistant.' },
-      ...messages.value,
-    ];
+    prompt.value = [{ role: 'system', content: getSystemMessage.value }, ...messages.value];
     const stringToTokenize = prompt.value.map((m) => m.content).join('');
     checkTokens({ stringToTokenize, model: model.value });
   }
@@ -115,6 +123,7 @@ export const useChatStore = defineStore('chat', () => {
     textStream,
     tokenLength, // from useTokenize
     userMessage,
+    currentConversation,
     fetchConversation,
   };
 });

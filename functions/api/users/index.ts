@@ -6,6 +6,7 @@ interface Env {
   DB: D1Database;
 }
 
+// TODO the ability to fetch all users should be restricted to admins
 export const onRequest: PagesFunction<Env> = async ({ env }) => {
   // Create a prepared statement with our query
   const ps = env.DB.prepare('SELECT * from Users');
