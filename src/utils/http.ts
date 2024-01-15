@@ -35,4 +35,4 @@ async function remove<T>(path: string, config?: RequestInit): Promise<T> {
   return await http<T>(path, init);
 }
 
-export default { get, post, put, delete: remove };
+export default { get, post, put, patch, delete: remove };

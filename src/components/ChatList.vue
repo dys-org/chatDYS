@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { DDropdown, DLink } from 'deez-components';
 
+import { useChatStore } from '@/stores/chat';
 import { useConversationStore } from '@/stores/conversation';
 import { useToastStore } from '@/stores/toast';
 
 import IconTrash from '~icons/lucide/trash-2';
+const route = useRoute();
+const router = useRouter();
 
+const chatStore = useChatStore();
 const conversationStore = useConversationStore();
 const toastStore = useToastStore();
 
@@ -14,6 +19,10 @@ async function handleDelete(id: number) {
   try {
     await conversationStore.deleteConversation(id);
     toastStore.add({ variant: 'success', title: 'Conversation deleted!' });
+    if (id.toString() === route.params.id) {
+      chatStore.$reset();
+      router.push({ name: 'chat' });
+    }
   } catch (err: any) {
     console.error(err);
     toastStore.add({

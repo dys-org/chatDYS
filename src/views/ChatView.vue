@@ -96,7 +96,7 @@ onBeforeMount(() => {
   }
 });
 
-onBeforeRouteUpdate((to, from) => {
+onBeforeRouteUpdate((to) => {
   // fetch the chat if there is an id in the route params
   if (to.params.id) {
     fetchChat(to.params.id);
