@@ -130,7 +130,7 @@ onMounted(() => {
               class="chat-message mx-auto w-full max-w-[60ch] leading-7"
               v-html="md.render(message.content)"
             />
-            <div>
+            <div class="min-w-[28px]">
               <DButton
                 v-if="message.role === 'assistant'"
                 class="-mt-1 p-1 hover:text-white dark:bg-transparent dark:text-white/60 dark:hover:bg-white/5"
