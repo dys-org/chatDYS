@@ -36,7 +36,7 @@ async function getConvos() {
 </script>
 
 <template>
-  <TwoColumn h1="Vision">
+  <TwoColumn h1="Sandbox">
     <template #main>
       <DButton @click="getUsers">Get Users</DButton>
       <DButton @click="getConvos">Get Conversations</DButton>

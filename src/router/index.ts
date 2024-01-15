@@ -24,9 +24,9 @@ const router = createRouter({
       beforeEnter: authGuard,
     },
     {
-      path: '/vision',
-      name: 'vision',
-      component: () => import('../views/VisionView.vue'),
+      path: '/sandbox',
+      name: 'sandbox',
+      component: () => import('../views/SandboxView.vue'),
       beforeEnter: authGuard,
     },
     {
