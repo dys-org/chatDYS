@@ -14,5 +14,5 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
   // check if data is empty object
   if (data == null) throw new HTTPError(404, 'User not found');
 
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 };

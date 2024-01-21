@@ -12,7 +12,7 @@ export const onRequest: PagesFunction<Env> = async ({ env }) => {
   const ps = env.DB.prepare('SELECT * from Users');
   const { results } = await ps.all();
 
-  return new Response(JSON.stringify(results));
+  return Response.json(results);
 };
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {

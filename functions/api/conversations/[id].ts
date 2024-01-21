@@ -21,7 +21,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
   // check if data is empty object
   if (data == null) throw new HTTPError(404, 'Conversation not found');
 
-  return new Response(JSON.stringify(data));
+  return Response.json(data);
 };
 
 export const onRequestPut: PagesFunction<Env> = async ({ request, env, params }) => {
@@ -42,7 +42,7 @@ export const onRequestPut: PagesFunction<Env> = async ({ request, env, params })
     .bind(model, temperature, max_tokens, system_message, messages, id)
     .run();
   if (info.success) {
-    return new Response(JSON.stringify(info), { status: 200 });
+    return Response.json(info, { status: 200 });
   } else {
     throw new Error('Error updating conversation');
   }

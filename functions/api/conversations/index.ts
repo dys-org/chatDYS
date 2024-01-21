@@ -13,7 +13,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   ).bind(subject);
   const { results } = await ps.all<Conversation>();
 
-  return new Response(JSON.stringify(results));
+  return Response.json(results);
 };
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -33,7 +33,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     .bind(subject, model, temperature, max_tokens, system_message, messages, title)
     .run();
   if (info.success) {
-    return new Response(JSON.stringify(info), { status: 201 });
+    return Response.json(info, { status: 201 });
   } else {
     throw new Error('Error saving conversation');
   }

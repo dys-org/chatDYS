@@ -12,7 +12,5 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
   const length = encoded.length;
   console.log('Token count is ' + length);
 
-  const json = JSON.stringify({ tokens: length });
-
-  return new Response(json, { headers: { 'content-type': 'application/json;charset=UTF-8' } });
+  return Response.json({ tokens: length });
 };

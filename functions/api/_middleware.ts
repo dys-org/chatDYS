@@ -50,12 +50,10 @@ const errorHandling: PagesFunction = async ({ next }) => {
   } catch (err) {
     if (err instanceof OpenAI.APIError) {
       const { status, message, code, type } = err;
-      return new Response(JSON.stringify({ status, message, code, type }), { status });
+      return Response.json({ status, message, code, type }, { status: status ?? 500 });
     }
     const { status, message, stack } = err;
-    return new Response(JSON.stringify({ status, message, stack }), {
-      status: status ?? 500,
-    });
+    return Response.json({ status, message, stack }, { status: status ?? 500 });
   }
 };
 
