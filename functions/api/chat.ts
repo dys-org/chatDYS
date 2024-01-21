@@ -1,20 +1,28 @@
 import OpenAI from 'openai';
+import { Stream } from 'openai/streaming.mjs';
 
 interface Env {
   OPENAI_API_KEY: string;
 }
 
+interface requestParams {
+  chatCompletionParams: OpenAI.ChatCompletionCreateParams;
+  apiKey: string;
+}
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const headers = new Headers({ 'Content-Type': 'text/event-stream' });
   const init = { status: 200, statusText: 'ok', headers };
-  const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
-  const params = (await request.json()) as OpenAI.ChatCompletionCreateParams;
+  const { chatCompletionParams, apiKey } = (await request.json()) as requestParams;
 
-  if (params.messages == null) throw new Error('No prompt was provided');
+  if (apiKey == null) throw new Error('No api key was provided');
+  const openai = new OpenAI({ apiKey: apiKey });
+
+  if (chatCompletionParams.messages == null) throw new Error('No prompt was provided');
 
   // make our request to the OpenAI API
   const stream = await openai.chat.completions.create({
-    ...params,
+    ...chatCompletionParams,
     stream: true,
   });
 
@@ -27,7 +35,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 };
 
 // For some reason the stream only pumps when I put this bit in a separate function
-async function writeToStream(writable: WritableStream, stream) {
+async function writeToStream(
+  writable: WritableStream,
+  stream: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>,
+) {
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
 

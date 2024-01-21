@@ -1,9 +1,11 @@
 import { computed, ref } from 'vue';
+import { useStorage } from '@vueuse/core';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
 import { useTokenize } from '@/composables/useTokenize';
 import { auth0 } from '@/main';
+import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 import http from '@/utils/http';
 
 export interface Conversation {
@@ -27,6 +29,7 @@ type Model = (typeof MODELS)[number];
 
 export const useChatStore = defineStore('chat', () => {
   const { checkTokens, tokenLength } = useTokenize();
+  const openaiApiKeyStorage = useStorage(STORAGE_APIKEY_OPENAI, '');
 
   const loading = ref(false);
   const maxTokens = ref(1024);
@@ -37,6 +40,7 @@ export const useChatStore = defineStore('chat', () => {
   const temperature = ref(0);
   const textStream = ref('');
   const userMessage = ref('');
+  const isApiKeyModalOpen = ref(false);
 
   const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
   const currentChat = computed(() => ({
@@ -56,12 +60,13 @@ export const useChatStore = defineStore('chat', () => {
     const stringToTokenize = prompt.value.map((m) => m.content).join('');
     checkTokens({ stringToTokenize, model: model.value });
   }
-  async function streamResponse(params: OpenAI.ChatCompletionCreateParams) {
+  async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
     const token = await auth0.getAccessTokenSilently();
+    const apiKey = openaiApiKeyStorage.value;
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + token },
-      body: JSON.stringify(params),
+      body: JSON.stringify({ chatCompletionParams, apiKey }),
     });
     if (!res.ok) {
       const error = await res.json();
@@ -125,5 +130,6 @@ export const useChatStore = defineStore('chat', () => {
     userMessage,
     currentChat,
     fetchChat,
+    isApiKeyModalOpen,
   };
 });
