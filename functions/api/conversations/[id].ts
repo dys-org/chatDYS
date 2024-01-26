@@ -48,6 +48,23 @@ export const onRequestPut: PagesFunction<Env> = async ({ request, env, params })
   }
 };
 
+export const onRequestPatch: PagesFunction<Env> = async ({ request, env, params }) => {
+  const id = typeof params.id === 'string' ? params.id : params.id[0];
+  await validateSubject({ request, env, id });
+  // don't parse the messages, we just want the string to save to the database
+  const messages = (await request.text()) as Conversation['messages'];
+  if (!messages) throw new Error('Missing messages value');
+
+  const info = await env.DB.prepare('UPDATE Conversations SET messages = ? WHERE id = ?')
+    .bind(messages, id)
+    .run();
+  if (info.success) {
+    return Response.json(info, { status: 200 });
+  } else {
+    throw new Error('Error updating messages');
+  }
+};
+
 export const onRequestDelete: PagesFunction<Env> = async ({ request, env, params }) => {
   const id = typeof params.id === 'string' ? params.id : params.id[0];
   await validateSubject({ request, env, id });

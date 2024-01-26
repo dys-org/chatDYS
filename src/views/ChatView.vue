@@ -10,6 +10,7 @@ import ChatSidebar from '@/components/ChatSidebar.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
+import { useConversationStore } from '@/stores/conversation';
 import { useToastStore } from '@/stores/toast';
 import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 
@@ -17,6 +18,7 @@ const route = useRoute();
 
 const chatStore = useChatStore();
 const toastStore = useToastStore();
+const conversationStore = useConversationStore();
 
 const openaiApiKeyStorage = useStorage(STORAGE_APIKEY_OPENAI, '');
 
@@ -29,14 +31,17 @@ async function handleSend() {
     alert('You have not added any text to analyze.');
     return;
   }
-  await chatStore.sendPrompt().catch((err) => {
+  try {
+    await chatStore.sendPrompt();
+    if (route.params.id) conversationStore.updateMessages(route.params.id);
+  } catch (err: any) {
     console.error(err);
     toastStore.add({
       variant: 'error',
       title: 'Failed to send prompt',
       description: err.message,
     });
-  });
+  }
 }
 async function scrollToBottom() {
   await nextTick();

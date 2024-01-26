@@ -26,6 +26,10 @@ export const useConversationStore = defineStore('conversation', () => {
     const id = typeof paramsId === 'string' ? paramsId : paramsId[0];
     await http.put(`/api/conversations/${id}`, chatStore.currentChat);
   }
+  async function updateMessages(paramsId: string | string[]) {
+    const id = typeof paramsId === 'string' ? paramsId : paramsId[0];
+    await http.patch(`/api/conversations/${id}`, chatStore.messages);
+  }
   async function deleteConversation(id: number) {
     await http.delete(`/api/conversations/${id}`);
     await fetchConversationList();
@@ -37,5 +41,6 @@ export const useConversationStore = defineStore('conversation', () => {
     createConversation,
     updateConversation,
     deleteConversation,
+    updateMessages,
   };
 });
