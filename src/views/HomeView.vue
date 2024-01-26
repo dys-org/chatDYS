@@ -24,12 +24,12 @@ import { RouterLink } from 'vue-router';
           >
             Chat
           </RouterLink>
-          <RouterLink
+          <!-- <RouterLink
             to="/vision"
             class="text-sm font-semibold leading-6 text-white transition-colors hover:text-sky-400"
           >
             Play with images <span aria-hidden="true">→ </span>
-          </RouterLink>
+          </RouterLink> -->
         </div>
       </div>
     </div>

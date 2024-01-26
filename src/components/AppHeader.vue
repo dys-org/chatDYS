@@ -27,17 +27,8 @@ const { isAuthenticated, isLoading } = useAuth0();
       >
         <div v-if="!isLoading" class="flex items-center gap-6 text-white/60">
           <!-- <RouterLink to="/vision" class="text-sm font-medium hover:text-white">Vision</RouterLink> -->
-          <template v-if="!isLoading">
-            <RouterLink
-              v-if="isAuthenticated"
-              to="/profile"
-              class="text-sm font-medium hover:text-white"
-            >
-              Profile
-            </RouterLink>
-            <NewChatButton v-if="isAuthenticated" />
-            <LoginButton />
-          </template>
+          <NewChatButton v-if="isAuthenticated" />
+          <LoginButton />
         </div>
       </Transition>
     </div>

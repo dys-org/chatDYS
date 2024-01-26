@@ -1,8 +1,26 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue';
-import { DButton } from 'deez-components';
+import { DAvatar, DButton, DDropdown } from 'deez-components';
 
-const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+import IconUser from '~icons/majesticons/user-line';
+
+const userDropdownOptions = [
+  {
+    label: 'Profile',
+    icon: IconUser,
+    key: 'profile',
+    to: '/profile',
+  },
+  { divider: true, key: 'd1' },
+  {
+    label: 'Log Out',
+    key: 'log_out',
+    danger: true,
+    fn: () => logoutAndReturn(),
+  },
+];
+
+const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
 
 function login() {
   loginWithRedirect({ appState: { target: '/chat' } });
@@ -13,8 +31,13 @@ function logoutAndReturn() {
 </script>
 
 <template>
-  <DButton v-if="isAuthenticated" variant="link" class="px-0" @click="logoutAndReturn">
-    Logout
-  </DButton>
+  <DDropdown
+    v-if="isAuthenticated"
+    label="User"
+    :options="userDropdownOptions"
+    button-class="flex text-gray-400 p-0 dark:bg-transparent dark:hover:bg-transparent"
+  >
+    <DAvatar :image="user?.picture" class="size-8 max-w-fit" />
+  </DDropdown>
   <DButton v-else variant="primary" @click="login">Login</DButton>
 </template>
