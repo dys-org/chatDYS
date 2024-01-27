@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, watch } from 'vue';
-import { onBeforeRouteUpdate, useRoute } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { useStorage } from '@vueuse/core';
 import { DSpinner } from 'deez-components';
 
@@ -12,15 +12,42 @@ import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
 import { useConversationStore } from '@/stores/conversation';
 import { useToastStore } from '@/stores/toast';
-import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
+import { CHAT_STORAGE_KEY, STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 
 const route = useRoute();
+const router = useRouter();
 
 const chatStore = useChatStore();
-const toastStore = useToastStore();
 const conversationStore = useConversationStore();
+const toastStore = useToastStore();
 
 const openaiApiKeyStorage = useStorage(STORAGE_APIKEY_OPENAI, '');
+
+async function saveConversation() {
+  try {
+    const post = await conversationStore.createConversation();
+    router.push({ name: 'chat', params: { id: post.meta.last_row_id } });
+  } catch (err: any) {
+    console.error(err);
+    toastStore.add({
+      variant: 'error',
+      title: 'There was a problem saving your conversation.',
+      description: err.message,
+    });
+  }
+}
+async function updateMessages() {
+  try {
+    await conversationStore.updateMessages(route.params.id);
+  } catch (err: any) {
+    console.error(err);
+    toastStore.add({
+      variant: 'error',
+      title: 'There was a problem updating your conversation.',
+      description: err.message,
+    });
+  }
+}
 
 async function handleSend() {
   if (!openaiApiKeyStorage.value) {
@@ -33,7 +60,8 @@ async function handleSend() {
   }
   try {
     await chatStore.sendPrompt();
-    if (route.params.id) conversationStore.updateMessages(route.params.id);
+    if (route.params.id) await updateMessages();
+    else await saveConversation();
   } catch (err: any) {
     console.error(err);
     toastStore.add({
@@ -66,12 +94,23 @@ watch(
   () => scrollToBottom(),
 );
 
+chatStore.$subscribe((mutation, state) => {
+  // persist the whole state to the local storage whenever it changes
+  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(state));
+});
+
 onBeforeMount(() => {
-  // fetch the chat if there is an id in the route params
-  if (route.params.id) {
-    fetchChat(route.params.id);
+  if (!route.params.id) return;
+  // use the persisted state if available and the id matches the route params
+  const persistedState = localStorage.getItem(CHAT_STORAGE_KEY);
+  if (persistedState) {
+    const state = JSON.parse(persistedState);
+    if (state.id !== route.params.id) return;
+    chatStore.$patch(state);
     return;
   }
+  // otherwise fetch the chat by id
+  fetchChat(route.params.id);
 });
 
 onBeforeRouteUpdate((to) => {

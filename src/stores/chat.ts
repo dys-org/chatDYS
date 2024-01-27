@@ -1,4 +1,5 @@
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { useStorage } from '@vueuse/core';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
@@ -28,6 +29,7 @@ export const MODELS = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-1106-preview'] as const;
 type Model = (typeof MODELS)[number];
 
 export const useChatStore = defineStore('chat', () => {
+  const route = useRoute();
   const { checkTokens, tokenLength } = useTokenize();
   const openaiApiKeyStorage = useStorage(STORAGE_APIKEY_OPENAI, '');
 
@@ -41,6 +43,7 @@ export const useChatStore = defineStore('chat', () => {
   const textStream = ref('');
   const userMessage = ref('');
   const isApiKeyModalOpen = ref(false);
+  const id = ref('');
 
   const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
   const currentChat = computed(() => ({
@@ -116,6 +119,15 @@ export const useChatStore = defineStore('chat', () => {
     loading.value = false;
   }
 
+  watch(
+    () => route.params.id,
+    (newVal) => {
+      const val = typeof newVal === 'string' ? newVal : newVal?.[0] || '';
+      console.log(val);
+      id.value = val;
+    },
+  );
+
   return {
     loading,
     maxTokens,
@@ -131,5 +143,6 @@ export const useChatStore = defineStore('chat', () => {
     currentChat,
     fetchChat,
     isApiKeyModalOpen,
+    id,
   };
 });
