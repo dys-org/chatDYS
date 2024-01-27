@@ -6,6 +6,8 @@ import { DSpinner } from 'deez-components';
 import OneColumn from '@/layouts/OneColumn.vue';
 import { useUserStore } from '@/stores/user';
 
+const isDev = import.meta.env.DEV;
+
 const { isAuthenticated, user, isLoading } = useAuth0();
 
 const userStore = useUserStore();
@@ -25,7 +27,7 @@ onBeforeMount(() => {
       <img :src="user?.picture" :alt="user?.name" class="mt-6 size-24 rounded-full" />
       <h2 class="mt-2 text-3xl">{{ user?.name }}</h2>
       <h3 class="text-lg text-white/60">{{ user?.email }}</h3>
-      <dl>
+      <dl v-if="isDev">
         <dt class="mt-6">Auth0 User</dt>
         <dd class="mt-1">
           <pre class="max-w-lg overflow-auto bg-gray-950 p-3 text-xs"><code>{{ user }}</code></pre>
