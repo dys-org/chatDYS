@@ -9,7 +9,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const subject = getSubject(request);
   // Create a prepared statement with our query
   const ps = env.DB.prepare(
-    'SELECT id, sub, title, model, created_at, updated_at from Conversations WHERE sub = ?',
+    'SELECT id, sub, title, model, created_at, updated_at from Conversations WHERE sub = ? ORDER BY created_at DESC',
   ).bind(subject);
   const { results } = await ps.all<Conversation>();
 
