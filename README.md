@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  An AI chat app built on Cloudflare pages with Vue 3.
+  An AI chat app built on Cloudflare Pages with Vue JS.
 </p>
 
 # chatDYS
