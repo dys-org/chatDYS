@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  If I had components under my chin would those be chin components?
+  An AI chat app built on Cloudflare pages with Vue 3.
 </p>
 
 # chatDYS
