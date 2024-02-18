@@ -16,6 +16,11 @@ async function handleSubmit() {
   try {
     await setIDB(STORAGE_APIKEY_OPENAI, openaiApiKeyInput.value);
     chatStore.isApiKeyModalOpen = false;
+    toastStore.add({
+      variant: 'success',
+      title: 'API key successfully saved',
+      description: 'You can change your API Key anytime from the Profile page.',
+    });
   } catch (err: any) {
     console.error(err);
     toastStore.add({ variant: 'error', title: 'Error saving API Key', description: err.message });
