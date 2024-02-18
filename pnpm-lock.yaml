@@ -26,6 +26,9 @@ dependencies:
   express:
     specifier: ^4.18.2
     version: 4.18.2
+  idb-keyval:
+    specifier: ^6.2.1
+    version: 6.2.1
   js-tiktoken:
     specifier: ^1.0.10
     version: 1.0.10
@@ -3077,6 +3080,10 @@ packages:
     dependencies:
       safer-buffer: 2.1.2
     dev: true
+
+  /idb-keyval@6.2.1:
+    resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
+    dev: false
 
   /ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}

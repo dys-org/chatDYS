@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStorage } from '@vueuse/core';
+import { get as getIDB } from 'idb-keyval';
 import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
@@ -31,7 +31,6 @@ type Model = (typeof MODELS)[number];
 export const useChatStore = defineStore('chat', () => {
   const route = useRoute();
   const { checkTokens, tokenLength } = useTokenize();
-  const openaiApiKeyStorage = useStorage(STORAGE_APIKEY_OPENAI, '');
 
   const loading = ref(false);
   const maxTokens = ref(1024);
@@ -65,7 +64,7 @@ export const useChatStore = defineStore('chat', () => {
   }
   async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
     const token = await auth0.getAccessTokenSilently();
-    const apiKey = openaiApiKeyStorage.value;
+    const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + token },

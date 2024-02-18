@@ -1,25 +1,31 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useStorage } from '@vueuse/core';
 import { DInput, DModal } from 'deez-components';
+import { get as getIDB, set as setIDB } from 'idb-keyval';
 
 import { useChatStore } from '@/stores/chat';
+import { useToastStore } from '@/stores/toast';
 import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 
 const chatStore = useChatStore();
-
-const openaiApiKeyStorage = useStorage(STORAGE_APIKEY_OPENAI, '');
+const toastStore = useToastStore();
 
 const openaiApiKeyInput = ref('');
 
-function handleSubmit() {
-  openaiApiKeyStorage.value = openaiApiKeyInput.value;
-  chatStore.isApiKeyModalOpen = false;
+async function handleSubmit() {
+  try {
+    await setIDB(STORAGE_APIKEY_OPENAI, openaiApiKeyInput.value);
+    chatStore.isApiKeyModalOpen = false;
+  } catch (err: any) {
+    console.error(err);
+    toastStore.add({ variant: 'error', title: 'Error saving API Key', description: err.message });
+  }
 }
 
-onMounted(() => {
-  if (!openaiApiKeyStorage.value) {
-    console.log('No API Key found in local storage.');
+onMounted(async () => {
+  const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
+  if (!apiKey) {
+    console.log('No API Key found in indexedDB.');
     chatStore.isApiKeyModalOpen = true;
   }
 });
@@ -35,8 +41,8 @@ onMounted(() => {
     <template #content>
       <div class="grid gap-3">
         <p class="text-sm text-white/60">
-          To use the chat you need an OpenAI API Key. It will be saved in your browser's local
-          storage. We <strong>DO NOT</strong> store your API Key on our servers.
+          To use the chat you need an OpenAI API Key. It will be saved in your browser's indexedDB.
+          We <strong>DO NOT</strong> store your API Key on our servers.
         </p>
         <form id="apiKeyForm" @submit.prevent="handleSubmit">
           <DInput id="openaiApiKey" v-model="openaiApiKeyInput" label="OpenAI API Key" required />

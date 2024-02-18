@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { nextTick, onBeforeMount, onMounted, watch } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
-import { useStorage } from '@vueuse/core';
 import { DSpinner } from 'deez-components';
+import { get as getIDB, set as setIDB } from 'idb-keyval';
 
 import ApiKeyModal from '@/components/ApiKeyModal.vue';
 import ChatMessage from '@/components/ChatMessage.vue';
@@ -20,8 +20,6 @@ const router = useRouter();
 const chatStore = useChatStore();
 const conversationStore = useConversationStore();
 const toastStore = useToastStore();
-
-const openaiApiKeyStorage = useStorage(STORAGE_APIKEY_OPENAI, '');
 
 async function saveConversation() {
   try {
@@ -50,7 +48,8 @@ async function updateMessages() {
 }
 
 async function handleSend() {
-  if (!openaiApiKeyStorage.value) {
+  const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
+  if (!apiKey) {
     chatStore.isApiKeyModalOpen = true;
     return;
   }
@@ -95,14 +94,14 @@ watch(
 );
 
 chatStore.$subscribe((mutation, state) => {
-  // persist the whole state to the local storage whenever it changes
-  localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(state));
+  // persist the whole state to the indexedDB whenever it changes
+  setIDB(CHAT_STORAGE_KEY, JSON.stringify(state)).catch(console.error);
 });
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   if (!route.params.id) return;
   // use the persisted state if available and the id matches the route params
-  const persistedState = localStorage.getItem(CHAT_STORAGE_KEY);
+  const persistedState = await getIDB(CHAT_STORAGE_KEY);
   if (persistedState) {
     const state = JSON.parse(persistedState);
     if (state.id !== route.params.id) return;
