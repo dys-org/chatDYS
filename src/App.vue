@@ -10,34 +10,34 @@ import { useUserStore } from '@/stores/user';
 import AppHeader from './components/AppHeader.vue';
 import PageLoader from './components/PageLoader.vue';
 
-const { isAuthenticated, user, isLoading } = useAuth0();
+const { isAuthenticated, user, isLoading, logout } = useAuth0();
 
 const toastStore = useToastStore();
 const userStore = useUserStore();
 
 const showLoader = computed(() => isLoading.value);
 
-watch(
-  () => !isLoading.value && isAuthenticated.value,
-  async (newValue) => {
-    if (newValue) {
-      // check database for user
-      if (!user.value) return;
-      try {
-        await userStore.fetchCurrentUser();
-      } catch (err: any) {
-        console.error(err.message);
-        // if user not found, create new user
-        if (err.status === 404) {
-          userStore.createNewUser({
-            name: user.value.name ?? '',
-            email: user.value.email ?? '',
-          });
-        }
+watch(isAuthenticated, async (newVal) => {
+  if (newVal) {
+    // check database for user
+    if (!user.value) return;
+    try {
+      await userStore.fetchCurrentUser();
+    } catch (err: any) {
+      console.error(err.message);
+      // if user not found, create new user
+      if (err.status === 404) {
+        userStore.createNewUser({
+          name: user.value.name ?? '',
+          email: user.value.email ?? '',
+        });
       }
     }
-  },
-);
+  }
+  if (!newVal) {
+    logout({ logoutParams: { returnTo: window.location.origin } });
+  }
+});
 </script>
 
 <template>
