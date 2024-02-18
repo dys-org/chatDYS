@@ -19,7 +19,8 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <OneColumn h1="My Profile">
+  <OneColumn>
+    <h1 class="mb-6 mt-12 text-4xl font-semibold">My Profile</h1>
     <div v-if="isLoading" class="flex w-full flex-col items-center gap-2">
       <DSpinner />
     </div>
