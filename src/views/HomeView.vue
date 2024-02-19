@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { DLink } from 'deez-components';
 </script>
 
 <template>
@@ -18,18 +18,18 @@ import { RouterLink } from 'vue-router';
           You can and should be extremely thoughtful and still move fast.
         </p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
-          <RouterLink
+          <DLink
             to="/chat"
             class="rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm transition-colors hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             Chat
-          </RouterLink>
-          <!-- <RouterLink
+          </DLink>
+          <!-- <DLink
             to="/vision"
             class="text-sm font-semibold leading-6 text-white transition-colors hover:text-sky-400"
           >
             Play with images <span aria-hidden="true">→ </span>
-          </RouterLink> -->
+          </DLink> -->
         </div>
       </div>
     </div>
