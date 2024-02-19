@@ -4,9 +4,8 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 import { useStorage } from '@vueuse/core';
 import { DButton } from 'deez-components';
 
-import IconPanelRight from '~icons/lucide/panel-right-close';
 import IconClose from '~icons/majesticons/close';
-import IconCog from '~icons/majesticons/settings-cog';
+import IconMenuExpand from '~icons/majesticons/menu-expand-left';
 
 const props = withDefaults(
   defineProps<{
@@ -27,23 +26,26 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
         <slot name="heading">
           <h1 class="my-4 px-4 text-xl font-semibold sm:px-6">
             {{ props.h1 }}
-            <DButton class="ml-3 lg:hidden" @click="sidebarOpen = true">
-              <span class="sr-only">Open sidebar</span>
-              <IconCog class="size-4" aria-hidden="true" />
-            </DButton>
           </h1>
         </slot>
         <slot name="main" />
-        <div class="absolute right-0 top-0 hidden justify-center pt-3.5 lg:flex">
+        <div class="absolute right-0 top-0 flex justify-center pt-3.5">
           <DButton
-            class="rounded-r-none p-2 dark:bg-gray-700 hover:dark:bg-gray-600"
+            class="hidden rounded-r-none p-1.5 dark:bg-gray-700 hover:dark:bg-gray-600 lg:block"
             @click="isSidebarExpanded = !isSidebarExpanded"
           >
             <span class="sr-only">{{ isSidebarExpanded ? 'Collapse' : 'Expand' }} Settings</span>
-            <IconPanelRight
-              :class="['size-5', !isSidebarExpanded && 'rotate-180']"
+            <IconMenuExpand
+              :class="['size-6', isSidebarExpanded && 'rotate-180']"
               aria-hidden="true"
             />
+          </DButton>
+          <DButton
+            class="rounded-r-none p-1.5 dark:bg-gray-700 hover:dark:bg-gray-600 lg:hidden"
+            @click="sidebarOpen = true"
+          >
+            <span class="sr-only">Open sidebar</span>
+            <IconMenuExpand class="size-6" aria-hidden="true" />
           </DButton>
         </div>
       </div>
@@ -103,7 +105,11 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
               leave-to="opacity-0"
             >
               <div class="absolute right-full top-0 flex w-16 justify-center pt-5">
-                <button type="button" class="-m-2.5 p-2.5" @click="sidebarOpen = false">
+                <button
+                  type="button"
+                  class="-m-2.5 rounded p-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+                  @click="sidebarOpen = false"
+                >
                   <span class="sr-only">Close sidebar</span>
                   <IconClose class="size-6 text-white" aria-hidden="true" />
                 </button>
