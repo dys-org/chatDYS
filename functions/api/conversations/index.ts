@@ -9,7 +9,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const subject = getSubject(request);
   // Create a prepared statement with our query
   const ps = env.DB.prepare(
-    'SELECT id, sub, title, model, created_at, updated_at from Conversations WHERE sub = ? ORDER BY created_at DESC',
+    'SELECT id, sub, title, model, created_at, updated_at from Conversations WHERE sub = ?1 ORDER BY created_at DESC',
   ).bind(subject);
   const { results } = await ps.all<Conversation>();
 
@@ -28,7 +28,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!title) throw new Error('Missing title value');
 
   const info = await env.DB.prepare(
-    'INSERT INTO Conversations (sub, model, temperature, max_tokens, system_message, messages, title) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    'INSERT INTO Conversations (sub, model, temperature, max_tokens, system_message, messages, title) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)',
   )
     .bind(subject, model, temperature, max_tokens, system_message, messages, title)
     .run();

@@ -8,7 +8,7 @@ interface Env {
 
 async function validateSubject({ request, env, id }: { request: Request; env: Env; id: string }) {
   const subject = getSubject(request);
-  const data = await env.DB.prepare('SELECT sub from Conversations WHERE id = ?').bind(id).first();
+  const data = await env.DB.prepare('SELECT sub from Conversations WHERE id = ?1').bind(id).first();
   if (data.sub !== subject) throw new HTTPError(403, 'User does not own this conversation');
 }
 
@@ -16,7 +16,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
   const id = typeof params.id === 'string' ? params.id : params.id[0];
 
   // Create a prepared statement with our query
-  const data = await env.DB.prepare('SELECT * from Conversations WHERE id = ?').bind(id).first();
+  const data = await env.DB.prepare('SELECT * from Conversations WHERE id = ?1').bind(id).first();
 
   // check if data is empty object
   if (data == null) throw new HTTPError(404, 'Conversation not found');
@@ -37,7 +37,7 @@ export const onRequestPut: PagesFunction<Env> = async ({ request, env, params })
   if (!messages) throw new Error('Missing messages value');
 
   const info = await env.DB.prepare(
-    'UPDATE Conversations SET model = ?, temperature = ?, max_tokens = ?, system_message = ?, messages = ? WHERE id = ?',
+    'UPDATE Conversations SET updated_at = CURRENT_TIMESTAMP, model = ?1, temperature = ?2, max_tokens = ?3, system_message = ?4, messages = ?5 WHERE id = ?6',
   )
     .bind(model, temperature, max_tokens, system_message, messages, id)
     .run();
@@ -55,7 +55,7 @@ export const onRequestPatch: PagesFunction<Env> = async ({ request, env, params 
   const messages = (await request.text()) as Conversation['messages'];
   if (!messages) throw new Error('Missing messages value');
 
-  const info = await env.DB.prepare('UPDATE Conversations SET messages = ? WHERE id = ?')
+  const info = await env.DB.prepare('UPDATE Conversations SET messages = ?1 WHERE id = ?2')
     .bind(messages, id)
     .run();
   if (info.success) {
@@ -69,7 +69,7 @@ export const onRequestDelete: PagesFunction<Env> = async ({ request, env, params
   const id = typeof params.id === 'string' ? params.id : params.id[0];
   await validateSubject({ request, env, id });
 
-  const info = await env.DB.prepare('DELETE FROM Conversations WHERE id = ?').bind(id).run();
+  const info = await env.DB.prepare('DELETE FROM Conversations WHERE id = ?1').bind(id).run();
 
   if (info.success) {
     return new Response(null, { status: 204 });

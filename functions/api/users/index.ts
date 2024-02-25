@@ -21,7 +21,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (!name) throw new Error('Missing name value for new user');
   if (!email) throw new Error('Missing email value for new user');
 
-  const { success } = await env.DB.prepare('INSERT INTO Users (sub, name, email) VALUES (?, ?, ?)')
+  const { success } = await env.DB.prepare(
+    'INSERT INTO Users (sub, name, email) VALUES (?1, ?2, ?3)',
+  )
     .bind(subject, name, email)
     .run();
   if (success) {
