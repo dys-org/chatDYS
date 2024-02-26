@@ -40,6 +40,11 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue'),
     },
     {
+      path: '/system-presets',
+      name: 'systemPresets',
+      component: () => import('../views/SystemPresetsView.vue'),
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'notFound',
       component: () => import('../views/NotFoundView.vue'),

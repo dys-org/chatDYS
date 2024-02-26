@@ -18,6 +18,8 @@ export interface Conversation {
   system_message: string;
   messages?: string;
   title?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Message {

@@ -12,14 +12,12 @@ async function validateSubject({ request, env, id }: { request: Request; env: En
   if (data.sub !== subject) throw new HTTPError(403, 'User does not own this conversation');
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
+export const onRequestGet: PagesFunction<Env> = async ({ request, env, params }) => {
   const id = typeof params.id === 'string' ? params.id : params.id[0];
+  await validateSubject({ request, env, id });
 
   // Create a prepared statement with our query
   const data = await env.DB.prepare('SELECT * from Conversations WHERE id = ?1').bind(id).first();
-
-  // check if data is empty object
-  if (data == null) throw new HTTPError(404, 'Conversation not found');
 
   return Response.json(data);
 };
@@ -55,7 +53,9 @@ export const onRequestPatch: PagesFunction<Env> = async ({ request, env, params 
   const messages = (await request.text()) as Conversation['messages'];
   if (!messages) throw new Error('Missing messages value');
 
-  const info = await env.DB.prepare('UPDATE Conversations SET messages = ?1 WHERE id = ?2')
+  const info = await env.DB.prepare(
+    'UPDATE Conversations SET updated_at = CURRENT_TIMESTAMP, messages = ?1 WHERE id = ?2',
+  )
     .bind(messages, id)
     .run();
   if (info.success) {
