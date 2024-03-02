@@ -45,9 +45,12 @@ async function updatePreset() {
 
 async function deletePreset() {
   if (selectedPreset.value?.id === undefined) return;
-  await systemPresetStore
-    .deleteSystemPreset(selectedPreset.value?.id)
-    .catch((err) => errorHandler(err, 'There was a problem deleting the preset.'));
+  try {
+    await systemPresetStore.deleteSystemPreset(selectedPreset.value?.id);
+    selectedPreset.value = null;
+  } catch (err: any) {
+    errorHandler(err, 'There was a problem deleting the preset.');
+  }
 }
 
 onBeforeMount(() => {
