@@ -124,7 +124,7 @@ export const useChatStore = defineStore('chat', () => {
     () => route.params.id,
     (newVal) => {
       const val = typeof newVal === 'string' ? newVal : newVal?.[0] || '';
-      console.log(val);
+      // console.log(val);
       id.value = val;
     },
   );

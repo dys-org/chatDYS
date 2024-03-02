@@ -54,7 +54,7 @@ onBeforeMount(() => {
           class="flex rounded px-2 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:bg-transparent dark:group-hover:bg-white/5"
           :to="{ name: 'chat', params: { id: chat.id } }"
           :title="chat.title"
-          active-class="text-white font-bold dark:bg-white/5"
+          active-class="font-bold dark:bg-white/5"
         >
           <span class="max-w-56 truncate">{{ chat.title }}</span>
         </DLink>

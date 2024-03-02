@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { DButton, DInput, DLink, DTextarea } from 'deez-components';
 
 import OneColumn from '@/layouts/OneColumn.vue';
@@ -11,6 +12,7 @@ import IconMinus from '~icons/majesticons/minus';
 import IconPlus from '~icons/majesticons/plus';
 
 const systemPresetStore = useSystemPresetsStore();
+const router = useRouter();
 
 const selectedPreset = ref<SystemPreset | null>(null);
 const name = ref('');
@@ -58,7 +60,11 @@ onBeforeMount(() => {
 
 <template>
   <OneColumn>
-    <DLink :to="{ name: 'chat' }" class="mb-2 mt-12 flex items-center gap-1 text-primary-500">
+    <DLink
+      to=""
+      class="mb-2 mt-12 transition-colors hover:underline focus:underline dark:text-primary-500 dark:hover:text-primary-400"
+      @click="router.go(-1)"
+    >
       <IconChevronLeft class="-ml-1 size-5" aria-hidden="true" />
       Back to Chat
     </DLink>
@@ -66,7 +72,7 @@ onBeforeMount(() => {
     <form class="grid gap-8 md:grid-cols-2 md:gap-16" @submit.prevent="updatePreset">
       <div>
         <div>
-          <label for="preset" class="block text-sm font-semibold leading-6">System Messages</label>
+          <label for="preset" class="block text-sm font-semibold leading-6">Preset Messages</label>
           <select
             id="preset"
             v-model="selectedPreset"
@@ -74,7 +80,7 @@ onBeforeMount(() => {
             name="preset"
             class="mt-2 block w-full rounded-md border-0 bg-white/5 px-3 py-2 ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-primary-500 sm:text-sm sm:leading-6"
           >
-            <option value="" disabled class="py-1">Select Message</option>
+            <option value="" disabled class="py-1">Select Preset</option>
             <option
               v-for="preset in systemPresetStore.presetList"
               :key="preset.id"
@@ -86,14 +92,21 @@ onBeforeMount(() => {
           </select>
         </div>
         <div class="mt-4 flex gap-0.5">
-          <DButton class="justify-self-start rounded-r-none px-2.5" @click="addNewPreset">
+          <DButton
+            class="justify-self-start rounded-r-none px-2.5"
+            title="Add New Preset"
+            @click="addNewPreset"
+          >
+            <span class="sr-only">Add New Preset</span>
             <IconPlus class="size-4" aria-hidden="true" />
           </DButton>
           <DButton
             class="justify-self-start rounded-l-none px-2.5"
             :disabled="!selectedPreset?.id"
+            title="Delete Preset"
             @click="deletePreset"
           >
+            <span class="sr-only">Delete Preset</span>
             <IconMinus class="size-4" aria-hidden="true" />
           </DButton>
         </div>
