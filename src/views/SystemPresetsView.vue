@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { DButton, DInput, DLink, DTextarea } from 'deez-components';
+import { DButton, DInput, DLink, DSelect, DTextarea } from 'deez-components';
 
 import OneColumn from '@/layouts/OneColumn.vue';
 import { type SystemPreset, useSystemPresetsStore } from '@/stores/systemPresets';
@@ -14,7 +14,7 @@ import IconPlus from '~icons/majesticons/plus';
 const systemPresetStore = useSystemPresetsStore();
 const router = useRouter();
 
-const selectedPreset = ref<SystemPreset | null>(null);
+const selectedPreset = ref<SystemPreset>();
 const name = ref('');
 const text = ref('');
 
@@ -47,7 +47,7 @@ async function deletePreset() {
   if (selectedPreset.value?.id === undefined) return;
   try {
     await systemPresetStore.deleteSystemPreset(selectedPreset.value?.id);
-    selectedPreset.value = null;
+    selectedPreset.value = undefined;
   } catch (err: any) {
     errorHandler(err, 'There was a problem deleting the preset.');
   }
@@ -74,26 +74,23 @@ onBeforeMount(() => {
     <h1 class="mb-16 text-4xl font-semibold">System Message Presets</h1>
     <form class="grid gap-8 md:grid-cols-2 md:gap-16" @submit.prevent="updatePreset">
       <div>
-        <div>
-          <label for="preset" class="block text-sm font-semibold leading-6">Preset Messages</label>
-          <select
-            id="preset"
-            v-model="selectedPreset"
-            size="5"
-            name="preset"
-            class="mt-2 block w-full rounded-md border-0 bg-white/5 px-3 py-2 ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-primary-500 sm:text-sm sm:leading-6"
+        <DSelect
+          id="preset"
+          v-model="selectedPreset"
+          size="5"
+          label="Preset Messages"
+          class="px-3 py-2"
+        >
+          <option value="" disabled class="py-1">Select Preset</option>
+          <option
+            v-for="preset in systemPresetStore.presetList"
+            :key="preset.id"
+            :value="preset"
+            class="py-1"
           >
-            <option value="" disabled class="py-1">Select Preset</option>
-            <option
-              v-for="preset in systemPresetStore.presetList"
-              :key="preset.id"
-              :value="preset"
-              class="py-1"
-            >
-              {{ preset.name }}
-            </option>
-          </select>
-        </div>
+            {{ preset.name }}
+          </option>
+        </DSelect>
         <div class="mt-4 flex gap-0.5">
           <DButton
             class="justify-self-start rounded-r-none px-2.5"
