@@ -5,7 +5,7 @@ import { DButton, DInput, DLink, DSelect, DTextarea } from 'deez-components';
 
 import OneColumn from '@/layouts/OneColumn.vue';
 import { type SystemPreset, useSystemPresetsStore } from '@/stores/systemPresets';
-import { errorHandler } from '@/utils';
+import { toastErrorHandler } from '@/utils';
 
 import IconChevronLeft from '~icons/majesticons/chevron-left';
 import IconMinus from '~icons/majesticons/minus';
@@ -29,7 +29,7 @@ async function addNewPreset() {
       name: 'New Preset',
       text: 'You are a helpful assistant.',
     })
-    .catch((err) => errorHandler(err, 'There was a problem creating the preset.'));
+    .catch((err) => toastErrorHandler(err, 'There was a problem creating the preset.'));
 }
 
 async function updatePreset() {
@@ -40,7 +40,7 @@ async function updatePreset() {
       name: name.value,
       text: text.value,
     })
-    .catch((err) => errorHandler(err, 'There was a problem updating the preset.'));
+    .catch((err) => toastErrorHandler(err, 'There was a problem updating the preset.'));
 }
 
 async function deletePreset() {
@@ -48,8 +48,8 @@ async function deletePreset() {
   try {
     await systemPresetStore.deleteSystemPreset(selectedPreset.value?.id);
     selectedPreset.value = undefined;
-  } catch (err: any) {
-    errorHandler(err, 'There was a problem deleting the preset.');
+  } catch (err) {
+    toastErrorHandler(err, 'There was a problem deleting the preset.');
   }
 }
 

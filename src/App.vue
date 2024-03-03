@@ -9,6 +9,7 @@ import { useUserStore } from '@/stores/user';
 
 import AppHeader from './components/AppHeader.vue';
 import PageLoader from './components/PageLoader.vue';
+import { HTTPError } from './utils/exceptions';
 
 const { isAuthenticated, user, isLoading, logout } = useAuth0();
 
@@ -23,10 +24,11 @@ watch(isAuthenticated, async (newVal) => {
     if (!user.value) return;
     try {
       await userStore.fetchCurrentUser();
-    } catch (err: any) {
-      console.error(err.message);
+    } catch (err) {
+      if (err instanceof Error) console.error(err.message);
+      else console.error(err);
       // if user not found, create new user
-      if (err.status === 404) {
+      if (err instanceof HTTPError && err.status === 404) {
         userStore.createNewUser({
           name: user.value.name ?? '',
           email: user.value.email ?? '',

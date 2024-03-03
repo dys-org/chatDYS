@@ -6,6 +6,7 @@ import { DDropdown, DLink } from 'deez-components';
 import { useChatStore } from '@/stores/chat';
 import { useConversationStore } from '@/stores/conversation';
 import { useToastStore } from '@/stores/toast';
+import { toastErrorHandler } from '@/utils';
 
 import IconTrash from '~icons/lucide/trash-2';
 const route = useRoute();
@@ -23,13 +24,8 @@ async function handleDelete(id: number) {
       chatStore.$reset();
       router.push({ name: 'chat' });
     }
-  } catch (err: any) {
-    console.error(err);
-    toastStore.add({
-      variant: 'error',
-      title: 'There was a problem deleting your conversation.',
-      description: err.message,
-    });
+  } catch (err) {
+    toastErrorHandler(err, 'There was a problem deleting your conversation.');
   }
 }
 

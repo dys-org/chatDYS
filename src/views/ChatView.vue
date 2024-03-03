@@ -11,7 +11,7 @@ import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { useChatStore } from '@/stores/chat';
 import { useConversationStore } from '@/stores/conversation';
-import { useToastStore } from '@/stores/toast';
+import { toastErrorHandler } from '@/utils';
 import { CHAT_STORAGE_KEY, STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 
 const route = useRoute();
@@ -19,31 +19,20 @@ const router = useRouter();
 
 const chatStore = useChatStore();
 const conversationStore = useConversationStore();
-const toastStore = useToastStore();
 
 async function saveConversation() {
   try {
     const post = await conversationStore.createConversation();
     router.push({ name: 'chat', params: { id: post.meta.last_row_id } });
-  } catch (err: any) {
-    console.error(err);
-    toastStore.add({
-      variant: 'error',
-      title: 'There was a problem saving your conversation.',
-      description: err.message,
-    });
+  } catch (err) {
+    toastErrorHandler(err, 'There was a problem saving your conversation.');
   }
 }
 async function updateMessages() {
   try {
     await conversationStore.updateMessages(route.params.id);
-  } catch (err: any) {
-    console.error(err);
-    toastStore.add({
-      variant: 'error',
-      title: 'There was a problem updating your conversation.',
-      description: err.message,
-    });
+  } catch (err) {
+    toastErrorHandler(err, 'There was a problem updating your conversation.');
   }
 }
 
@@ -61,13 +50,8 @@ async function handleSend() {
     await chatStore.sendPrompt();
     if (route.params.id) await updateMessages();
     else await saveConversation();
-  } catch (err: any) {
-    console.error(err);
-    toastStore.add({
-      variant: 'error',
-      title: 'Failed to send prompt',
-      description: err.message,
-    });
+  } catch (err) {
+    toastErrorHandler(err, 'Failed to send prompt.');
   }
 }
 async function scrollToBottom() {

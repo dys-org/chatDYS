@@ -5,6 +5,7 @@ import { get as getIDB, set as setIDB } from 'idb-keyval';
 
 import { useChatStore } from '@/stores/chat';
 import { useToastStore } from '@/stores/toast';
+import { toastErrorHandler } from '@/utils';
 import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 
 const chatStore = useChatStore();
@@ -21,9 +22,8 @@ async function handleSubmit() {
       title: 'API key successfully saved',
       description: 'You can change your API Key anytime from the Profile page.',
     });
-  } catch (err: any) {
-    console.error(err);
-    toastStore.add({ variant: 'error', title: 'Error saving API Key', description: err.message });
+  } catch (err) {
+    toastErrorHandler(err, 'Error saving API Key');
   }
 }
 

@@ -2,35 +2,23 @@
 import { DButton } from 'deez-components';
 
 import TwoColumn from '@/layouts/TwoColumn.vue';
-import { useToastStore } from '@/stores/toast';
+import { toastErrorHandler } from '@/utils';
 import http from '@/utils/http';
-
-const toastStore = useToastStore();
 
 async function getUsers() {
   try {
     const data = await http.get('/api/users');
     console.log(data);
-  } catch (err: any) {
-    console.error(err);
-    toastStore.add({
-      variant: 'error',
-      title: 'Failed to get users',
-      description: err.message,
-    });
+  } catch (err) {
+    toastErrorHandler(err, 'Failed to get users.');
   }
 }
 async function getConvos() {
   try {
     const data = await http.get('/api/conversations');
     console.log(data);
-  } catch (err: any) {
-    console.error(err);
-    toastStore.add({
-      variant: 'error',
-      title: 'Failed to get conversations',
-      description: err.message,
-    });
+  } catch (err) {
+    toastErrorHandler(err, 'Failed to get conversations.');
   }
 }
 </script>
