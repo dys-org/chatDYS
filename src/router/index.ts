@@ -24,6 +24,12 @@ const router = createRouter({
       beforeEnter: authGuard,
     },
     {
+      path: '/system-presets',
+      name: 'systemPresets',
+      component: () => import('../views/SystemPresetsView.vue'),
+      beforeEnter: authGuard,
+    },
+    {
       path: '/sandbox',
       name: 'sandbox',
       component: () => import('../views/SandboxView.vue'),
@@ -38,11 +44,6 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-    },
-    {
-      path: '/system-presets',
-      name: 'systemPresets',
-      component: () => import('../views/SystemPresetsView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
