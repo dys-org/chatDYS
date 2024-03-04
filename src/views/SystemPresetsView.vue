@@ -5,14 +5,16 @@ import { DButton, DInput, DLink, DSelect, DTextarea } from 'deez-components';
 
 import OneColumn from '@/layouts/OneColumn.vue';
 import { type SystemPreset, useSystemPresetsStore } from '@/stores/systemPresets';
+import { useToastStore } from '@/stores/toast';
 import { toastErrorHandler } from '@/utils';
 
 import IconChevronLeft from '~icons/majesticons/chevron-left';
 import IconMinus from '~icons/majesticons/minus';
 import IconPlus from '~icons/majesticons/plus';
 
-const systemPresetStore = useSystemPresetsStore();
 const router = useRouter();
+const systemPresetStore = useSystemPresetsStore();
+const toastStore = useToastStore();
 
 const selectedPreset = ref<SystemPreset>();
 const name = ref('');
@@ -24,23 +26,31 @@ watch(selectedPreset, (newVal, _) => {
 });
 
 async function addNewPreset() {
-  await systemPresetStore
-    .createSystemPreset({
+  try {
+    const post = await systemPresetStore.createSystemPreset({
       name: 'New Preset',
       text: 'You are a helpful assistant.',
-    })
-    .catch((err) => toastErrorHandler(err, 'There was a problem creating the preset.'));
+    });
+    selectedPreset.value = systemPresetStore.presetList?.find(
+      (preset) => preset.id === post.meta.last_row_id,
+    );
+  } catch (err) {
+    toastErrorHandler(err, 'There was a problem creating the preset.');
+  }
 }
 
 async function updatePreset() {
-  if (selectedPreset.value == null) return;
-  await systemPresetStore
-    .updateSystemPreset({
+  if (selectedPreset.value === undefined) return;
+  try {
+    await systemPresetStore.updateSystemPreset({
       id: selectedPreset.value.id,
       name: name.value,
       text: text.value,
-    })
-    .catch((err) => toastErrorHandler(err, 'There was a problem updating the preset.'));
+    });
+    toastStore.add({ variant: 'success', title: 'Preset successfully updated' });
+  } catch (err) {
+    toastErrorHandler(err, 'There was a problem updating the preset.');
+  }
 }
 
 async function deletePreset() {
@@ -112,13 +122,19 @@ onBeforeMount(() => {
         </div>
       </div>
       <div class="grid gap-8">
-        <DInput id="name" v-model="name" label="Name" />
-        <DTextarea id="text" v-model="text" label="Text" :rows="6" />
+        <DInput id="name" v-model="name" label="Name" :disabled="selectedPreset === undefined" />
+        <DTextarea
+          id="text"
+          v-model="text"
+          label="Text"
+          :rows="6"
+          :disabled="selectedPreset === undefined"
+        />
         <DButton
           type="submit"
           variant="primary"
           class="justify-self-end"
-          :disabled="selectedPreset == null"
+          :disabled="selectedPreset === undefined"
         >
           Save
         </DButton>
