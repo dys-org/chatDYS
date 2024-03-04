@@ -27,12 +27,12 @@ watch(selectedPreset, (newVal, _) => {
 
 async function addNewPreset() {
   try {
-    const post = await systemPresetStore.createSystemPreset({
+    const res = await systemPresetStore.createSystemPreset({
       name: 'New Preset',
       text: 'You are a helpful assistant.',
     });
     selectedPreset.value = systemPresetStore.presetList?.find(
-      (preset) => preset.id === post.meta.last_row_id,
+      (preset) => preset.id === res.meta.last_row_id,
     );
   } catch (err) {
     toastErrorHandler(err, 'There was a problem creating the preset.');
@@ -47,6 +47,10 @@ async function updatePreset() {
       name: name.value,
       text: text.value,
     });
+    // preset has to be re-selected because the modeled object has changed
+    selectedPreset.value = systemPresetStore.presetList?.find(
+      (preset) => preset.id === selectedPreset.value?.id,
+    );
     toastStore.add({ variant: 'success', title: 'Preset successfully updated' });
   } catch (err) {
     toastErrorHandler(err, 'There was a problem updating the preset.');

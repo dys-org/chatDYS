@@ -22,9 +22,9 @@ export const useSystemPresetsStore = defineStore('systemPresets', () => {
   }
 
   async function createSystemPreset(params: { name: string; text: string }) {
-    const post: D1Result<Record<string, unknown>> = await http.post('/api/system_presets', params);
+    const res: D1Result<Record<string, unknown>> = await http.post('/api/system_presets', params);
     await fetchPresetList();
-    return post;
+    return res;
   }
   async function updateSystemPreset(params: { id: number; name: string; text: string }) {
     await http.put(`/api/system_presets/${params.id}`, params);
