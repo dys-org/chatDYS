@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { DButton, DInput, DLink, DSelect, DTextarea } from 'deez-components';
+import { DButton, DInput, DLink, DModal, DSelect, DTextarea } from 'deez-components';
 
 import OneColumn from '@/layouts/OneColumn.vue';
 import { type SystemPreset, useSystemPresetsStore } from '@/stores/systemPresets';
@@ -17,8 +17,10 @@ const systemPresetStore = useSystemPresetsStore();
 const toastStore = useToastStore();
 
 const selectedPreset = ref<SystemPreset>();
+const isConfirmOpen = ref(false);
 const name = ref('');
 const text = ref('');
+let confirmPresetName = '';
 
 watch(selectedPreset, (newVal, _) => {
   name.value = newVal?.name || '';
@@ -62,9 +64,17 @@ async function deletePreset() {
   try {
     await systemPresetStore.deleteSystemPreset(selectedPreset.value?.id);
     selectedPreset.value = undefined;
+    isConfirmOpen.value = false;
+    toastStore.add({ variant: 'success', title: 'Preset successfully deleted' });
   } catch (err) {
     toastErrorHandler(err, 'There was a problem deleting the preset.');
   }
+}
+
+function handleDeletePreset() {
+  if (selectedPreset.value === undefined) return;
+  confirmPresetName = selectedPreset.value.name;
+  isConfirmOpen.value = true;
 }
 
 onBeforeMount(() => {
@@ -118,7 +128,7 @@ onBeforeMount(() => {
             class="justify-self-start rounded-l-none px-2.5"
             :disabled="!selectedPreset?.id"
             title="Delete Preset"
-            @click="deletePreset"
+            @click="handleDeletePreset"
           >
             <span class="sr-only">Delete Preset</span>
             <IconMinus class="size-4" aria-hidden="true" />
@@ -145,4 +155,19 @@ onBeforeMount(() => {
       </div>
     </form>
   </OneColumn>
+  <DModal
+    v-model:open="isConfirmOpen"
+    danger
+    title="Delete Preset"
+    confirm-text="Yes, Delete"
+    @confirm="deletePreset"
+  >
+    <template #content>
+      <p class="text-sm dark:text-white/60">
+        Are you sure you want to delete
+        <span class="font-semibold text-white">{{ confirmPresetName }}</span
+        >? This action cannot be undone.
+      </p>
+    </template>
+  </DModal>
 </template>
