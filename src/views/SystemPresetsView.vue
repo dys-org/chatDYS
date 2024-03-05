@@ -62,7 +62,7 @@ async function updatePreset() {
 async function deletePreset() {
   if (selectedPreset.value?.id === undefined) return;
   try {
-    await systemPresetStore.deleteSystemPreset(selectedPreset.value?.id);
+    await systemPresetStore.deleteSystemPreset(selectedPreset.value.id);
     selectedPreset.value = undefined;
     isConfirmOpen.value = false;
     toastStore.add({ variant: 'success', title: 'Preset successfully deleted' });
@@ -72,8 +72,8 @@ async function deletePreset() {
 }
 
 function handleDeletePreset() {
-  if (selectedPreset.value === undefined) return;
-  confirmPresetName = selectedPreset.value.name;
+  // make a copy of the preset name before opening the confirm modal
+  confirmPresetName = selectedPreset.value?.name ?? '';
   isConfirmOpen.value = true;
 }
 
