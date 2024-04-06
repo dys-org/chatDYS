@@ -2,12 +2,10 @@
 import { useAuth0 } from '@auth0/auth0-vue';
 import { DAvatar, DButton, DDropdown } from 'deez-components';
 
-import IconUser from '~icons/majesticons/user-line';
-
 const userDropdownOptions = [
   {
     label: 'Profile',
-    icon: IconUser,
+    icon: 'i-majesticons-user-line',
     key: 'profile',
     to: '/profile',
   },

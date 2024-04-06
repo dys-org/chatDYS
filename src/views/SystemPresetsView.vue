@@ -8,10 +8,6 @@ import { type SystemPreset, useSystemPresetsStore } from '@/stores/systemPresets
 import { useToastStore } from '@/stores/toast';
 import { toastErrorHandler } from '@/utils';
 
-import IconChevronLeft from '~icons/majesticons/chevron-left';
-import IconMinus from '~icons/majesticons/minus';
-import IconPlus from '~icons/majesticons/plus';
-
 const router = useRouter();
 const systemPresetStore = useSystemPresetsStore();
 const toastStore = useToastStore();
@@ -92,7 +88,7 @@ onBeforeMount(() => {
       class="mb-2 mt-12 transition-colors hover:underline focus:underline dark:text-primary-500 dark:hover:text-primary-400"
       @click="router.go(-1)"
     >
-      <IconChevronLeft class="-ml-1 size-5" aria-hidden="true" />
+      <span class="i-majesticons-chevron-left -ml-1 size-5" aria-hidden="true"></span>
       Back to Chat
     </DLink>
     <h1 class="mb-16 text-4xl font-semibold">System Message Presets</h1>
@@ -122,7 +118,7 @@ onBeforeMount(() => {
             @click="addNewPreset"
           >
             <span class="sr-only">Add New Preset</span>
-            <IconPlus class="size-4" aria-hidden="true" />
+            <span class="i-majesticons-plus size-4" aria-hidden="true"></span>
           </DButton>
           <DButton
             class="justify-self-start rounded-l-none px-2.5"
@@ -131,7 +127,7 @@ onBeforeMount(() => {
             @click="handleDeletePreset"
           >
             <span class="sr-only">Delete Preset</span>
-            <IconMinus class="size-4" aria-hidden="true" />
+            <span class="i-majesticons-minus size-4" aria-hidden="true"></span>
           </DButton>
         </div>
       </div>

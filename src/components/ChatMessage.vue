@@ -6,9 +6,6 @@ import MarkdownIt from 'markdown-it';
 
 import { type Message } from '@/stores/chat';
 
-import IconClipboardCheck from '~icons/majesticons/clipboard-check-line';
-import IconClipboard from '~icons/majesticons/clipboard-line';
-
 const props = withDefaults(
   defineProps<{
     message: Message;
@@ -73,8 +70,12 @@ async function handleCopy(content: string) {
           @click="handleCopy(props.message.content)"
         >
           <span class="sr-only">{{ isCopying ? 'Copied' : 'Copy' }}</span>
-          <IconClipboardCheck v-if="isCopying" class="size-5 text-green-400" aria-hidden="true" />
-          <IconClipboard v-else class="size-5" aria-hidden="true" />
+          <span
+            v-if="isCopying"
+            class="i-majesticons-clipboard-check-line size-5 text-green-400"
+            aria-hidden="true"
+          ></span>
+          <span v-else class="i-majesticons-clipboard-line size-5" aria-hidden="true"></span>
         </DButton>
       </div>
     </div>

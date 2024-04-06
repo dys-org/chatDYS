@@ -4,9 +4,6 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 import { useStorage } from '@vueuse/core';
 import { DButton } from 'deez-components';
 
-import IconClose from '~icons/majesticons/close';
-import IconMenuExpand from '~icons/majesticons/menu-expand-left';
-
 const props = withDefaults(
   defineProps<{
     h1?: string;
@@ -35,17 +32,20 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
             @click="isSidebarExpanded = !isSidebarExpanded"
           >
             <span class="sr-only">{{ isSidebarExpanded ? 'Collapse' : 'Expand' }} Settings</span>
-            <IconMenuExpand
-              :class="['size-6', isSidebarExpanded && 'rotate-180']"
+            <span
+              :class="[
+                'i-majesticons-menu-expand-left block size-6',
+                isSidebarExpanded && 'rotate-180',
+              ]"
               aria-hidden="true"
-            />
+            ></span>
           </DButton>
           <DButton
             class="rounded-r-none p-1.5 dark:bg-gray-700 hover:dark:bg-gray-600 lg:hidden"
             @click="sidebarOpen = true"
           >
             <span class="sr-only">Open sidebar</span>
-            <IconMenuExpand class="size-6" aria-hidden="true" />
+            <span class="i-majesticons-menu-expand-left block size-6" aria-hidden="true"></span>
           </DButton>
         </div>
       </div>
@@ -111,7 +111,10 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
                   @click="sidebarOpen = false"
                 >
                   <span class="sr-only">Close sidebar</span>
-                  <IconClose class="size-6 text-white" aria-hidden="true" />
+                  <span
+                    class="i-majesticons-close block size-6 text-white"
+                    aria-hidden="true"
+                  ></span>
                 </button>
               </div>
             </TransitionChild>

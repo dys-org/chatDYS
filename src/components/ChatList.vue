@@ -8,7 +8,6 @@ import { useConversationStore } from '@/stores/conversation';
 import { useToastStore } from '@/stores/toast';
 import { toastErrorHandler } from '@/utils';
 
-import IconTrash from '~icons/lucide/trash-2';
 const route = useRoute();
 const router = useRouter();
 
@@ -63,7 +62,7 @@ onBeforeMount(() => {
               {
                 key: 'delete_conversation',
                 label: 'Delete',
-                icon: IconTrash,
+                icon: 'i-lucide-trash-2',
                 danger: true,
                 fn: () => handleDelete(chat.id),
               },

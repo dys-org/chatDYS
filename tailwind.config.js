@@ -1,7 +1,8 @@
-/** @type {import('tailwindcss').Config} */
+import { getIconCollections, iconsPlugin } from '@egoist/tailwindcss-icons';
 import forms from '@tailwindcss/forms';
 import colors from 'tailwindcss/colors';
 
+/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     './index.html',
@@ -21,5 +22,11 @@ export default {
       },
     },
   },
-  plugins: [forms],
+  plugins: [
+    forms,
+    iconsPlugin({
+      // Select the icon collections you want to use
+      collections: getIconCollections(['lucide', 'majesticons']),
+    }),
+  ],
 };

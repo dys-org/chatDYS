@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { DButton, DTextarea } from 'deez-components';
 
-import IconSend from '~icons/majesticons/send';
-
 const model = defineModel<string>();
 
 const emit = defineEmits<{
@@ -32,7 +30,7 @@ const emit = defineEmits<{
           @click="emit('send')"
         >
           <span class="sr-only">Send</span>
-          <IconSend class="size-5" />
+          <span class="i-majesticons-send size-5"></span>
         </DButton>
       </template>
     </DTextarea>

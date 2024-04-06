@@ -4,13 +4,11 @@ import { DButton } from 'deez-components';
 
 import { useChatStore } from '@/stores/chat';
 
-import IconPenSquare from '~icons/lucide/pen-square';
-
 const router = useRouter();
 const chatStore = useChatStore();
 
 async function handleNewChat() {
-  await chatStore.$reset();
+  chatStore.$reset();
   await router.push({ name: 'chat' });
 }
 </script>
@@ -18,6 +16,6 @@ async function handleNewChat() {
 <template>
   <DButton class="w-full justify-between" variant="primary" @click="handleNewChat">
     New Chat
-    <IconPenSquare class="size-4" />
+    <span class="i-lucide-pen-square size-4"></span>
   </DButton>
 </template>
