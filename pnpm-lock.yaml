@@ -82,9 +82,6 @@ devDependencies:
   '@types/node':
     specifier: ^20.12.7
     version: 20.12.7
-  '@types/prismjs':
-    specifier: ^1.26.3
-    version: 1.26.3
   '@vitejs/plugin-vue':
     specifier: ^4.6.2
     version: 4.6.2(vite@4.5.3)(vue@3.4.22)
@@ -1345,10 +1342,6 @@ packages:
     resolution: {integrity: sha512-wq0cICSkRLVaf3UGLMGItu/PtdY7oaXaI/RVU+xliKVOtRna3PRY57ZDfztpDL0n11vfymMUnXv8QwYCO7L1wg==}
     dependencies:
       undici-types: 5.26.5
-
-  /@types/prismjs@1.26.3:
-    resolution: {integrity: sha512-A0D0aTXvjlqJ5ZILMz3rNfDBOx9hHxLZYv2by47Sm/pqW35zzjusrZTryatjN/Rf8Us2gZrJD+KeHbUSTux1Cw==}
-    dev: true
 
   /@types/semver@7.5.8:
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}

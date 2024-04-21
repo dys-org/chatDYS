@@ -47,7 +47,6 @@
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/markdown-it": "^13.0.7",
     "@types/node": "^20.12.7",
-    "@types/prismjs": "^1.26.3",
     "@vitejs/plugin-vue": "^4.6.2",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
