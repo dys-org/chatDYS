@@ -3,9 +3,9 @@ import { type TiktokenModel } from 'js-tiktoken';
 
 import http from '@/utils/http';
 
-export interface TokenizeRequest {
+interface TokenizeRequest {
   stringToTokenize: string;
-  model?: TiktokenModel;
+  model: TiktokenModel;
 }
 
 interface TokenizeResponse {
@@ -15,7 +15,7 @@ interface TokenizeResponse {
 export function useTokenize() {
   const tokenLength = ref(0);
 
-  async function checkTokens({ stringToTokenize, model = 'gpt-4' }: TokenizeRequest) {
+  async function checkTokens({ stringToTokenize, model }: TokenizeRequest) {
     tokenLength.value = 0;
     try {
       const { tokens } = await http.post<TokenizeRequest, TokenizeResponse>('/api/tokenize', {

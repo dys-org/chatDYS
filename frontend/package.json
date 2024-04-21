@@ -26,6 +26,7 @@
     "cors": "^2.8.5",
     "deez-components": "^0.5.2",
     "dotenv": "^16.4.5",
+    "hono": "^4.2.5",
     "idb-keyval": "^6.2.1",
     "js-tiktoken": "^1.0.11",
     "lodash.clonedeep": "^4.5.0",
