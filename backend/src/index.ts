@@ -9,6 +9,8 @@ import chat from './chat';
 import conversations from './conversations';
 import tokenize from './tokenize';
 import users from './users';
+import { HTTPException } from 'hono/http-exception';
+// import { HTTPException } from 'hono/http-exception';
 
 const app = new Hono();
 
@@ -25,8 +27,11 @@ app.onError((err, c) => {
     const { status, message, code, type } = err;
     return c.json({ status, message, code, type }, { status: status ?? 500 });
   }
-  const { status, message, code, type } = err;
-  return c.json({ status, message, stack }, { status: status ?? 500 });
+  if (err instanceof HTTPException) {
+    const { status, message, stack } = err;
+    return c.json({ status, message, stack }, { status: status ?? 500 });
+  }
+  return c.text('Server Error', 500);
 });
 
 const api = new Hono();

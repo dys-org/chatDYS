@@ -5,12 +5,16 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.11.0",
+    "better-sqlite3": "^9.5.0",
+    "drizzle-orm": "^0.30.9",
     "hono": "^4.2.5",
     "js-tiktoken": "^1.0.11",
     "openai": "^4.38.2"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
     "@types/node": "^20.11.17",
+    "drizzle-kit": "^0.20.17",
     "tsx": "^4.7.1",
     "typescript": "^5.4.5"
   }

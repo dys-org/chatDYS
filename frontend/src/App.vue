@@ -9,7 +9,7 @@ import { useUserStore } from '@/stores/user';
 
 import AppHeader from './components/AppHeader.vue';
 import PageLoader from './components/PageLoader.vue';
-import { HTTPError } from './utils/exceptions';
+import { HTTPError } from './utils/exceptions'; // use hono's HTTPException
 
 const { isAuthenticated, user, isLoading, logout } = useAuth0();
 

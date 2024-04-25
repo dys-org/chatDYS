@@ -9,11 +9,11 @@ interface requestParams {
 
 const app = new Hono();
 
-app.get('/chat', async (c) => {
+app.post('/chat', async (c) => {
   const headers = new Headers({ 'Content-Type': 'text/event-stream' });
   const init = { status: 200, statusText: 'ok', headers };
   const { chatCompletionParams, apiKey } = (await c.req.json()) as requestParams;
-
+  // TODO can i use zod to validate the request body?
   if (apiKey == null) throw new Error('No api key was provided');
   const openai = new OpenAI({ apiKey: apiKey });
 

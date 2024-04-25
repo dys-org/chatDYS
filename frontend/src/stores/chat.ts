@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 import { defineStore } from 'pinia';
 
 import { useTokenize } from '@/composables/useTokenize';
-import { auth0 } from '@/main';
+// import { auth0 } from '@/main';
 import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 import http from '@/utils/http';
 
@@ -65,11 +65,11 @@ export const useChatStore = defineStore('chat', () => {
     checkTokens({ stringToTokenize, model: model.value });
   }
   async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
-    const token = await auth0.getAccessTokenSilently();
+    // const token = await auth0.getAccessTokenSilently();
     const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
     const res = await fetch('/api/chat', {
       method: 'POST',
-      headers: { Authorization: 'Bearer ' + token },
+      // headers: { Authorization: 'Bearer ' + token },
       body: JSON.stringify({ chatCompletionParams, apiKey }),
     });
     if (!res.ok) {
