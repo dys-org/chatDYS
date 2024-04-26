@@ -31,7 +31,9 @@ async function handleDelete(id: number) {
 onBeforeMount(() => {
   // fetch the conversations if they are not already loaded
   if (conversationStore.conversationList === null) {
-    conversationStore.fetchConversationList();
+    conversationStore.fetchConversationList().catch((err) => {
+      toastErrorHandler(err, 'There was a problem fetching your conversations.');
+    });
   }
 });
 </script>

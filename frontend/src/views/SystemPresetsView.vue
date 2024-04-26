@@ -76,7 +76,9 @@ function handleDeletePreset() {
 onBeforeMount(() => {
   // fetch the preset system messages if they are not already loaded
   if (systemPresetStore.presetList === null) {
-    systemPresetStore.fetchPresetList();
+    systemPresetStore.fetchPresetList().catch((err) => {
+      toastErrorHandler(err, 'There was a problem fetching presets.');
+    });
   }
 });
 </script>

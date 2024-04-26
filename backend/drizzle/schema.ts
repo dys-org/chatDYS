@@ -9,7 +9,7 @@ import {
 } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
-export const users = sqliteTable(
+export const Users = sqliteTable(
   'Users',
   {
     id: integer('id').primaryKey({ autoIncrement: true }),
@@ -26,13 +26,13 @@ export const users = sqliteTable(
   },
 );
 
-export type UserInsert = typeof users.$inferInsert;
+export type UserInsert = typeof Users.$inferInsert;
 
-export const conversations = sqliteTable('Conversations', {
+export const Conversations = sqliteTable('Conversations', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   sub: text('sub')
     .notNull()
-    .references(() => users.sub),
+    .references(() => Users.sub),
   model: text('model').notNull(),
   temperature: integer('temperature').notNull(),
   max_tokens: integer('max_tokens').notNull(),
@@ -43,17 +43,17 @@ export const conversations = sqliteTable('Conversations', {
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type ConversationInsert = typeof conversations.$inferInsert;
+export type ConversationInsert = typeof Conversations.$inferInsert;
 
-export const systemPresets = sqliteTable('System_Presets', {
+export const System_Presets = sqliteTable('System_Presets', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   sub: text('sub')
     .notNull()
-    .references(() => users.sub),
+    .references(() => Users.sub),
   name: text('name').notNull(),
   text: text('text').notNull(),
   created_at: numeric('created_at').default(sql`(CURRENT_TIMESTAMP)`),
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type SystemPresetInsert = typeof systemPresets.$inferInsert;
+export type SystemPresetInsert = typeof System_Presets.$inferInsert;

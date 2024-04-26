@@ -1,9 +1,13 @@
-import { auth0 } from '@/main';
+// import { auth0 } from '@/main';
 
 async function http<T>(path: string, config: RequestInit): Promise<T> {
-  const token = await auth0.getAccessTokenSilently();
+  // const token = await auth0.getAccessTokenSilently();
   const req = new Request(path, {
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    headers: {
+      'Content-Type': 'application/json',
+      // Authorization: 'Bearer ' + token
+      // Authorization: 'Basic ' + btoa('dys:hello321'),
+    },
     ...config,
   });
   const res = await fetch(req);

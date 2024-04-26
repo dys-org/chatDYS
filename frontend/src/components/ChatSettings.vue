@@ -6,6 +6,7 @@ import { DCollapse, DDropdown, DRange, DSelect, DTextarea } from 'deez-component
 
 import { MODELS, useChatStore } from '@/stores/chat';
 import { useSystemPresetsStore } from '@/stores/systemPresets';
+import { toastErrorHandler } from '@/utils';
 
 const router = useRouter();
 
@@ -34,7 +35,9 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
 onBeforeMount(() => {
   // fetch the preset system messages if they are not already loaded
   if (systemPresetStore.presetList === null) {
-    systemPresetStore.fetchPresetList();
+    systemPresetStore.fetchPresetList().catch((err) => {
+      toastErrorHandler(err, 'There was a problem fetching presets.');
+    });
   }
 });
 </script>

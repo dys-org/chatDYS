@@ -7,4 +7,5 @@ export default {
   dbCredentials: {
     url: './db-data/chat-dys.db',
   },
+  introspect: { casing: 'preserve' },
 } satisfies Config;

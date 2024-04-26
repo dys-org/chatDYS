@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null);
 
   async function fetchCurrentUser() {
-    user.value = await http.get(`/api/user/info`);
+    user.value = await http.get(`/api/users/current`);
   }
 
   async function createNewUser(userInfo: { email: string; name: string }) {

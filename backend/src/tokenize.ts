@@ -8,7 +8,7 @@ interface TokenizeRequest {
 
 const app = new Hono();
 
-app.get('/tokenize', async (c) => {
+app.get('/', async (c) => {
   const { stringToTokenize, model }: TokenizeRequest = await c.req.json();
   if (stringToTokenize == null) throw new Error('No string was provided');
   const encoder = encodingForModel(model);

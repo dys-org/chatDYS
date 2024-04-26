@@ -18,20 +18,20 @@ export const useSystemPresetsStore = defineStore('systemPresets', () => {
   const presetList = ref<SystemPreset[] | null>(null);
 
   async function fetchPresetList() {
-    presetList.value = await http.get(`/api/system_presets`);
+    presetList.value = await http.get(`/api/system-presets`);
   }
 
   async function createSystemPreset(params: { name: string; text: string }) {
-    const res: D1Result<Record<string, unknown>> = await http.post('/api/system_presets', params);
+    const res: D1Result<Record<string, unknown>> = await http.post('/api/system-presets', params);
     await fetchPresetList();
     return res;
   }
   async function updateSystemPreset(params: { id: number; name: string; text: string }) {
-    await http.put(`/api/system_presets/${params.id}`, params);
+    await http.put(`/api/system-presets/${params.id}`, params);
     await fetchPresetList();
   }
   async function deleteSystemPreset(id: number) {
-    await http.delete(`/api/system_presets/${id}`);
+    await http.delete(`/api/system-presets/${id}`);
     await fetchPresetList();
   }
 
