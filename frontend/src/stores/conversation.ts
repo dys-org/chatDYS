@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import type { D1Result } from '@cloudflare/workers-types';
 import { defineStore } from 'pinia';
 
 import http from '@/utils/http';
@@ -15,7 +14,8 @@ export const useConversationStore = defineStore('conversation', () => {
   }
 
   async function createConversation() {
-    const post: D1Result<Record<string, unknown>> = await http.post(
+    // TODO get types
+    const post = await http.post(
       '/api/conversations',
       chatStore.currentChat,
     );

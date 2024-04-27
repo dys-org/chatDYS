@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import type { D1Result } from '@cloudflare/workers-types';
 import { defineStore } from 'pinia';
 
 import http from '@/utils/http';
@@ -22,7 +21,8 @@ export const useSystemPresetsStore = defineStore('systemPresets', () => {
   }
 
   async function createSystemPreset(params: { name: string; text: string }) {
-    const res: D1Result<Record<string, unknown>> = await http.post('/api/system-presets', params);
+    // TODO get types
+    const res = await http.post('/api/system-presets', params);
     await fetchPresetList();
     return res;
   }

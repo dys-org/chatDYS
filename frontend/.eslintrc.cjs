@@ -46,5 +46,13 @@ module.exports = {
         ],
       },
     },
+    {
+      files: [
+        'e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'
+      ],
+      'extends': [
+        'plugin:playwright/recommended'
+      ]
+    }
   ],
 };
