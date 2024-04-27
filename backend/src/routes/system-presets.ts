@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { db } from '../drizzle/db';
-import { System_Presets, type SystemPresetInsert } from '../drizzle/schema';
+import { db } from '../../drizzle/db';
+import { System_Presets, type SystemPresetInsert } from '../../drizzle/schema';
 import { asc, eq, sql } from 'drizzle-orm';
 
 const app = new Hono();

@@ -1,25 +1,20 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
-import { basicAuth } from 'hono/basic-auth';
 import OpenAI from 'openai';
 // import { cors } from 'hono/cors';
-// import { prettyJSON } from 'hono/pretty-json';
 
-import chat from './chat';
-import conversations from './conversations';
-import systemPresets from './system-presets';
-import tokenize from './tokenize';
-import users from './users';
+import chat from './routes/chat';
+import conversations from './routes/conversations';
+import systemPresets from './routes/system-presets';
+import tokenize from './routes/tokenize';
+import users from './routes/users';
 import { HTTPException } from 'hono/http-exception';
-// import { HTTPException } from 'hono/http-exception';
 
 const app = new Hono();
 
 app.get('/', (c) => c.text('DYS API'));
 
-// app.use(basicAuth({ username: 'dys', password: 'hello321' }));
 // app.use(cors());
-// app.use(prettyJSON());
 
 app.notFound((c) => c.json({ message: `Not Found - ${c.req.url}`, ok: false }, 404));
 
