@@ -14,14 +14,20 @@ app.get('/', async (c) => {
     .where(eq(System_Presets.sub, sql.placeholder('sub')))
     .orderBy(asc(System_Presets.name))
     .prepare();
-
-  const data = ps.all({ sub: 'github|26875701' }); // TODO get sub from auth
+  // TODO get sub from auth
+  const data = ps.all({ sub: 'github|26875701' });
   return c.json(data);
 });
 
 app.post('/', async (c) => {
   // INSERT INTO System_Presets (sub, name, text) VALUES (?1, ?2, ?3)
-  const preset: SystemPresetInsert = await c.req.json(); // validate with zod
+  const preset: SystemPresetInsert = await c.req.json();
+
+  // validate with zod
+  const { name, text } = preset;
+  if (!name) throw new Error('Missing name value');
+  if (!text) throw new Error('Missing text value');
+
   const ps = db.insert(System_Presets).values(preset).prepare();
   const info = ps.run();
   c.status(201);
@@ -42,6 +48,12 @@ app.get('/:id', async (c) => {
 app.put('/:id', async (c) => {
   // UPDATE System_Presets SET updated_at = CURRENT_TIMESTAMP, name = ?1, text = ?2 WHERE id = ?3
   const preset: SystemPresetInsert = await c.req.json();
+
+  // validate with zod
+  const { name, text } = preset;
+  if (!name) throw new Error('Missing name value');
+  if (!text) throw new Error('Missing text value');
+
   const ps = db
     .update(System_Presets)
     .set(preset)
