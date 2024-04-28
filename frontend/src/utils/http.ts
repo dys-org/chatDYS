@@ -1,19 +1,24 @@
-// import { auth0 } from '@/main';
+import { useUserStore } from '@/stores/user';
 
 async function http<T>(path: string, config: RequestInit): Promise<T> {
-  // const token = await auth0.getAccessTokenSilently();
+  const { user, logout } = useUserStore();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  // if (token) headers.Authorization = 'Bearer ' + token;
+
   const req = new Request(path, {
-    headers: {
-      'Content-Type': 'application/json',
-      // Authorization: 'Bearer ' + token
-      // Authorization: 'Basic ' + btoa('dys:hello321'),
-    },
+    headers,
     ...config,
   });
   const res = await fetch(req);
   // if no body, return empty object
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) return Promise.reject(data);
+
+  if (!res.ok) {
+    if ([401, 403].includes(res.status) && user) {
+      logout();
+    }
+    return Promise.reject(data);
+  }
   return data;
 }
 

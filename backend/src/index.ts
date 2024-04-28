@@ -9,10 +9,13 @@ import systemPresets from './routes/system-presets';
 import tokenize from './routes/tokenize';
 import users from './routes/users';
 import { HTTPException } from 'hono/http-exception';
+import { jwt, sign } from 'hono/jwt';
+import dotenv from 'dotenv';
+import { deleteCookie, setCookie } from 'hono/cookie';
+
+dotenv.config({ path: ['../.env.local', '../.env'] });
 
 const app = new Hono();
-
-app.get('/', (c) => c.text('DYS API'));
 
 // app.use(cors());
 
@@ -32,18 +35,71 @@ app.onError((err, c) => {
   return c.json({ message: err.message, stack: err.stack }, { status: 500 });
 });
 
-const api = new Hono();
-api.route('/chat', chat);
+const fakeUsers = [
+  { id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' },
+];
 
-api.route('/tokenize', tokenize);
+const publicApi = new Hono();
 
-api.route('/conversations', conversations);
+publicApi.post('/authenticate', async (c) => {
+  const { username, password }: { username: string; password: string } = await c.req.json();
+  const user = fakeUsers.find((u) => u.username === username && u.password === password);
 
-api.route('/system-presets', systemPresets);
+  if (!user) throw 'Username or password is incorrect';
 
-api.route('/users', users);
+  const token = await sign(
+    {
+      sub: user.id,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60, // expires in 1 hour,
+    },
+    process.env.AUTH_SECRET,
+  );
 
-app.route('/api', api);
+  setCookie(c, 'auth_token', token, {
+    httpOnly: true,
+    sameSite: 'Strict',
+    expires: new Date(Date.now() + 86400e3), // expires in 24 hours
+  });
+
+  // remove password from user object
+  const { password: userPassword, ...userWithoutPassword } = user;
+
+  return c.json({
+    ...userWithoutPassword,
+    token,
+  });
+});
+
+publicApi.get('/logout', async (c) => {
+  deleteCookie(c, 'auth_token');
+  return c.json({ message: 'User logged out.' });
+});
+
+// TODO volidate that resource belongs to user
+// for all mutations
+
+const authApi = new Hono();
+
+authApi.use('/*', (c, next) => {
+  const jwtMiddleware = jwt({
+    secret: process.env.AUTH_SECRET,
+    cookie: 'auth_token',
+  });
+  return jwtMiddleware(c, next);
+});
+
+authApi.route('/chat', chat);
+
+authApi.route('/tokenize', tokenize);
+
+authApi.route('/conversations', conversations);
+
+authApi.route('/system-presets', systemPresets);
+
+authApi.route('/users', users);
+
+app.route('/api', publicApi);
+app.route('/api', authApi);
 
 const port = 6969;
 console.log(`Server is running on port ${port}`);

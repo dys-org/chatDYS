@@ -30,8 +30,7 @@ app.post('/', async (c) => {
 
   const ps = db.insert(System_Presets).values(preset).prepare();
   const info = ps.run();
-  c.status(201);
-  return c.json({ info });
+  return c.json({ info }, 201);
 });
 
 app.get('/:id', async (c) => {
@@ -70,8 +69,7 @@ app.delete('/:id', async (c) => {
     .where(eq(System_Presets.id, parseInt(c.req.param('id'))))
     .prepare();
   const info = ps.run();
-  c.status(204);
-  return c.json({ info });
+  return c.json({ info }, 204);
 });
 
 export default app;

@@ -24,8 +24,7 @@ app.post('/', async (c) => {
 
   const ps = db.insert(Users).values(user).prepare();
   const info = ps.run();
-  c.status(201);
-  return c.json({ info });
+  return c.json({ info }, 201);
 });
 
 app.get('/current', async (c) => {

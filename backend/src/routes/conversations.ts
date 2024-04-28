@@ -34,8 +34,7 @@ app.post('/', async (c) => {
 
   const ps = db.insert(Conversations).values(convo).prepare();
   const info = ps.run();
-  c.status(201); // TODO what is status if i don't set it?
-  return c.json({ info });
+  return c.json({ info }, 201);
 });
 
 app.get('/:id', async (c) => {
@@ -95,8 +94,7 @@ app.delete('/:id', async (c) => {
     .where(eq(Conversations.id, parseInt(c.req.param('id'))))
     .prepare();
   const info = ps.run();
-  c.status(204);
-  return c.json({ info });
+  return c.json({ info }, 204);
 });
 
 export default app;
