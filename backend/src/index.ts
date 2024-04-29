@@ -1,23 +1,20 @@
 import { serve } from '@hono/node-server';
+import dotenv from 'dotenv';
 import { Hono } from 'hono';
+import { deleteCookie, setCookie } from 'hono/cookie';
+import { HTTPException } from 'hono/http-exception';
+import { jwt, sign } from 'hono/jwt';
 import OpenAI from 'openai';
-// import { cors } from 'hono/cors';
 
 import chat from './routes/chat';
 import conversations from './routes/conversations';
 import systemPresets from './routes/system-presets';
 import tokenize from './routes/tokenize';
 import users from './routes/users';
-import { HTTPException } from 'hono/http-exception';
-import { jwt, sign } from 'hono/jwt';
-import dotenv from 'dotenv';
-import { deleteCookie, setCookie } from 'hono/cookie';
 
 dotenv.config({ path: ['../.env.local', '../.env'] });
 
 const app = new Hono();
-
-// app.use(cors());
 
 app.notFound((c) => c.json({ message: `Not Found - ${c.req.url}`, ok: false }, 404));
 

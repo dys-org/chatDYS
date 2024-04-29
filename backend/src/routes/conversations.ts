@@ -1,7 +1,8 @@
-import { Hono } from 'hono';
-import { db } from '../../drizzle/db';
 import { desc, eq, sql } from 'drizzle-orm';
-import { Conversations, type ConversationInsert } from '../../drizzle/schema';
+import { Hono } from 'hono';
+
+import { db } from '../../drizzle/db';
+import { type ConversationInsert, Conversations } from '../../drizzle/schema';
 
 const app = new Hono();
 

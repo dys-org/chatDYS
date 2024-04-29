@@ -1,8 +1,9 @@
-import { Hono } from 'hono';
-import { db } from '../../drizzle/db';
-import { Users, type UserInsert } from '../../drizzle/schema';
-import { HTTPException } from 'hono/http-exception';
 import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
+
+import { db } from '../../drizzle/db';
+import { type UserInsert, Users } from '../../drizzle/schema';
 
 const app = new Hono();
 
