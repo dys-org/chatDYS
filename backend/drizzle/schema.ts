@@ -12,7 +12,7 @@ import {
 export const Users = sqliteTable(
   'Users',
   {
-    id: integer('id').primaryKey({ autoIncrement: true }),
+    id: text('id').primaryKey(),
     sub: text('sub').notNull(),
     email: text('email').notNull(),
     name: text('name'),
