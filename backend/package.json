@@ -1,7 +1,15 @@
 {
+  "name": "chat-dys-be",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "npx tsc"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=8"
   },
   "dependencies": {
     "@hono/node-server": "^1.11.1",
