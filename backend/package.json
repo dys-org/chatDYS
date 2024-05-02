@@ -13,11 +13,14 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.11.1",
+    "@lucia-auth/adapter-drizzle": "^1.0.7",
+    "arctic": "^1.8.0",
     "better-sqlite3": "^9.6.0",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.9",
     "hono": "^4.2.8",
     "js-tiktoken": "^1.0.11",
+    "lucia": "^3.2.0",
     "openai": "^4.38.5"
   },
   "devDependencies": {

@@ -1,27 +1,27 @@
 import { asc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 
-import { db } from '../../drizzle/db';
-import { type SystemPresetInsert, System_Presets } from '../../drizzle/schema';
+import { db } from '../drizzle/db';
+import { type SystemPresetInsert, System_Presets } from '../drizzle/schema';
 
 const app = new Hono();
 
 app.get('/', async (c) => {
-  // SELECT id, sub, name, text, created_at, updated_at from System_Presets WHERE sub = ?1 ORDER BY name ASC
-  const { id, sub, name, text, created_at, updated_at } = System_Presets;
+  // SELECT id, user_id, name, text, created_at, updated_at from System_Presets WHERE user_id = ?1 ORDER BY name ASC
+  const { id, user_id, name, text, created_at, updated_at } = System_Presets;
   const ps = db
-    .select({ id, sub, name, text, created_at, updated_at })
+    .select({ id, user_id, name, text, created_at, updated_at })
     .from(System_Presets)
-    .where(eq(System_Presets.sub, sql.placeholder('sub')))
+    .where(eq(System_Presets.user_id, sql.placeholder('user_id')))
     .orderBy(asc(System_Presets.name))
     .prepare();
-  // TODO get sub from auth
-  const data = ps.all({ sub: 'github|26875701' });
+  // TODO get user_id from auth
+  const data = ps.all({ user_id: '53zgz7bdwlbozmbj' });
   return c.json(data);
 });
 
 app.post('/', async (c) => {
-  // INSERT INTO System_Presets (sub, name, text) VALUES (?1, ?2, ?3)
+  // INSERT INTO System_Presets (user_id, name, text) VALUES (?1, ?2, ?3)
   const preset: SystemPresetInsert = await c.req.json();
 
   // validate with zod

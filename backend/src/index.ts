@@ -1,18 +1,24 @@
+import 'dotenv/config';
+
 import { serve } from '@hono/node-server';
-import dotenv from 'dotenv';
+import { OAuth2RequestError, generateState } from 'arctic';
+import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { deleteCookie, setCookie } from 'hono/cookie';
+import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
 import { jwt, sign } from 'hono/jwt';
+import { generateIdFromEntropySize } from 'lucia';
 import OpenAI from 'openai';
 
+import { github, lucia } from './auth';
+import { db } from './drizzle/db';
+import { Users } from './drizzle/schema';
 import chat from './routes/chat';
 import conversations from './routes/conversations';
 import systemPresets from './routes/system-presets';
 import tokenize from './routes/tokenize';
 import users from './routes/users';
-
-dotenv.config({ path: ['../.env.local', '../.env'] });
+import { GithubUser } from './types';
 
 const app = new Hono();
 
@@ -32,52 +38,80 @@ app.onError((err, c) => {
   return c.json({ message: err.message, stack: err.stack }, { status: 500 });
 });
 
-const fakeUsers = [
-  { id: 1, username: 'test', password: 'test', firstName: 'Test', lastName: 'User' },
-];
+const auth = new Hono();
 
-const publicApi = new Hono();
-
-publicApi.post('/authenticate', async (c) => {
-  const { username, password }: { username: string; password: string } = await c.req.json();
-  const user = fakeUsers.find((u) => u.username === username && u.password === password);
-
-  if (!user) throw 'Username or password is incorrect';
-
-  const token = await sign(
-    {
-      sub: user.id,
-      exp: Math.floor(Date.now() / 1000) + 60 * 60, // expires in 1 hour,
-    },
-    process.env.AUTH_SECRET,
-  );
-
-  setCookie(c, 'auth_token', token, {
+auth.get('/login/github', async (c) => {
+  const state = generateState();
+  const url = await github.createAuthorizationURL(state);
+  setCookie(c, 'github_oauth_state', state, {
     httpOnly: true,
-    sameSite: 'Strict',
-    expires: new Date(Date.now() + 86400e3), // expires in 24 hours
+    secure: process.env.NODE_ENV === 'PRODUCTION', // set `Secure` flag in HTTPS
+    maxAge: 60 * 10, // 10 minutes
+    path: '/',
   });
-
-  // remove password from user object
-  const { password: userPassword, ...userWithoutPassword } = user;
-
-  return c.json({
-    ...userWithoutPassword,
-    token,
-  });
+  return c.body(null, 302, { Location: url.toString() });
 });
 
-publicApi.get('/logout', async (c) => {
-  deleteCookie(c, 'auth_token');
-  return c.json({ message: 'User logged out.' });
+auth.get('/login/github/callback', async (c) => {
+  const stateCookie = getCookie(c, 'github_oauth_state');
+
+  const url = new URL(c.req.url);
+  const state = url.searchParams.get('state');
+  const code = url.searchParams.get('code');
+
+  if (!stateCookie || !state || !code || stateCookie !== state) {
+    throw new HTTPException(400);
+  }
+
+  try {
+    const tokens = await github.validateAuthorizationCode(code);
+    const githubUserResponse = await fetch('https://api.github.com/user', {
+      headers: { Authorization: 'Bearer ' + tokens.accessToken },
+    });
+    const githubUserResult: GithubUser = await githubUserResponse.json();
+
+    const existingUser = db
+      .select()
+      .from(Users)
+      .where(eq(Users.github_id, githubUserResult.id))
+      .prepare()
+      .get();
+
+    if (existingUser) {
+      const session = await lucia.createSession(existingUser.id, {});
+      const sessionCookie = lucia.createSessionCookie(session.id);
+      return c.body(null, 302, { Location: '/', 'Set-Cookie': sessionCookie.serialize() });
+    }
+    const userId = generateIdFromEntropySize(10);
+    db.insert(Users)
+      .values({
+        id: userId,
+        username: githubUserResult.login,
+        github_id: githubUserResult.id,
+        email: githubUserResult.email,
+        name: githubUserResult.name,
+      })
+      .prepare()
+      .run();
+    const session = await lucia.createSession(userId, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    return c.body(null, 302, { Location: '/', 'Set-Cookie': sessionCookie.serialize() });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof OAuth2RequestError) {
+      // bad verification code, invalid credentials, etc
+      throw new HTTPException(400, err);
+    }
+    throw err;
+  }
 });
 
 // TODO volidate that resource belongs to user
 // for all mutations
 
-const authApi = new Hono();
+const api = new Hono();
 
-authApi.use('/*', (c, next) => {
+api.use('/*', (c, next) => {
   const jwtMiddleware = jwt({
     secret: process.env.AUTH_SECRET,
     cookie: 'auth_token',
@@ -85,18 +119,18 @@ authApi.use('/*', (c, next) => {
   return jwtMiddleware(c, next);
 });
 
-authApi.route('/chat', chat);
+api.route('/chat', chat);
 
-authApi.route('/tokenize', tokenize);
+api.route('/tokenize', tokenize);
 
-authApi.route('/conversations', conversations);
+api.route('/conversations', conversations);
 
-authApi.route('/system-presets', systemPresets);
+api.route('/system-presets', systemPresets);
 
-authApi.route('/users', users);
+api.route('/users', users);
 
-app.route('/api', publicApi);
-app.route('/api', authApi);
+app.route('/auth', auth);
+app.route('/api', api);
 
 const port = 6969;
 console.log(`Server is running on port ${port}`);

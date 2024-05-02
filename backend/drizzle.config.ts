@@ -1,8 +1,8 @@
 import type { Config } from 'drizzle-kit';
 
 export default {
-  schema: './drizzle/schema.ts',
-  out: './drizzle',
+  schema: './src/drizzle/schema.ts',
+  out: './src/drizzle',
   driver: 'better-sqlite',
   dbCredentials: {
     url: './db-data/chat-dys.db',

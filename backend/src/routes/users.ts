@@ -2,8 +2,8 @@ import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 
-import { db } from '../../drizzle/db';
-import { type UserInsert, Users } from '../../drizzle/schema';
+import { db } from '../drizzle/db';
+import { type UserInsert, Users } from '../drizzle/schema';
 
 const app = new Hono();
 
@@ -15,7 +15,7 @@ app.get('/', async (c) => {
 });
 
 app.post('/', async (c) => {
-  // INSERT INTO Users (sub, name, email) VALUES (?1, ?2, ?3)
+  // INSERT INTO Users (id, name, email) VALUES (?1, ?2, ?3)
   const user: UserInsert = await c.req.json();
 
   // TODO validate with zod
@@ -29,9 +29,9 @@ app.post('/', async (c) => {
 });
 
 app.get('/current', async (c) => {
-  // SELECT * from Users WHERE sub = ?1
-  // TODO get sub from auth
-  const ps = db.select().from(Users).where(eq(Users.sub, 'github|26875701')).prepare();
+  // SELECT * from Users WHERE id = ?1
+  // TODO get id from auth
+  const ps = db.select().from(Users).where(eq(Users.id, '53zgz7bdwlbozmbj')).prepare();
   const data = ps.get();
   // check if data is empty object
   if (data === undefined) throw new HTTPException(404, { message: 'User not found' });

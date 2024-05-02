@@ -1,27 +1,27 @@
 import { desc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 
-import { db } from '../../drizzle/db';
-import { type ConversationInsert, Conversations } from '../../drizzle/schema';
+import { db } from '../drizzle/db';
+import { type ConversationInsert, Conversations } from '../drizzle/schema';
 
 const app = new Hono();
 
 app.get('/', async (c) => {
-  // SELECT id, sub, title, model, created_at, updated_at from Conversations WHERE sub = ?1 ORDER BY created_at DESC
-  const { id, sub, title, model, created_at, updated_at } = Conversations;
+  // SELECT id, user_id, title, model, created_at, updated_at from Conversations WHERE user_id = ?1 ORDER BY created_at DESC
+  const { id, user_id, title, model, created_at, updated_at } = Conversations;
   const ps = db
-    .select({ id, sub, title, model, created_at, updated_at })
+    .select({ id, user_id, title, model, created_at, updated_at })
     .from(Conversations)
-    .where(eq(Conversations.sub, sql.placeholder('sub')))
+    .where(eq(Conversations.user_id, sql.placeholder('user_id')))
     .orderBy(desc(Conversations.created_at))
     .prepare();
-  // TODO get sub from auth
-  const data = ps.all({ sub: 'github|26875701' });
+  // TODO get user_id from auth
+  const data = ps.all({ user_id: '53zgz7bdwlbozmbj' });
   return c.json(data);
 });
 
 app.post('/', async (c) => {
-  // INSERT INTO Conversations (sub, model, temperature, max_tokens, system_message, messages, title) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+  // INSERT INTO Conversations (user_id, model, temperature, max_tokens, system_message, messages, title) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
   const convo: ConversationInsert = await c.req.json();
 
   // TODO validate with zod

@@ -46,6 +46,7 @@ async function logout() {
       <DButton @click="getConvos">Get Conversations</DButton>
       <DButton @click="authenticate">Authenticate</DButton>
       <DButton @click="logout">Logout</DButton>
+      <a href="/auth/login/github">Sign in with GitHub</a>
     </template>
     <template #side> </template>
   </TwoColumn>

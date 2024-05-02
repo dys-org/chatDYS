@@ -25,3 +25,5 @@ coverage
 
 # db
 db-data
+
+backend/.env
