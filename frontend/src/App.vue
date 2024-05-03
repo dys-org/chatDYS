@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import { RouterView } from 'vue-router';
 import { DToastList } from 'deez-components';
 
@@ -14,7 +14,7 @@ const userStore = useUserStore();
 
 const { startPolling } = usePolling(userStore.fetchCurrentUser, 60000);
 
-onMounted(() => {
+onBeforeMount(() => {
   startPolling();
 });
 </script>

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import { useUserStore } from '@/stores/user';
+
 import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -65,12 +67,12 @@ const router = createRouter({
   // },
 });
 
-// router.beforeEach(async (to) => {
-//   const userStore = useUserStore();
-//   if (to.meta.requiresAtuh && !userStore.user) {
-//     auth.returnUrl = to.fullPath;
-//     return '/login';
-//   }
-// });
+router.beforeEach(async (to) => {
+  const userStore = useUserStore();
+  if (to.meta.requiresAuth && userStore.user !== null && !userStore.isLoggedIn) {
+    // auth.returnUrl = to.fullPath;
+    return '/login';
+  }
+});
 
 export default router;

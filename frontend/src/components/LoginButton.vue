@@ -20,20 +20,16 @@ const userDropdownOptions = [
     fn: () => userStore.logout(),
   },
 ];
-
-// function login() {
-//   loginWithRedirect({ appState: { target: '/chat' } });
-// }
 </script>
 
 <template>
   <DDropdown
-    v-if="userStore.isLoggedIn"
+    v-if="userStore.user !== null"
     label="User"
     :options="userDropdownOptions"
     button-class="flex text-gray-400 p-0 dark:bg-transparent dark:hover:bg-transparent"
   >
-    <DAvatar :image="userStore.user?.avatar_url" class="size-8 max-w-fit" />
+    <DAvatar :image="userStore.user.avatar_url" class="size-8 max-w-fit" />
   </DDropdown>
   <DLink
     v-else

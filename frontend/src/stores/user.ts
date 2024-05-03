@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia';
 
@@ -18,16 +18,22 @@ export interface User {
 export const useUserStore = defineStore('user', () => {
   const router = useRouter();
   const user = ref<User | null>(null);
-
-  const isLoggedIn = computed(() => user.value !== null);
+  const isLoggedIn = ref(false);
 
   async function fetchCurrentUser() {
-    user.value = await http.get<User>(`/api/users/current`);
+    try {
+      const data = await http.get<User>(`/api/users/current`);
+      user.value = data;
+      isLoggedIn.value = true;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async function logout() {
     console.log('LOGGING OUT');
     user.value = null;
+    isLoggedIn.value = false;
     await http.get(`/auth/logout`);
     router.push('/login');
   }

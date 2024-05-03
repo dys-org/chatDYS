@@ -1,7 +1,7 @@
 import { useUserStore } from '@/stores/user';
 
 async function http<T>(path: string, config: RequestInit): Promise<T> {
-  const { user, logout } = useUserStore();
+  const userStore = useUserStore();
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   // if (token) headers.Authorization = 'Bearer ' + token;
 
@@ -14,9 +14,8 @@ async function http<T>(path: string, config: RequestInit): Promise<T> {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    console.log('HEY HEY');
-    if ([401, 403].includes(res.status) && user) {
-      logout();
+    if ([401, 403].includes(res.status) && userStore.isLoggedIn) {
+      userStore.logout();
     }
     return Promise.reject(data);
   }

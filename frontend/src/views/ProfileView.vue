@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
 import { DButton, DSpinner } from 'deez-components';
 
 import ApiKeyModal from '@/components/ApiKeyModal.vue';
@@ -11,28 +10,22 @@ const isDev = import.meta.env.DEV;
 
 const userStore = useUserStore();
 const chatStore = useChatStore();
-
-onBeforeMount(() => {
-  if (userStore.user !== null) return;
-  userStore.fetchCurrentUser();
-});
 </script>
 
 <template>
   <OneColumn>
     <h1 class="mb-6 mt-12 text-4xl font-semibold">My Profile</h1>
-    <!-- <div v-if="isLoading" class="flex w-full flex-col items-center gap-2">
+    <div v-if="userStore.user === null" class="flex w-full flex-col items-center gap-2">
       <DSpinner />
-    </div> -->
-    <!-- <div v-else-if="isAuthenticated" class="grid gap-4 pb-32"> -->
-    <div class="grid gap-4 pb-32">
+    </div>
+    <div v-else class="grid gap-4 pb-32">
       <img
-        :src="userStore.user?.avatar_url"
-        :alt="userStore.user?.name"
+        :src="userStore.user.avatar_url"
+        :alt="userStore.user.name"
         class="mt-6 size-24 rounded-full"
       />
-      <h2 class="mt-2 text-3xl">{{ userStore.user?.name }}</h2>
-      <h3 class="text-lg text-white/60">{{ userStore.user?.email }}</h3>
+      <h2 class="mt-2 text-3xl">{{ userStore.user.name }}</h2>
+      <h3 class="text-lg text-white/60">{{ userStore.user.email }}</h3>
       <div>
         <DButton class="mt-6" @click="chatStore.isApiKeyModalOpen = true"> Change API Key</DButton>
       </div>
