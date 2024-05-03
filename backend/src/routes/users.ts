@@ -1,11 +1,12 @@
 import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
+import { Session, User } from 'lucia';
 
 import { db } from '../drizzle/db';
 import { type UserInsert, Users } from '../drizzle/schema';
 
-const app = new Hono();
+const app = new Hono<{ Variables: { user: User | null; session: Session | null } }>();
 
 app.get('/', async (c) => {
   // SELECT * from Users
@@ -29,9 +30,10 @@ app.post('/', async (c) => {
 });
 
 app.get('/current', async (c) => {
+  const user = c.get('user');
+  if (!user) throw new HTTPException(401, { message: 'User not found in request authorization.' });
   // SELECT * from Users WHERE id = ?1
-  // TODO get id from auth
-  const ps = db.select().from(Users).where(eq(Users.id, '53zgz7bdwlbozmbj')).prepare();
+  const ps = db.select().from(Users).where(eq(Users.id, user.id)).prepare();
   const data = ps.get();
   // check if data is empty object
   if (data === undefined) throw new HTTPException(404, { message: 'User not found' });
@@ -43,7 +45,7 @@ app.get('/:id', async (c) => {
   const ps = db
     .select()
     .from(Users)
-    .where(eq(Users.id, parseInt(c.req.param('id'))))
+    .where(eq(Users.id, c.req.param('id')))
     .prepare();
   const data = ps.get();
   return c.json(data);

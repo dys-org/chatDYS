@@ -1,12 +1,16 @@
 import { asc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
+import { Session, User } from 'lucia';
 
 import { db } from '../drizzle/db';
 import { type SystemPresetInsert, System_Presets } from '../drizzle/schema';
 
-const app = new Hono();
+const app = new Hono<{ Variables: { user: User | null; session: Session | null } }>();
 
 app.get('/', async (c) => {
+  const user = c.get('user');
+  if (!user) throw new HTTPException(401, { message: 'User not found in request authorization.' });
   // SELECT id, user_id, name, text, created_at, updated_at from System_Presets WHERE user_id = ?1 ORDER BY name ASC
   const { id, user_id, name, text, created_at, updated_at } = System_Presets;
   const ps = db
@@ -15,8 +19,7 @@ app.get('/', async (c) => {
     .where(eq(System_Presets.user_id, sql.placeholder('user_id')))
     .orderBy(asc(System_Presets.name))
     .prepare();
-  // TODO get user_id from auth
-  const data = ps.all({ user_id: '53zgz7bdwlbozmbj' });
+  const data = ps.all({ user_id: user.id });
   return c.json(data);
 });
 

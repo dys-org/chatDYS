@@ -5,9 +5,9 @@ import { OAuth2RequestError, generateState } from 'arctic';
 import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
+import { csrf } from 'hono/csrf';
 import { HTTPException } from 'hono/http-exception';
-import { jwt, sign } from 'hono/jwt';
-import { generateIdFromEntropySize } from 'lucia';
+import { Session, User, generateIdFromEntropySize } from 'lucia';
 import OpenAI from 'openai';
 
 import { github, lucia } from './auth';
@@ -21,6 +21,8 @@ import users from './routes/users';
 import { GithubUser } from './types';
 
 const app = new Hono();
+
+app.use(csrf());
 
 app.notFound((c) => c.json({ message: `Not Found - ${c.req.url}`, ok: false }, 404));
 
@@ -109,14 +111,30 @@ auth.get('/login/github/callback', async (c) => {
 // TODO volidate that resource belongs to user
 // for all mutations
 
-const api = new Hono();
+const api = new Hono<{ Variables: { user: User | null; session: Session | null } }>();
 
-api.use('/*', (c, next) => {
-  const jwtMiddleware = jwt({
-    secret: process.env.AUTH_SECRET,
-    cookie: 'auth_token',
-  });
-  return jwtMiddleware(c, next);
+api.use('*', async (c, next) => {
+  const sessionId = getCookie(c, lucia.sessionCookieName) ?? null;
+  if (!sessionId) {
+    c.set('user', null);
+    c.set('session', null);
+    // throw new HTTPException(401, { message: 'No authorization included in request.' });
+    return next();
+  }
+  const { user, session } = await lucia.validateSession(sessionId);
+  if (session && session.fresh) {
+    c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), {
+      append: true,
+    });
+  }
+  if (!session) {
+    c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), {
+      append: true,
+    });
+  }
+  c.set('user', user);
+  c.set('session', session);
+  return next();
 });
 
 api.route('/chat', chat);
