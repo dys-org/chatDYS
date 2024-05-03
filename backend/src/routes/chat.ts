@@ -7,9 +7,9 @@ interface requestParams {
   apiKey: string;
 }
 
-const app = new Hono();
+const chat = new Hono();
 
-app.post('/', async (c) => {
+chat.post('/', async (c) => {
   const headers = new Headers({ 'Content-Type': 'text/event-stream' });
   const init = { status: 200, statusText: 'ok', headers };
   const { chatCompletionParams, apiKey } = (await c.req.json()) as requestParams;
@@ -50,4 +50,4 @@ async function writeToStream(
   writer.close();
 }
 
-export default app;
+export default chat;

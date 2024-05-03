@@ -7,12 +7,12 @@ export const Users = sqliteTable('Users', {
   github_id: integer('github_id').unique().notNull(),
   name: text('name'),
   email: text('email'),
+  avatar_url: text('avatar_url'),
   created_at: numeric('created_at').default(sql`(CURRENT_TIMESTAMP)`),
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
 export type UserInsert = typeof Users.$inferInsert;
-
 
 export const Sessions = sqliteTable('Session', {
   id: text('id').notNull().primaryKey(),
@@ -23,7 +23,6 @@ export const Sessions = sqliteTable('Session', {
 });
 
 export type SessionInsert = typeof Sessions.$inferInsert;
-
 
 export const Conversations = sqliteTable('Conversations', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -41,7 +40,6 @@ export const Conversations = sqliteTable('Conversations', {
 });
 
 export type ConversationInsert = typeof Conversations.$inferInsert;
-
 
 export const System_Presets = sqliteTable('System_Presets', {
   id: integer('id').primaryKey({ autoIncrement: true }),

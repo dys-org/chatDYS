@@ -1,6 +1,6 @@
 import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle';
 import { GitHub } from 'arctic';
-import { Lucia } from 'lucia';
+import { Lucia, TimeSpan } from 'lucia';
 
 import { db } from './drizzle/db';
 import { Sessions, UserInsert, Users } from './drizzle/schema';
@@ -8,6 +8,7 @@ import { Sessions, UserInsert, Users } from './drizzle/schema';
 const adapter = new DrizzleSQLiteAdapter(db, Sessions, Users);
 
 export const lucia = new Lucia(adapter, {
+  sessionExpiresIn: new TimeSpan(1, 'h'), // 1 hour
   sessionCookie: {
     attributes: {
       secure: process.env.NODE_ENV === 'PRODUCTION',

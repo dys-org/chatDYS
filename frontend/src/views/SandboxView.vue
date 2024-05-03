@@ -21,17 +21,9 @@ async function getConvos() {
     toastErrorHandler(err, 'Failed to get conversations.');
   }
 }
-async function authenticate() {
-  try {
-    const data = await http.post('/api/authenticate', { username: 'test', password: 'test' });
-    console.log(data);
-  } catch (err) {
-    toastErrorHandler(err, 'Failed to authenticate.');
-  }
-}
 async function logout() {
   try {
-    const data = await http.get('/api/logout');
+    const data = await http.get('/auth/logout');
     console.log(data);
   } catch (err) {
     toastErrorHandler(err, 'Failed to logout.');
@@ -44,9 +36,7 @@ async function logout() {
     <template #main>
       <DButton @click="getUsers">Get Users</DButton>
       <DButton @click="getConvos">Get Conversations</DButton>
-      <DButton @click="authenticate">Authenticate</DButton>
       <DButton @click="logout">Logout</DButton>
-      <a href="/auth/login/github">Sign in with GitHub</a>
     </template>
     <template #side> </template>
   </TwoColumn>

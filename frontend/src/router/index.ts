@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-// import { authGuard } from '@auth0/auth0-vue';
 import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -10,6 +9,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
     },
     {
       path: '/chat/:id?',
@@ -62,8 +66,8 @@ const router = createRouter({
 });
 
 // router.beforeEach(async (to) => {
-//   const auth = useAuthStore();
-//   if (to.meta.requiresAtuh && !auth.user) {
+//   const userStore = useUserStore();
+//   if (to.meta.requiresAtuh && !userStore.user) {
 //     auth.returnUrl = to.fullPath;
 //     return '/login';
 //   }

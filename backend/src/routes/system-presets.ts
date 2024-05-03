@@ -6,9 +6,9 @@ import { Session, User } from 'lucia';
 import { db } from '../drizzle/db';
 import { type SystemPresetInsert, System_Presets } from '../drizzle/schema';
 
-const app = new Hono<{ Variables: { user: User | null; session: Session | null } }>();
+const systemPresets = new Hono<{ Variables: { user: User | null; session: Session | null } }>();
 
-app.get('/', async (c) => {
+systemPresets.get('/', async (c) => {
   const user = c.get('user');
   if (!user) throw new HTTPException(401, { message: 'User not found in request authorization.' });
   // SELECT id, user_id, name, text, created_at, updated_at from System_Presets WHERE user_id = ?1 ORDER BY name ASC
@@ -23,7 +23,7 @@ app.get('/', async (c) => {
   return c.json(data);
 });
 
-app.post('/', async (c) => {
+systemPresets.post('/', async (c) => {
   // INSERT INTO System_Presets (user_id, name, text) VALUES (?1, ?2, ?3)
   const preset: SystemPresetInsert = await c.req.json();
 
@@ -37,7 +37,7 @@ app.post('/', async (c) => {
   return c.json({ info }, 201);
 });
 
-app.get('/:id', async (c) => {
+systemPresets.get('/:id', async (c) => {
   // SELECT * from System_Presets WHERE id = ?1
   const ps = db
     .select()
@@ -48,7 +48,7 @@ app.get('/:id', async (c) => {
   return c.json(data);
 });
 
-app.put('/:id', async (c) => {
+systemPresets.put('/:id', async (c) => {
   // UPDATE System_Presets SET updated_at = CURRENT_TIMESTAMP, name = ?1, text = ?2 WHERE id = ?3
   const preset: SystemPresetInsert = await c.req.json();
 
@@ -66,14 +66,14 @@ app.put('/:id', async (c) => {
   return c.json({ info });
 });
 
-app.delete('/:id', async (c) => {
+systemPresets.delete('/:id', async (c) => {
   // DELETE FROM System_Presets WHERE id = ?1
   const ps = db
     .delete(System_Presets)
     .where(eq(System_Presets.id, parseInt(c.req.param('id'))))
     .prepare();
   const info = ps.run();
-  return c.json({ info }, 204);
+  return c.json({ info }, 200);
 });
 
-export default app;
+export default systemPresets;

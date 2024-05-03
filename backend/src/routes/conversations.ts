@@ -6,9 +6,9 @@ import { Session, User } from 'lucia';
 import { db } from '../drizzle/db';
 import { type ConversationInsert, Conversations } from '../drizzle/schema';
 
-const app = new Hono<{ Variables: { user: User | null; session: Session | null } }>();
+const conversations = new Hono<{ Variables: { user: User | null; session: Session | null } }>();
 
-app.get('/', async (c) => {
+conversations.get('/', async (c) => {
   const user = c.get('user');
   if (!user) throw new HTTPException(401, { message: 'User not found in request authorization.' });
   // SELECT id, user_id, title, model, created_at, updated_at from Conversations WHERE user_id = ?1 ORDER BY created_at DESC
@@ -23,7 +23,7 @@ app.get('/', async (c) => {
   return c.json(data);
 });
 
-app.post('/', async (c) => {
+conversations.post('/', async (c) => {
   // INSERT INTO Conversations (user_id, model, temperature, max_tokens, system_message, messages, title) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
   const convo: ConversationInsert = await c.req.json();
 
@@ -41,7 +41,7 @@ app.post('/', async (c) => {
   return c.json({ info }, 201);
 });
 
-app.get('/:id', async (c) => {
+conversations.get('/:id', async (c) => {
   // SELECT * from Conversations WHERE id = ?1
   const ps = db
     .select()
@@ -52,7 +52,7 @@ app.get('/:id', async (c) => {
   return c.json(data);
 });
 
-app.put('/:id', async (c) => {
+conversations.put('/:id', async (c) => {
   // UPDATE Conversations SET updated_at = CURRENT_TIMESTAMP, model = ?1, temperature = ?2, max_tokens = ?3, system_message = ?4, messages = ?5 WHERE id = ?6
   const convo: ConversationInsert = await c.req.json();
 
@@ -74,7 +74,7 @@ app.put('/:id', async (c) => {
   return c.json({ info });
 });
 
-app.patch('/:id', async (c) => {
+conversations.patch('/:id', async (c) => {
   // UPDATE Conversations SET updated_at = CURRENT_TIMESTAMP, messages = ?1 WHERE id = ?2
   const messages: ConversationInsert['messages'] = await c.req.text();
 
@@ -91,14 +91,14 @@ app.patch('/:id', async (c) => {
   return c.json({ info });
 });
 
-app.delete('/:id', async (c) => {
+conversations.delete('/:id', async (c) => {
   // DELETE FROM Conversations WHERE id = ?1
   const ps = db
     .delete(Conversations)
     .where(eq(Conversations.id, parseInt(c.req.param('id'))))
     .prepare();
   const info = ps.run();
-  return c.json({ info }, 204);
+  return c.json({ info }, 200);
 });
 
-export default app;
+export default conversations;

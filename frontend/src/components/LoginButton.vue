@@ -1,6 +1,9 @@
 <script setup lang="ts">
-// import { useAuth0 } from '@auth0/auth0-vue';
-import { DAvatar, DButton, DDropdown } from 'deez-components';
+import { DAvatar, DButton, DDropdown, DLink } from 'deez-components';
+
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 
 const userDropdownOptions = [
   {
@@ -14,35 +17,30 @@ const userDropdownOptions = [
     label: 'Log Out',
     key: 'log_out',
     danger: true,
-    // fn: () => logoutAndReturn(),
-    fn: () => {},
+    fn: () => userStore.logout(),
   },
 ];
-
-// const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
 
 // function login() {
 //   loginWithRedirect({ appState: { target: '/chat' } });
 // }
-// function logoutAndReturn() {
-//   logout({ logoutParams: { returnTo: window.location.origin } });
-// }
 </script>
 
 <template>
-  <!-- <DDropdown
-    v-if="isAuthenticated"
-    label="User"
-    :options="userDropdownOptions"
-    button-class="flex text-gray-400 p-0 dark:bg-transparent dark:hover:bg-transparent"
-  > -->
   <DDropdown
+    v-if="userStore.isLoggedIn"
     label="User"
     :options="userDropdownOptions"
     button-class="flex text-gray-400 p-0 dark:bg-transparent dark:hover:bg-transparent"
   >
-    <!-- <DAvatar :image="user?.picture" class="size-8 max-w-fit" /> -->
-    <DAvatar class="size-8 max-w-fit" />
+    <DAvatar :image="userStore.user?.avatar_url" class="size-8 max-w-fit" />
   </DDropdown>
-  <!-- <DButton v-else variant="primary" @click="login">Login</DButton> -->
+  <DLink
+    v-else
+    to="/login"
+    class="h rounded px-3 py-1.5 text-sm font-semibold text-white/60 transition-colors hover:bg-white/5 hover:text-white"
+    active-class="text-white font-bold"
+  >
+    Login
+  </DLink>
 </template>

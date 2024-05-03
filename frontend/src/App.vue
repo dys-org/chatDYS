@@ -1,45 +1,22 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
-// import { useAuth0 } from '@auth0/auth0-vue';
 import { DToastList } from 'deez-components';
 
+import usePolling from '@/composables/usePolling';
 import { useToastStore } from '@/stores/toast';
 import { useUserStore } from '@/stores/user';
 
 import AppHeader from './components/AppHeader.vue';
-import PageLoader from './components/PageLoader.vue';
-import { HTTPError } from './utils/exceptions'; // use hono's HTTPException
-
-// const { isAuthenticated, user, isLoading, logout } = useAuth0();
 
 const toastStore = useToastStore();
 const userStore = useUserStore();
 
-// const showLoader = computed(() => isLoading.value);
+const { startPolling } = usePolling(userStore.fetchCurrentUser, 60000);
 
-// watch(isAuthenticated, async (newVal) => {
-//   if (newVal) {
-//     // check database for user
-//     if (!user.value) return;
-//     try {
-//       await userStore.fetchCurrentUser();
-//     } catch (err) {
-//       if (err instanceof Error) console.error(err.message);
-//       else console.error(err);
-//       // if user not found, create new user
-//       if (err instanceof HTTPError && err.status === 404) {
-//         userStore.createNewUser({
-//           name: user.value.name ?? '',
-//           email: user.value.email ?? '',
-//         });
-//       }
-//     }
-//   }
-//   if (!newVal) {
-//     logout({ logoutParams: { returnTo: window.location.origin } });
-//   }
-// });
+onMounted(() => {
+  startPolling();
+});
 </script>
 
 <template>

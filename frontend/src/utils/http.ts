@@ -14,6 +14,7 @@ async function http<T>(path: string, config: RequestInit): Promise<T> {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
+    console.log('HEY HEY');
     if ([401, 403].includes(res.status) && user) {
       logout();
     }
