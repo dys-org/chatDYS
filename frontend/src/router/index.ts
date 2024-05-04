@@ -68,10 +68,15 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-  const userStore = useUserStore();
-  if (to.meta.requiresAuth && userStore.user !== null && !userStore.isLoggedIn) {
-    // auth.returnUrl = to.fullPath;
-    return '/login';
+  if (to.meta.requiresAuth) {
+    const userStore = useUserStore();
+    try {
+      if (userStore.user === null) await userStore.fetchCurrentUser();
+    } catch (err: any) {
+      // checking for instanceof HTTPException is not working
+      console.error(err);
+      if (err.status === 401) return '/login';
+    }
   }
 });
 

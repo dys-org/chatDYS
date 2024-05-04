@@ -5,6 +5,7 @@ import { Hono } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { csrf } from 'hono/csrf';
 import { HTTPException } from 'hono/http-exception';
+import { StatusCode } from 'hono/utils/http-status';
 import { Session, User } from 'lucia';
 import OpenAI from 'openai';
 
@@ -51,14 +52,14 @@ const app = new Hono<{
     console.log(err);
     if (err instanceof OpenAI.APIError) {
       const { status, message, code, type } = err;
-      return c.json({ status, message, code, type }, { status: status ?? 500 });
+      return c.json({ status, message, code, type }, (status as StatusCode) ?? 500);
     }
     if (err instanceof HTTPException) {
       console.log(err);
       const { status, message, stack } = err;
-      return c.json({ status, message, stack }, { status });
+      return c.json({ status, message, stack }, status);
     }
-    return c.json({ message: err.message, stack: err.stack }, { status: 500 });
+    return c.json({ message: err.message, stack: err.stack }, 500);
   });
 
 const api = new Hono()
