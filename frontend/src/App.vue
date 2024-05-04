@@ -12,7 +12,7 @@ import AppHeader from './components/AppHeader.vue';
 const toastStore = useToastStore();
 const userStore = useUserStore();
 
-const { startPolling } = usePolling(userStore.fetchCurrentUser, 60000);
+const { startPolling } = usePolling(userStore.fetchCurrentUser, 1000 * 60 * 60);
 
 onBeforeMount(() => {
   startPolling();

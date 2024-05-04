@@ -26,16 +26,20 @@ export const useUserStore = defineStore('user', () => {
       user.value = data;
       isLoggedIn.value = true;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
   async function logout() {
     console.log('LOGGING OUT');
-    user.value = null;
-    isLoggedIn.value = false;
-    await http.get(`/auth/logout`);
-    router.push('/login');
+    try {
+      await http.get(`/auth/logout`);
+      user.value = null;
+      isLoggedIn.value = false;
+      router.push('/login');
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return {

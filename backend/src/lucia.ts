@@ -8,7 +8,7 @@ import { Sessions, UserInsert, Users } from './drizzle/schema';
 const adapter = new DrizzleSQLiteAdapter(db, Sessions, Users);
 
 export const lucia = new Lucia(adapter, {
-  sessionExpiresIn: new TimeSpan(1, 'h'), // 1 hour
+  sessionExpiresIn: new TimeSpan(1, 'd'),
   sessionCookie: {
     attributes: {
       secure: process.env.NODE_ENV === 'PRODUCTION',

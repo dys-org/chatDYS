@@ -3,7 +3,6 @@ import { useUserStore } from '@/stores/user';
 async function http<T>(path: string, config: RequestInit): Promise<T> {
   const userStore = useUserStore();
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  // if (token) headers.Authorization = 'Bearer ' + token;
 
   const req = new Request(path, {
     headers,
