@@ -30,3 +30,6 @@ declare module 'lucia' {
     DatabaseUserAttributes: Pick<UserInsert, 'username' | 'github_id'>;
   }
 }
+
+// TODO delete expired sessions on some interval
+// await lucia.deleteExpiredSessions();

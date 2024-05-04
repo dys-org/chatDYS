@@ -6,9 +6,7 @@ interface TokenizeRequest {
   model: TiktokenModel;
 }
 
-const tokenize = new Hono();
-
-tokenize.get('/', async (c) => {
+const tokenize = new Hono().get('/', async (c) => {
   const { stringToTokenize, model }: TokenizeRequest = await c.req.json();
   if (stringToTokenize == null) throw new Error('No string was provided');
   const encoder = encodingForModel(model);

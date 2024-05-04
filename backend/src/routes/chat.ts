@@ -7,9 +7,7 @@ interface requestParams {
   apiKey: string;
 }
 
-const chat = new Hono();
-
-chat.post('/', async (c) => {
+const chat = new Hono().post('/', async (c) => {
   const headers = new Headers({ 'Content-Type': 'text/event-stream' });
   const init = { status: 200, statusText: 'ok', headers };
   const { chatCompletionParams, apiKey } = (await c.req.json()) as requestParams;
