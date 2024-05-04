@@ -15,8 +15,8 @@ const userDropdownOptions = [
   { divider: true, key: 'd1' },
   {
     label: 'Log Out',
+    icon: 'i-majesticons-logout-line',
     key: 'log_out',
-    danger: true,
     fn: () => userStore.logout(),
   },
 ];
@@ -34,9 +34,9 @@ const userDropdownOptions = [
   <DLink
     v-else
     to="/login"
-    class="h rounded px-3 py-1.5 text-sm font-semibold text-white/60 transition-colors hover:bg-white/5 hover:text-white"
+    class="rounded px-3 py-1.5 text-sm font-semibold text-primary-400 transition-colors hover:bg-white/5 hover:text-white"
     active-class="text-white font-bold"
   >
-    Login
+    Login <span aria-hidden="true" class="i-majesticons-login-line text-lg">→</span>
   </DLink>
 </template>
