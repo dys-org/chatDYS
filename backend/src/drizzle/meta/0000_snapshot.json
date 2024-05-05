@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "9d6bfc48-e1f4-4311-8ed8-cdb79240c5c9",
+  "id": "a9e589b6-aa4f-464e-9632-20e5725a98b9",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "Conversations": {
@@ -9,6 +9,13 @@
       "columns": {
         "id": {
           "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "user_id": {
+          "name": "user_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -75,12 +82,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "Conversations_id_Users_id_fk": {
-          "name": "Conversations_id_Users_id_fk",
+        "Conversations_user_id_Users_id_fk": {
+          "name": "Conversations_user_id_Users_id_fk",
           "tableFrom": "Conversations",
           "tableTo": "Users",
           "columnsFrom": [
-            "id"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -141,6 +148,13 @@
       "columns": {
         "id": {
           "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "user_id": {
+          "name": "user_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -179,12 +193,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "System_Presets_id_Users_id_fk": {
-          "name": "System_Presets_id_Users_id_fk",
+        "System_Presets_user_id_Users_id_fk": {
+          "name": "System_Presets_user_id_Users_id_fk",
           "tableFrom": "System_Presets",
           "tableTo": "Users",
           "columnsFrom": [
-            "id"
+            "user_id"
           ],
           "columnsTo": [
             "id"

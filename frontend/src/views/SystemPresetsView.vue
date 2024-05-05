@@ -30,7 +30,8 @@ async function addNewPreset() {
       text: 'You are a helpful assistant.',
     });
     selectedPreset.value = systemPresetStore.presetList?.find(
-      (preset) => preset.id === res.meta.last_row_id,
+      // @ts-expect-error
+      (preset) => preset.id === res.info.lastInsertRowid,
     );
   } catch (err) {
     toastErrorHandler(err, 'There was a problem creating the preset.');

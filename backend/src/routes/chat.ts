@@ -1,35 +1,50 @@
+import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import OpenAI from 'openai';
 import { Stream } from 'openai/streaming.mjs';
+import { z } from 'zod';
 
-interface requestParams {
-  chatCompletionParams: OpenAI.ChatCompletionCreateParams;
-  apiKey: string;
-}
-
-const chat = new Hono().post('/', async (c) => {
-  const headers = new Headers({ 'Content-Type': 'text/event-stream' });
-  const init = { status: 200, statusText: 'ok', headers };
-  const { chatCompletionParams, apiKey } = (await c.req.json()) as requestParams;
-  // TODO can i use zod to validate the request body?
-  if (apiKey == null) throw new Error('No api key was provided');
-  const openai = new OpenAI({ apiKey: apiKey });
-
-  if (chatCompletionParams.messages == null) throw new Error('No prompt was provided');
-
-  // make our request to the OpenAI API
-  const stream = await openai.chat.completions.create({
-    ...chatCompletionParams,
-    stream: true,
-  });
-
-  // Using our readable and writable to handle streaming data
-  const { readable, writable } = new TransformStream();
-  writeToStream(writable, stream);
-
-  // Send readable back to the browser so it can read the stream content
-  return new Response(readable, init);
+const chatParamsSchema = z.object({
+  chatCompletionParams: z.object({
+    model: z.string(),
+    messages: z.array(
+      z.object({
+        role: z.union([z.literal('user'), z.literal('system'), z.literal('assistant')]),
+        content: z.string(),
+      }),
+    ),
+    temperature: z.number(),
+    max_tokens: z.number(),
+  }),
+  apiKey: z.string(),
 });
+
+const chat = new Hono().post(
+  '/',
+  zValidator('json', chatParamsSchema, (result, c) => {
+    if (!result.success) c.json({ message: result.error.message }, 400);
+  }),
+  async (c) => {
+    const headers = new Headers({ 'Content-Type': 'text/event-stream' });
+    const init = { status: 200, statusText: 'ok', headers };
+    const { chatCompletionParams, apiKey } = c.req.valid('json');
+
+    const openai = new OpenAI({ apiKey: apiKey });
+
+    // make our request to the OpenAI API
+    const stream = await openai.chat.completions.create({
+      ...chatCompletionParams,
+      stream: true,
+    });
+
+    // Using our readable and writable to handle streaming data
+    const { readable, writable } = new TransformStream();
+    writeToStream(writable, stream);
+
+    // Send readable back to the browser so it can read the stream content
+    return new Response(readable, init);
+  },
+);
 
 async function writeToStream(
   writable: WritableStream,

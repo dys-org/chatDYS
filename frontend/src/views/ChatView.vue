@@ -23,7 +23,8 @@ const conversationStore = useConversationStore();
 async function saveConversation() {
   try {
     const post = await conversationStore.createConversation();
-    router.push({ name: 'chat', params: { id: post.meta.last_row_id } });
+    // @ts-expect-error
+    router.push({ name: 'chat', params: { id: post.info.lastInsertRowid } });
   } catch (err) {
     toastErrorHandler(err, 'There was a problem saving your conversation.');
   }

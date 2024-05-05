@@ -15,7 +15,7 @@ export const Users = sqliteTable('Users', {
 export type UserInsert = typeof Users.$inferInsert;
 
 export const Sessions = sqliteTable('Session', {
-  id: text('id').notNull().primaryKey(),
+  id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => Users.id),
@@ -25,8 +25,8 @@ export const Sessions = sqliteTable('Session', {
 export type SessionInsert = typeof Sessions.$inferInsert;
 
 export const Conversations = sqliteTable('Conversations', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  user_id: text('id')
+  id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+  user_id: text('user_id')
     .notNull()
     .references(() => Users.id),
   model: text('model').notNull(),
@@ -42,8 +42,8 @@ export const Conversations = sqliteTable('Conversations', {
 export type ConversationInsert = typeof Conversations.$inferInsert;
 
 export const System_Presets = sqliteTable('System_Presets', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  user_id: text('id')
+  id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
+  user_id: text('user_id')
     .notNull()
     .references(() => Users.id),
   name: text('name').notNull(),

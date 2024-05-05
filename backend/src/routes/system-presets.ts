@@ -1,15 +1,14 @@
 import { zValidator } from '@hono/zod-validator';
 import { asc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { HTTPException } from 'hono/http-exception';
 import { Session, User } from 'lucia';
 import { z } from 'zod';
 
 import { db } from '../drizzle/db';
-import { System_Presets } from '../drizzle/schema';
-import { validateOwnership } from '../utils';
+import { System_Presets, Users } from '../drizzle/schema';
+import { userCanEdit } from '../utils';
 
-const presetSchema = z.object({
+const presetParamsSchema = z.object({
   name: z.string(),
   text: z.string(),
 });
@@ -22,9 +21,8 @@ const systemPresets = new Hono<{
 }>()
   .get('/', async (c) => {
     const user = c.get('user');
-    if (!user) {
-      throw new HTTPException(401, { message: 'User not found in request authorization.' });
-    }
+    if (!user) return c.json({ message: 'User is null.' }, 401);
+
     const { id, user_id, name, text, created_at, updated_at } = System_Presets;
     const ps = db
       .select({ id, user_id, name, text, created_at, updated_at })
@@ -37,16 +35,13 @@ const systemPresets = new Hono<{
   })
   .post(
     '/',
-    zValidator('json', presetSchema, (result) => {
-      if (!result.success) {
-        throw new HTTPException(400, { message: result.error.message });
-      }
+    zValidator('json', presetParamsSchema, (result, c) => {
+      if (!result.success) c.json({ message: result.error.message }, 400);
     }),
     async (c) => {
       const user = c.get('user');
-      if (!user) {
-        throw new HTTPException(401, { message: 'User not found in request authorization.' });
-      }
+      if (!user) return c.json({ message: 'User is null.' }, 401);
+
       const preset = c.req.valid('json');
       const ps = db
         .insert(System_Presets)
@@ -58,17 +53,16 @@ const systemPresets = new Hono<{
   )
   .put(
     '/:id',
-    zValidator('json', presetSchema, (result) => {
-      if (!result.success) {
-        throw new HTTPException(400, { message: result.error.message });
-      }
+    zValidator('json', presetParamsSchema, (result, c) => {
+      if (!result.success) c.json({ message: result.error.message }, 400);
     }),
     async (c) => {
       const user = c.get('user');
-      if (!user) {
-        throw new HTTPException(401, { message: 'User not found in request authorization.' });
+      if (!user) return c.json({ message: 'User is null.' }, 401);
+
+      if (!userCanEdit(user.id, parseInt(c.req.param('id')), System_Presets)) {
+        return c.json({ message: 'User cannot edit this conversation.' }, 403);
       }
-      await validateOwnership(user.id, parseInt(c.req.param('id')), System_Presets);
 
       const preset = c.req.valid('json');
       const ps = db
@@ -82,10 +76,11 @@ const systemPresets = new Hono<{
   )
   .delete('/:id', async (c) => {
     const user = c.get('user');
-    if (!user) {
-      throw new HTTPException(401, { message: 'User not found in request authorization.' });
+    if (!user) return c.json({ message: 'User is null.' }, 401);
+
+    if (!userCanEdit(user.id, parseInt(c.req.param('id')), System_Presets)) {
+      return c.json({ message: 'User cannot edit this conversation.' }, 403);
     }
-    await validateOwnership(user.id, parseInt(c.req.param('id')), System_Presets);
 
     const ps = db
       .delete(System_Presets)

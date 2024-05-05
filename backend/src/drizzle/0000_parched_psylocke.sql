@@ -1,5 +1,6 @@
 CREATE TABLE `Conversations` (
-	`id` text NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`user_id` text NOT NULL,
 	`model` text NOT NULL,
 	`temperature` integer NOT NULL,
 	`max_tokens` integer NOT NULL,
@@ -8,7 +9,7 @@ CREATE TABLE `Conversations` (
 	`title` text NOT NULL,
 	`created_at` numeric DEFAULT (CURRENT_TIMESTAMP),
 	`updated_at` numeric DEFAULT (CURRENT_TIMESTAMP),
-	FOREIGN KEY (`id`) REFERENCES `Users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`user_id`) REFERENCES `Users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `Session` (
@@ -19,12 +20,13 @@ CREATE TABLE `Session` (
 );
 --> statement-breakpoint
 CREATE TABLE `System_Presets` (
-	`id` text NOT NULL,
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`user_id` text NOT NULL,
 	`name` text NOT NULL,
 	`text` text NOT NULL,
 	`created_at` numeric DEFAULT (CURRENT_TIMESTAMP),
 	`updated_at` numeric DEFAULT (CURRENT_TIMESTAMP),
-	FOREIGN KEY (`id`) REFERENCES `Users`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`user_id`) REFERENCES `Users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `Users` (

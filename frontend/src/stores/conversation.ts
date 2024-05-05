@@ -15,10 +15,7 @@ export const useConversationStore = defineStore('conversation', () => {
 
   async function createConversation() {
     // TODO get types
-    const post = await http.post(
-      '/api/conversations',
-      chatStore.currentChat,
-    );
+    const post = await http.post('/api/conversations', chatStore.currentChat);
     await fetchConversationList();
     return post;
   }

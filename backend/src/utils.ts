@@ -1,24 +1,20 @@
 import { eq } from 'drizzle-orm';
 import { TableConfig } from 'drizzle-orm/sqlite-core';
 import { SQLiteTableWithColumns } from 'drizzle-orm/sqlite-core';
-import { HTTPException } from 'hono/http-exception';
 
 import { db } from './drizzle/db';
-import { Users } from './drizzle/schema';
 
-export async function validateOwnership<T extends TableConfig>(
+export function userCanEdit<T extends TableConfig>(
   userId: string,
-  presetId: number,
+  queryId: number,
   table: SQLiteTableWithColumns<T>,
 ) {
   const result = db
-    .select({ userId: Users.id })
-    .from(Users)
-    .where(eq(table.id, presetId))
+    .select({ userId: table.user_id })
+    .from(table)
+    .where(eq(table.id, queryId))
     .prepare()
     .get();
 
-  if (result?.userId !== userId) {
-    throw new HTTPException(403, { message: 'User does not own this resource.' });
-  }
+  return result?.userId === userId;
 }

@@ -27,7 +27,8 @@ export const useSystemPresetsStore = defineStore('systemPresets', () => {
     return res;
   }
   async function updateSystemPreset(params: { id: number; name: string; text: string }) {
-    await http.put(`/api/system-presets/${params.id}`, params);
+    const { id, name, text } = params;
+    await http.put(`/api/system-presets/${id}`, { name, text });
     await fetchPresetList();
   }
   async function deleteSystemPreset(id: number) {

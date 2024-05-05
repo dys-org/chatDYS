@@ -9,6 +9,8 @@ import { useTokenize } from '@/composables/useTokenize';
 import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 import http from '@/utils/http';
 
+import { useUserStore } from './user';
+
 export interface Conversation {
   id: number;
   sub: string;
@@ -65,11 +67,10 @@ export const useChatStore = defineStore('chat', () => {
     checkTokens({ stringToTokenize, model: model.value });
   }
   async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
-    // const token = await auth0.getAccessTokenSilently();
     const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
     const res = await fetch('/api/chat', {
       method: 'POST',
-      // headers: { Authorization: 'Bearer ' + token },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chatCompletionParams, apiKey }),
     });
     if (!res.ok) {

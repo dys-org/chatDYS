@@ -2,7 +2,6 @@ import { OAuth2RequestError, generateState } from 'arctic';
 import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
-import { HTTPException } from 'hono/http-exception';
 import { generateIdFromEntropySize } from 'lucia';
 
 import { db } from '../drizzle/db';
@@ -30,7 +29,7 @@ const auth = new Hono()
     const code = url.searchParams.get('code');
 
     if (!stateCookie || !state || !code || stateCookie !== state) {
-      throw new HTTPException(400);
+      return c.json({ message: "States don't match" }, 400);
     }
 
     try {
@@ -71,14 +70,13 @@ const auth = new Hono()
       console.log(err);
       if (err instanceof OAuth2RequestError) {
         // bad verification code, invalid credentials, etc
-        throw new HTTPException(400, err);
+        return c.json(err, 400);
       }
-      throw err;
+      return c.json(err, 500);
     }
   })
   .get('/logout', async (c) => {
     const sessionId = getCookie(c, lucia.sessionCookieName);
-    // if (sessionId === undefined) throw new HTTPException(403);
     await lucia.invalidateSession(sessionId ?? ''); // succeeds even if session ID is invalid
     return c.body(null, 204);
   });

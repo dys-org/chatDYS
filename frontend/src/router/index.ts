@@ -73,7 +73,6 @@ router.beforeEach(async (to) => {
     try {
       if (userStore.user === null) await userStore.fetchCurrentUser();
     } catch (err: any) {
-      // checking for instanceof HTTPException is not working
       console.error(err);
       if (err.status === 401) return '/login';
     }
