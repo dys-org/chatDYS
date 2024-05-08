@@ -97,9 +97,6 @@ devDependencies:
   '@trivago/prettier-plugin-sort-imports':
     specifier: ^4.3.0
     version: 4.3.0(prettier@3.2.5)
-  '@tsconfig/node20':
-    specifier: ^20.1.4
-    version: 20.1.4
   '@types/better-sqlite3':
     specifier: ^7.6.10
     version: 7.6.10
@@ -130,9 +127,6 @@ devDependencies:
   '@vue/test-utils':
     specifier: ^2.4.5
     version: 2.4.5
-  '@vue/tsconfig':
-    specifier: ^0.5.1
-    version: 0.5.1
   autoprefixer:
     specifier: ^10.4.19
     version: 10.4.19(postcss@8.4.38)
@@ -1698,10 +1692,6 @@ packages:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
     dev: true
 
-  /@tsconfig/node20@20.1.4:
-    resolution: {integrity: sha512-sqgsT69YFeLWf5NtJ4Xq/xAF8p4ZQHlmGW74Nu2tD4+g5fAsposc4ZfaaPixVu4y01BEiDCWLRDCvDM5JOsRxg==}
-    dev: true
-
   /@tybys/wasm-util@0.8.3:
     resolution: {integrity: sha512-Z96T/L6dUFFxgFJ+pQtkPpne9q7i6kIPYCFnQBHSgSPV9idTsKfIhCss0h5iM9irweZCatkrdeP8yi5uM1eX6Q==}
     requiresBuild: true
@@ -2092,10 +2082,6 @@ packages:
     dependencies:
       js-beautify: 1.15.1
       vue-component-type-helpers: 2.0.16
-    dev: true
-
-  /@vue/tsconfig@0.5.1:
-    resolution: {integrity: sha512-VcZK7MvpjuTPx2w6blwnwZAu5/LgBUtejFOi3pPGQFXQN5Ela03FUtd2Qtg4yWGGissVL0dr6Ro1LfOFh+PCuQ==}
     dev: true
 
   /@vueuse/core@10.9.0(vue@3.4.26):
