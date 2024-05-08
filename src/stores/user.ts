@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import http from '@/utils/http';
+import http from '@/lib/http';
 
 // TODO get from Hono Client
 export interface User {

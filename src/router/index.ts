@@ -71,10 +71,12 @@ router.beforeEach(async (to) => {
   if (to.meta.requiresAuth) {
     const userStore = useUserStore();
     try {
+      // if not logged in, try to fetch the current user
+      // if that triggers an error, redirect to login
       if (userStore.user === null) await userStore.fetchCurrentUser();
     } catch (err: any) {
       console.error(err);
-      if (err.status === 401) return '/login';
+      return '/login';
     }
   }
 });

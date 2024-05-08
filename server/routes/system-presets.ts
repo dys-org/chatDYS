@@ -2,16 +2,10 @@ import { zValidator } from '@hono/zod-validator';
 import { asc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { Session, User } from 'lucia';
-import { z } from 'zod';
 
 import { db } from '../drizzle/db';
-import { System_Presets, Users } from '../drizzle/schema';
+import { System_Presets, insertSystemPresetsSchema } from '../drizzle/schema';
 import { userCanEdit } from '../utils';
-
-const presetParamsSchema = z.object({
-  name: z.string(),
-  text: z.string(),
-});
 
 const systemPresets = new Hono<{
   Variables: {
@@ -31,11 +25,11 @@ const systemPresets = new Hono<{
       .orderBy(asc(System_Presets.name))
       .prepare();
     const data = ps.all({ user_id: user.id });
-    return c.json(data);
+    return c.json(data, 200);
   })
   .post(
     '/',
-    zValidator('json', presetParamsSchema, (result, c) => {
+    zValidator('json', insertSystemPresetsSchema, (result, c) => {
       if (!result.success) c.json({ message: result.error.message }, 400);
     }),
     async (c) => {
@@ -53,7 +47,7 @@ const systemPresets = new Hono<{
   )
   .put(
     '/:id',
-    zValidator('json', presetParamsSchema, (result, c) => {
+    zValidator('json', insertSystemPresetsSchema, (result, c) => {
       if (!result.success) c.json({ message: result.error.message }, 400);
     }),
     async (c) => {

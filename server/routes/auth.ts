@@ -66,7 +66,7 @@ const auth = new Hono()
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       return c.body(null, 302, { Location: '/chat', 'Set-Cookie': sessionCookie.serialize() });
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
       if (err instanceof OAuth2RequestError) {
         // bad verification code, invalid credentials, etc

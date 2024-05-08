@@ -3,10 +3,10 @@ import { DDropdown, DLink } from 'deez-components';
 import { onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import { toastErrorHandler } from '@/lib';
 import { useChatStore } from '@/stores/chat';
 import { useConversationStore } from '@/stores/conversation';
 import { useToastStore } from '@/stores/toast';
-import { toastErrorHandler } from '@/utils';
 
 const route = useRoute();
 const router = useRouter();

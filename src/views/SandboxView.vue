@@ -2,8 +2,8 @@
 import { DButton } from 'deez-components';
 
 import TwoColumn from '@/layouts/TwoColumn.vue';
-import { toastErrorHandler } from '@/utils';
-import http from '@/utils/http';
+import { toastErrorHandler } from '@/lib';
+import http from '@/lib/http';
 
 async function getUsers() {
   try {

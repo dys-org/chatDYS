@@ -3,7 +3,7 @@ import { GitHub } from 'arctic';
 import { Lucia, TimeSpan } from 'lucia';
 
 import { db } from './drizzle/db';
-import { Sessions, UserInsert, Users } from './drizzle/schema';
+import { Sessions, Users, UsersInsert } from './drizzle/schema';
 
 const adapter = new DrizzleSQLiteAdapter(db, Sessions, Users);
 
@@ -27,7 +27,7 @@ export const github = new GitHub(process.env.GITHUB_CLIENT_ID!, process.env.GITH
 declare module 'lucia' {
   interface Register {
     Lucia: typeof lucia;
-    DatabaseUserAttributes: Pick<UserInsert, 'username' | 'github_id'>;
+    DatabaseUserAttributes: Pick<UsersInsert, 'username' | 'github_id'>;
   }
 }
 

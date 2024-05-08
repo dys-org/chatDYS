@@ -1,5 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { integer, numeric, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 export const Users = sqliteTable('Users', {
   id: text('id').primaryKey(),
@@ -12,7 +14,9 @@ export const Users = sqliteTable('Users', {
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type UserInsert = typeof Users.$inferInsert;
+export type UsersInsert = typeof Users.$inferInsert;
+export const insertUsersSchema = createInsertSchema(Users);
+export const selectUsersSchema = createSelectSchema(Users);
 
 export const Sessions = sqliteTable('Session', {
   id: text('id').primaryKey(),
@@ -22,7 +26,7 @@ export const Sessions = sqliteTable('Session', {
   expiresAt: integer('expires_at').notNull(),
 });
 
-export type SessionInsert = typeof Sessions.$inferInsert;
+export type SessionsInsert = typeof Sessions.$inferInsert;
 
 export const Conversations = sqliteTable('Conversations', {
   id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
@@ -39,7 +43,9 @@ export const Conversations = sqliteTable('Conversations', {
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type ConversationInsert = typeof Conversations.$inferInsert;
+export type ConversationsInsert = typeof Conversations.$inferInsert;
+export const insertConversationsSchema = createInsertSchema(Conversations);
+export const selectConversationsSchema = createSelectSchema(Conversations);
 
 export const System_Presets = sqliteTable('System_Presets', {
   id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
@@ -52,4 +58,8 @@ export const System_Presets = sqliteTable('System_Presets', {
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type SystemPresetInsert = typeof System_Presets.$inferInsert;
+export type SystemPresetsInsert = typeof System_Presets.$inferInsert;
+export const insertSystemPresetsSchema = createInsertSchema(System_Presets, {
+  user_id: z.string().optional(),
+});
+export const selectSystemPresetsSchema = createSelectSchema(System_Presets);

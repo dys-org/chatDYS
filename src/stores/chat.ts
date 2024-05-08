@@ -5,11 +5,8 @@ import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useTokenize } from '@/composables/useTokenize';
-// import { auth0 } from '@/main';
-import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
-import http from '@/utils/http';
-
-import { useUserStore } from './user';
+import { IDB_APIKEY_OPENAI } from '@/lib/constants';
+import http from '@/lib/http';
 
 export interface Conversation {
   id: number;
@@ -67,7 +64,7 @@ export const useChatStore = defineStore('chat', () => {
     checkTokens({ stringToTokenize, model: model.value });
   }
   async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
-    const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
+    const apiKey = await getIDB(IDB_APIKEY_OPENAI);
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

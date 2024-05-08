@@ -1,7 +1,7 @@
 import { type TiktokenModel } from 'js-tiktoken';
 import { ref } from 'vue';
 
-import http from '@/utils/http';
+import http from '@/lib/http';
 
 interface TokenizeRequest {
   stringToTokenize: string;

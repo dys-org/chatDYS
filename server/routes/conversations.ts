@@ -5,17 +5,8 @@ import { Session, User } from 'lucia';
 import { z } from 'zod';
 
 import { db } from '../drizzle/db';
-import { Conversations } from '../drizzle/schema';
+import { Conversations, insertConversationsSchema } from '../drizzle/schema';
 import { userCanEdit } from '../utils';
-
-const convoParamsSchema = z.object({
-  model: z.string(),
-  temperature: z.number(),
-  max_tokens: z.number(),
-  system_message: z.string(),
-  messages: z.string(),
-  title: z.string(),
-});
 
 const conversations = new Hono<{
   Variables: {
@@ -35,11 +26,11 @@ const conversations = new Hono<{
       .orderBy(desc(Conversations.created_at))
       .prepare();
     const data = ps.all({ user_id: user.id });
-    return c.json(data);
+    return c.json(data, 200);
   })
   .post(
     '/',
-    zValidator('json', convoParamsSchema, (result, c) => {
+    zValidator('json', insertConversationsSchema, (result, c) => {
       if (!result.success) c.json({ message: result.error.message }, 400);
     }),
     async (c) => {
@@ -63,11 +54,11 @@ const conversations = new Hono<{
       .where(eq(Conversations.id, parseInt(c.req.param('id'))))
       .prepare();
     const data = ps.get();
-    return c.json(data);
+    return c.json(data, 200);
   })
   .put(
     '/:id',
-    zValidator('json', convoParamsSchema, (result, c) => {
+    zValidator('json', insertConversationsSchema, (result, c) => {
       if (!result.success) c.json({ message: result.error.message }, 400);
     }),
     async (c) => {

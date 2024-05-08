@@ -3,10 +3,10 @@ import { DInput, DModal } from 'deez-components';
 import { get as getIDB, set as setIDB } from 'idb-keyval';
 import { onMounted, ref } from 'vue';
 
+import { toastErrorHandler } from '@/lib';
+import { IDB_APIKEY_OPENAI } from '@/lib/constants';
 import { useChatStore } from '@/stores/chat';
 import { useToastStore } from '@/stores/toast';
-import { toastErrorHandler } from '@/utils';
-import { STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 
 const chatStore = useChatStore();
 const toastStore = useToastStore();
@@ -15,7 +15,7 @@ const openaiApiKeyInput = ref('');
 
 async function handleSubmit() {
   try {
-    await setIDB(STORAGE_APIKEY_OPENAI, openaiApiKeyInput.value);
+    await setIDB(IDB_APIKEY_OPENAI, openaiApiKeyInput.value);
     chatStore.isApiKeyModalOpen = false;
     toastStore.add({
       variant: 'success',
@@ -28,7 +28,7 @@ async function handleSubmit() {
 }
 
 onMounted(async () => {
-  const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
+  const apiKey = await getIDB(IDB_APIKEY_OPENAI);
   if (!apiKey) {
     console.log('No API Key found in indexedDB.');
     chatStore.isApiKeyModalOpen = true;

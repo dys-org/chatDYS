@@ -69,7 +69,7 @@ const api = new Hono()
   .route('/tokenize', tokenize)
   .route('/users', users);
 
-const routes = app.route('/auth', auth).route('/api', api);
+export const routes = app.route('/auth', auth).route('/api', api);
 
 const port = 6969;
 console.log(`Server is running on port ${port}`);
@@ -77,4 +77,3 @@ console.log(`Server is running on port ${port}`);
 serve({ fetch: app.fetch, port });
 
 export default app;
-export type AppType = typeof routes;

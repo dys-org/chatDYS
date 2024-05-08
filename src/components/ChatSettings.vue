@@ -4,9 +4,9 @@ import { DCollapse, DDropdown, DRange, DSelect, DTextarea } from 'deez-component
 import { computed, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { toastErrorHandler } from '@/lib';
 import { MODELS, useChatStore } from '@/stores/chat';
 import { useSystemPresetsStore } from '@/stores/systemPresets';
-import { toastErrorHandler } from '@/utils';
 
 const router = useRouter();
 

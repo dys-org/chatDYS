@@ -9,10 +9,10 @@ import ChatMessage from '@/components/ChatMessage.vue';
 import ChatSidebar from '@/components/ChatSidebar.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
+import { toastErrorHandler } from '@/lib';
+import { IDB_APIKEY_OPENAI, IDB_CHAT } from '@/lib/constants';
 import { useChatStore } from '@/stores/chat';
 import { useConversationStore } from '@/stores/conversation';
-import { toastErrorHandler } from '@/utils';
-import { CHAT_STORAGE_KEY, STORAGE_APIKEY_OPENAI } from '@/utils/constants';
 
 const route = useRoute();
 const router = useRouter();
@@ -38,7 +38,7 @@ async function updateMessages() {
 }
 
 async function handleSend() {
-  const apiKey = await getIDB(STORAGE_APIKEY_OPENAI);
+  const apiKey = await getIDB(IDB_APIKEY_OPENAI);
   if (!apiKey) {
     chatStore.isApiKeyModalOpen = true;
     return;
@@ -80,13 +80,13 @@ watch(
 
 chatStore.$subscribe((mutation, state) => {
   // persist the whole state to the indexedDB whenever it changes
-  setIDB(CHAT_STORAGE_KEY, JSON.stringify(state)).catch(console.error);
+  setIDB(IDB_CHAT, JSON.stringify(state)).catch(console.error);
 });
 
 onBeforeMount(async () => {
   if (!route.params.id) return;
   // use the persisted state if available and the id matches the route params
-  const persistedState = await getIDB(CHAT_STORAGE_KEY);
+  const persistedState = await getIDB(IDB_CHAT);
   if (persistedState) {
     const state = JSON.parse(persistedState);
     if (state.id !== route.params.id) return;

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import http from '@/utils/http';
+import http from '@/lib/http';
 
 import { type Conversation, useChatStore } from './chat';
 

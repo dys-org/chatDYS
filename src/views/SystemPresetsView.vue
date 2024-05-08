@@ -4,9 +4,9 @@ import { onBeforeMount, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import OneColumn from '@/layouts/OneColumn.vue';
+import { toastErrorHandler } from '@/lib';
 import { type SystemPreset, useSystemPresetsStore } from '@/stores/systemPresets';
 import { useToastStore } from '@/stores/toast';
-import { toastErrorHandler } from '@/utils';
 
 const router = useRouter();
 const systemPresetStore = useSystemPresetsStore();
