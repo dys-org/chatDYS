@@ -1,29 +1,25 @@
+import { type InferResponseType, hc } from 'hono/client';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { client } from '@/lib/apiClient';
 import http from '@/lib/http';
 
-// TODO get from Hono Client
-export interface User {
-  id: number;
-  sub: string;
-  email: string;
-  name: string;
-  avatar_url: string;
-  created_at: Date;
-  updated_at: Date;
-}
+type UserResType = InferResponseType<typeof client.api.users.current.$get, 200>;
 
 export const useUserStore = defineStore('user', () => {
   const router = useRouter();
-  const user = ref<User | null>(null);
+  const user = ref<UserResType | null>(null);
 
   const isLoggedIn = computed(() => user.value !== null);
 
   async function fetchCurrentUser() {
-    const data = await http.get<User>(`/api/users/current`);
+    const data = await http.get<UserResType>(`/api/users/current`);
     user.value = data;
+    // const res = await client.api.users.current.$get();
+    // const data = await res.json();
+    // user.value = data;
   }
 
   async function logout() {

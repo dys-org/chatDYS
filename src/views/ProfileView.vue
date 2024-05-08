@@ -20,8 +20,8 @@ const chatStore = useChatStore();
     </div>
     <div v-else class="grid gap-4 pb-32">
       <img
-        :src="userStore.user.avatar_url"
-        :alt="userStore.user.name"
+        :src="userStore.user.avatar_url ?? ''"
+        :alt="userStore.user.name ?? ''"
         class="mt-6 size-24 rounded-full"
       />
       <h2 class="mt-2 text-3xl">{{ userStore.user.name }}</h2>
