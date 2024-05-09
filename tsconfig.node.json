@@ -1,5 +1,5 @@
 {
-  "include": ["playwright.config.*"],
+  "include": ["vite.config.*", "playwright.config.*", "drizzle.config.*"],
   "compilerOptions": {
     "composite": true,
     "module": "ESNext",
