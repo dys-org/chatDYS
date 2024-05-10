@@ -25,7 +25,7 @@ const systemPresets = new Hono<{
       .orderBy(asc(System_Presets.name))
       .prepare();
     const data = ps.all({ user_id: user.id });
-    return c.json(data, 200);
+    return c.json(data);
   })
   .post(
     '/',
@@ -42,7 +42,7 @@ const systemPresets = new Hono<{
         .values({ ...preset, user_id: user.id })
         .prepare();
       const info = ps.run();
-      return c.json({ info }, 201);
+      return c.json(info, 201);
     },
   )
   .put(
@@ -65,7 +65,7 @@ const systemPresets = new Hono<{
         .where(eq(System_Presets.id, parseInt(c.req.param('id'))))
         .prepare();
       const info = ps.run();
-      return c.json({ info });
+      return c.json(info);
     },
   )
   .delete('/:id', async (c) => {
@@ -81,7 +81,7 @@ const systemPresets = new Hono<{
       .where(eq(System_Presets.id, parseInt(c.req.param('id'))))
       .prepare();
     const info = ps.run();
-    return c.json({ info }, 200);
+    return c.json(info);
   });
 
 export default systemPresets;

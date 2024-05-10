@@ -1,38 +1,37 @@
+import { InferResponseType } from 'hono';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import http from '@/lib/http';
+import { client } from '@/lib/apiClient';
 
-export interface SystemPreset {
-  id: number;
-  sub?: string;
-  name: string;
-  text: string;
-  created_at?: string;
-  updated_at?: string;
-}
+export type SystemPresetsResponse = InferResponseType<typeof client.api.systemPresets.$get, 200>;
 
 export const useSystemPresetsStore = defineStore('systemPresets', () => {
   const loading = ref(false);
-  const presetList = ref<SystemPreset[] | null>(null);
+  const presetList = ref<SystemPresetsResponse | null>(null);
 
   async function fetchPresetList() {
-    presetList.value = await http.get(`/api/system-presets`);
+    const res = await client.api.systemPresets.$get();
+    if (res.ok) presetList.value = await res.json();
   }
-
   async function createSystemPreset(params: { name: string; text: string }) {
-    // TODO get types
-    const res = await http.post('/api/system-presets', params);
+    const res = await client.api.systemPresets.$post({ json: params });
+    const info = await res.json();
     await fetchPresetList();
-    return res;
+    return info;
   }
   async function updateSystemPreset(params: { id: number; name: string; text: string }) {
     const { id, name, text } = params;
-    await http.put(`/api/system-presets/${id}`, { name, text });
+    await client.api.systemPresets[':id'].$put({
+      param: { id: id.toString() },
+      json: { name, text },
+    });
     await fetchPresetList();
   }
   async function deleteSystemPreset(id: number) {
-    await http.delete(`/api/system-presets/${id}`);
+    await client.api.systemPresets[':id'].$delete({
+      param: { id: id.toString() },
+    });
     await fetchPresetList();
   }
 

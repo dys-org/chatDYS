@@ -44,7 +44,9 @@ export const Conversations = sqliteTable('Conversations', {
 });
 
 export type ConversationsInsert = typeof Conversations.$inferInsert;
-export const insertConversationsSchema = createInsertSchema(Conversations);
+export const insertConversationsSchema = createInsertSchema(Conversations, {
+  user_id: z.string().optional(),
+});
 export const selectConversationsSchema = createSelectSchema(Conversations);
 
 export const System_Presets = sqliteTable('System_Presets', {

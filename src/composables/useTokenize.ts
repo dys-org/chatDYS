@@ -1,15 +1,10 @@
-import { type TiktokenModel } from 'js-tiktoken';
 import { ref } from 'vue';
 
-import http from '@/lib/http';
+import { client } from '@/lib/apiClient';
 
 interface TokenizeRequest {
   stringToTokenize: string;
-  model: TiktokenModel;
-}
-
-interface TokenizeResponse {
-  tokens: number;
+  model: 'gpt-3.5-turbo' | 'gpt-4' | 'gpt-4-1106-preview'; // TiktokenModel;
 }
 
 export function useTokenize() {
@@ -18,13 +13,9 @@ export function useTokenize() {
   async function checkTokens({ stringToTokenize, model }: TokenizeRequest) {
     tokenLength.value = 0;
     try {
-      const { tokens } = await http.post<TokenizeRequest, TokenizeResponse>('/api/tokenize', {
-        stringToTokenize,
-        model,
-      });
-
+      const res = await client.api.tokenize.$post({ json: { stringToTokenize, model } });
+      const { tokens } = await res.json();
       tokenLength.value = tokens;
-      // console.log('tokens =', tokens);
     } catch (err) {
       console.error(err);
     }

@@ -5,14 +5,14 @@ import { useRouter } from 'vue-router';
 
 import OneColumn from '@/layouts/OneColumn.vue';
 import { toastErrorHandler } from '@/lib';
-import { type SystemPreset, useSystemPresetsStore } from '@/stores/systemPresets';
+import { type SystemPresetsResponse, useSystemPresetsStore } from '@/stores/systemPresets';
 import { useToastStore } from '@/stores/toast';
 
 const router = useRouter();
 const systemPresetStore = useSystemPresetsStore();
 const toastStore = useToastStore();
 
-const selectedPreset = ref<SystemPreset>();
+const selectedPreset = ref<SystemPresetsResponse[number]>();
 const isConfirmOpen = ref(false);
 const name = ref('');
 const text = ref('');
@@ -25,13 +25,13 @@ watch(selectedPreset, (newVal, _) => {
 
 async function addNewPreset() {
   try {
-    const res = await systemPresetStore.createSystemPreset({
+    const info = await systemPresetStore.createSystemPreset({
       name: 'New Preset',
       text: 'You are a helpful assistant.',
     });
     selectedPreset.value = systemPresetStore.presetList?.find(
-      // @ts-expect-error
-      (preset) => preset.id === res.info.lastInsertRowid,
+      // @ts-expect-error - info object is not getting typed correctly
+      (preset) => preset.id === info.lastInsertRowid,
     );
   } catch (err) {
     toastErrorHandler(err, 'There was a problem creating the preset.');

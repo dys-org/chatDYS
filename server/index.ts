@@ -13,7 +13,7 @@ import { lucia } from './lucia';
 import auth from './routes/auth';
 import chat from './routes/chat';
 import conversations from './routes/conversations';
-import systemPresets from './routes/system-presets';
+import systemPresets from './routes/systemPresets';
 import tokenize from './routes/tokenize';
 import users from './routes/users';
 
@@ -65,7 +65,7 @@ const app = new Hono<{
 const api = new Hono()
   .route('/chat', chat)
   .route('/conversations', conversations)
-  .route('/system-presets', systemPresets)
+  .route('/systemPresets', systemPresets)
   .route('/tokenize', tokenize)
   .route('/users', users);
 

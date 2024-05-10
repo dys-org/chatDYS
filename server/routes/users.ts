@@ -15,7 +15,7 @@ const users = new Hono<{
     // TODO restrict access
     const ps = db.select().from(Users).prepare();
     const data = ps.all();
-    return c.json(data, 200);
+    return c.json(data);
   })
   .get('/current', async (c) => {
     const user = c.get('user');
@@ -25,18 +25,18 @@ const users = new Hono<{
     const data = ps.get();
     if (data === undefined) return c.json({ message: 'User not found.' }, 404);
 
-    return c.json(data, 200);
-  })
-  .get('/:id', async (c) => {
-    const ps = db
-      .select()
-      .from(Users)
-      .where(eq(Users.id, c.req.param('id')))
-      .prepare();
-    const data = ps.get();
-    if (data === undefined) return c.json({ message: 'User not found.' }, 404);
-
-    return c.json(data, 200);
+    return c.json(data);
   });
+// .get('/:id', async (c) => {
+//   const ps = db
+//     .select()
+//     .from(Users)
+//     .where(eq(Users.id, c.req.param('id')))
+//     .prepare();
+//   const data = ps.get();
+//   if (data === undefined) return c.json({ message: 'User not found.' }, 404);
+
+//   return c.json(data);
+// });
 
 export default users;
