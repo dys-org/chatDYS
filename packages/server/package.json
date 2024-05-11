@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/",
     "build": "npx tsc",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path ../.gitignore",
@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.10",
-    "@types/node": "^20.12.8",
     "drizzle-kit": "^0.20.17",
     "tsx": "^4.7.3"
   }

@@ -21,6 +21,9 @@ importers:
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.2.5)
+      '@types/node':
+        specifier: ^20.12.8
+        version: 20.12.11
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
@@ -114,7 +117,7 @@ importers:
         version: 3.4.3
       vite:
         specifier: ^5.2.11
-        version: 5.2.11
+        version: 5.2.11(@types/node@20.12.11)
       vue-tsc:
         specifier: ^2.0.16
         version: 2.0.17(typescript@5.4.5)
@@ -161,9 +164,6 @@ importers:
       '@types/better-sqlite3':
         specifier: ^7.6.10
         version: 7.6.10
-      '@types/node':
-        specifier: ^20.12.8
-        version: 20.12.11
       drizzle-kit:
         specifier: ^0.20.17
         version: 0.20.18
@@ -1838,7 +1838,7 @@ packages:
       vite: ^5.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 5.2.11
+      vite: 5.2.11(@types/node@20.12.11)
       vue: 3.4.27(typescript@5.4.5)
     dev: true
 
@@ -4476,7 +4476,7 @@ packages:
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  /vite@5.2.11:
+  /vite@5.2.11(@types/node@20.12.11):
     resolution: {integrity: sha512-HndV31LWW05i1BLPMUCE1B9E9GFbOu1MbenhS58FuK6owSO5qHm7GiCotrNY1YE5rMeQSFBGmT5ZaLEjFizgiQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -4504,6 +4504,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 20.12.11
       esbuild: 0.20.2
       postcss: 8.4.38
       rollup: 4.17.2
