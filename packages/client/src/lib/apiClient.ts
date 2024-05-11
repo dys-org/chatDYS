@@ -2,7 +2,7 @@ import { hc } from 'hono/client';
 
 import { useUserStore } from '@/stores/user';
 
-import type { AppType } from '../../server';
+import type { AppType } from '../../../server/src'
 
 async function myFetch(input: string | URL | Request, init?: RequestInit) {
   const userStore = useUserStore();

@@ -19,10 +19,6 @@ coverage
 *.sln
 *.sw?
 
-# Local Cloudflare
-.wrangler
-.dev.vars
-
 # db
 db-data
 

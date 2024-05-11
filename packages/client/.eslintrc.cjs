@@ -12,7 +12,6 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
   },
-  plugins: ['simple-import-sort'],
   rules: {
     'vue/no-undef-components': ['error', { ignorePatterns: [] }],
     'vue/v-on-event-hyphenation': 'off',
