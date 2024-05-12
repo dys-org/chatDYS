@@ -4,9 +4,9 @@ import { Hono } from 'hono';
 import { Session, User } from 'lucia';
 import { z } from 'zod';
 
-import { db } from '../drizzle/db';
-import { Conversations, insertConversationsSchema } from '../drizzle/schema';
-import { userCanEdit } from '../utils';
+import { db } from '../drizzle/db.js';
+import { Conversations, insertConversationsSchema } from '../drizzle/schema.js';
+import { userCanEdit } from '../utils.js';
 
 const conversations = new Hono<{
   Variables: {

@@ -9,13 +9,13 @@ import { StatusCode } from 'hono/utils/http-status';
 import { Session, User } from 'lucia';
 import OpenAI from 'openai';
 
-import { lucia } from './lucia';
-import auth from './routes/auth';
-import chat from './routes/chat';
-import conversations from './routes/conversations';
-import systemPresets from './routes/systemPresets';
-import tokenize from './routes/tokenize';
-import users from './routes/users';
+import { lucia } from './lucia.js';
+import auth from './routes/auth.js';
+import chat from './routes/chat.js';
+import conversations from './routes/conversations.js';
+import systemPresets from './routes/systemPresets.js';
+import tokenize from './routes/tokenize.js';
+import users from './routes/users.js';
 
 const app = new Hono<{
   Variables: {

@@ -1,8 +1,8 @@
 import type { Config } from 'drizzle-kit';
 
 export default {
-  schema: './server/drizzle/schema.ts',
-  out: './server/drizzle/migrations',
+  schema: './src/drizzle/schema.ts',
+  out: './src/drizzle/migrations',
   driver: 'better-sqlite',
   dbCredentials: {
     url: './db-data/chat-dys.db',

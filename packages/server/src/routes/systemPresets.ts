@@ -3,9 +3,9 @@ import { asc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { Session, User } from 'lucia';
 
-import { db } from '../drizzle/db';
-import { System_Presets, insertSystemPresetsSchema } from '../drizzle/schema';
-import { userCanEdit } from '../utils';
+import { db } from '../drizzle/db.js';
+import { System_Presets, insertSystemPresetsSchema } from '../drizzle/schema.js';
+import { userCanEdit } from '../utils.js';
 
 const systemPresets = new Hono<{
   Variables: {

@@ -2,8 +2,8 @@ import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle';
 import { GitHub } from 'arctic';
 import { Lucia, TimeSpan } from 'lucia';
 
-import { db } from './drizzle/db';
-import { Sessions, Users, UsersInsert } from './drizzle/schema';
+import { db } from './drizzle/db.js';
+import { Sessions, Users, UsersInsert } from './drizzle/schema.js';
 
 const adapter = new DrizzleSQLiteAdapter(db, Sessions, Users);
 

@@ -2,8 +2,8 @@ import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { Session, User } from 'lucia';
 
-import { db } from '../drizzle/db';
-import { Users } from '../drizzle/schema';
+import { db } from '../drizzle/db.js';
+import { Users } from '../drizzle/schema.js';
 
 const users = new Hono<{
   Variables: {

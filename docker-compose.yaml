@@ -1,0 +1,25 @@
+version: '3'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server
+    ports:
+      - '6969:6969'
+    volumes:
+      - './db-data:/app/db-data'
+    command: 'node dist/index.js'
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: client
+    ports:
+      - '80:80'
+    networks:
+      - app-network
+
+networks:
+  app-network:

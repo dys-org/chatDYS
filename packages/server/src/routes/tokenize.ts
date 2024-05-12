@@ -1,6 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { TiktokenModel, encodingForModel } from 'js-tiktoken';
+import { encodingForModel } from 'js-tiktoken';
 import { z } from 'zod';
 
 const tokenize = new Hono().post(

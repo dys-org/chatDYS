@@ -4,10 +4,10 @@ import { Hono } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
 import { generateIdFromEntropySize } from 'lucia';
 
-import { db } from '../drizzle/db';
-import { Users } from '../drizzle/schema';
-import { github, lucia } from '../lucia';
-import { GithubUser } from '../types';
+import { db } from '../drizzle/db.js';
+import { Users } from '../drizzle/schema.js';
+import { github, lucia } from '../lucia.js';
+import { GithubUser } from '../types.js';
 
 const auth = new Hono()
   .get('/login/github', async (c) => {
