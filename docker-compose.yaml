@@ -18,8 +18,3 @@ services:
       target: client
     ports:
       - '80:80'
-    networks:
-      - app-network
-
-networks:
-  app-network:
