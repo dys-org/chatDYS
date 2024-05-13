@@ -8,7 +8,6 @@ FROM base AS build
 COPY . /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN mkdir -p /app/db-data
-RUN npx drizzle-kit generate:sqlite
 ENV NODE_ENV=production
 RUN pnpm run -r build
 RUN pnpm deploy --filter=server --prod /prod/server

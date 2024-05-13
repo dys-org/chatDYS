@@ -17,4 +17,4 @@ services:
       dockerfile: Dockerfile
       target: client
     ports:
-      - '80:80'
+      - '5173:5173'
