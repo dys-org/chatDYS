@@ -2,6 +2,7 @@
   "name": "chat-dys",
   "type": "module",
   "private": true,
+  "packageManager": "pnpm@8.15.7",
   "pnpm": {
     "overrides": {
       "hono": "^4.3.2",
