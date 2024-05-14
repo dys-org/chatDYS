@@ -1,0 +1,15 @@
+{
+  "include": ["env.d.ts", "src/**/*"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "outDir": "./dist",
+    "skipLibCheck": true
+  },
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
