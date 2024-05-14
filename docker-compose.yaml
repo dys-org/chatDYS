@@ -8,12 +8,5 @@ services:
     ports:
       - '6969:6969'
     volumes:
-      - './db-data:/app/db-data'
+      - './packages/server/db-data:/app/db-data'
     command: 'node dist/index.js'
-
-  # client:
-  #   build:
-  #     context: ./packages/client
-  #     dockerfile: Dockerfile
-  # ports:
-  #   - '5173:5173'
