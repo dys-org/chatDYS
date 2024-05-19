@@ -1,9 +1,15 @@
 version: '3'
 services:
+  client:
+    build:
+      context: .
+      target: client
+    ports:
+      - '5173:80'
+
   server:
     build:
       context: .
-      dockerfile: Dockerfile
       target: server
     ports:
       - '6969:6969'
