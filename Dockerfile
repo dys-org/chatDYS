@@ -14,6 +14,7 @@ RUN mkdir -p /app-server/db-data
 
 FROM nginx:1.26-alpine-slim as client
 COPY --from=build /app/packages/client/dist /usr/share/nginx/html
+COPY --from=build /app/packages/client/default.conf /etc/nginx/conf.d/
 
 FROM base AS server
 COPY --from=build /app-server /app
