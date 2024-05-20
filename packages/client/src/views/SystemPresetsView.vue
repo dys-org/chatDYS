@@ -1,18 +1,20 @@
 <script setup lang="ts">
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { DButton, DInput, DLink, DModal, DSelect, DTextarea } from 'deez-components';
-import { onBeforeMount, ref, watch } from 'vue';
+import { InferRequestType, InferResponseType } from 'hono';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import OneColumn from '@/layouts/OneColumn.vue';
 import { toastErrorHandler } from '@/lib';
-import { type SystemPresetsResponse, useSystemPresetsStore } from '@/stores/systemPresets';
+import { client } from '@/lib/apiClient';
 import { useToastStore } from '@/stores/toast';
 
 const router = useRouter();
-const systemPresetStore = useSystemPresetsStore();
+const queryClient = useQueryClient();
 const toastStore = useToastStore();
 
-const selectedPreset = ref<SystemPresetsResponse[number]>();
+const selectedPreset = ref<InferResponseType<typeof client.api.systemPresets.$get, 200>[number]>();
 const isConfirmOpen = ref(false);
 const name = ref('');
 const text = ref('');
@@ -23,49 +25,100 @@ watch(selectedPreset, (newVal, _) => {
   text.value = newVal?.text || '';
 });
 
-async function addNewPreset() {
-  try {
-    const info = await systemPresetStore.createSystemPreset({
-      name: 'New Preset',
-      text: 'You are a helpful assistant.',
-    });
-    selectedPreset.value = systemPresetStore.presetList?.find(
-      // @ts-expect-error - info object is not getting typed correctly
-      (preset) => preset.id === info.lastInsertRowid,
-    );
-  } catch (err) {
-    toastErrorHandler(err, 'There was a problem creating the preset.');
-  }
+const {
+  isPending,
+  isError,
+  data: presetList,
+  error,
+} = useQuery({
+  queryKey: ['presetList'],
+  queryFn: fetchPresetList,
+  refetchOnMount: false,
+});
+
+watch(isError, (newVal) => {
+  if (newVal) toastErrorHandler(error, 'There was a problem fetching presets.');
+});
+
+async function fetchPresetList() {
+  const res = await client.api.systemPresets.$get();
+  if (res.ok) return await res.json();
 }
+
+const $post = client.api.systemPresets.$post;
+const create = useMutation<
+  InferResponseType<typeof $post>,
+  Error,
+  InferRequestType<typeof $post>['json']
+>({
+  mutationFn: async (preset) => {
+    const res = await $post({ json: preset });
+    return await res.json();
+  },
+  onSuccess: async (data) => {
+    await queryClient.invalidateQueries({ queryKey: ['presetList'] });
+    // @ts-expect-error - data shoould by 201 type
+    selectedPreset.value = presetList.value?.find((preset) => preset.id === data.id);
+  },
+  onError: (err) => {
+    toastErrorHandler(err, 'There was a problem creating the preset.');
+  },
+});
+
+function addNewPreset() {
+  create.mutate({ name: 'New Preset', text: 'You are a helpful assistant.' });
+}
+
+const $put = client.api.systemPresets[':id'].$put;
+const update = useMutation<
+  InferResponseType<typeof $put>,
+  Error,
+  InferRequestType<typeof $put>['json']
+>({
+  mutationFn: async (params) => {
+    const { id, name, text } = params;
+    const res = await $put({ param: { id: id!.toString() }, json: { name, text } });
+    return await res.json();
+  },
+  onSuccess: async (data) => {
+    await queryClient.invalidateQueries({ queryKey: ['presetList'] });
+    // @ts-expect-error - info object is not getting typed correctly
+    selectedPreset.value = presetList.value?.find((preset) => preset.id === data.id);
+    toastStore.add({ variant: 'success', title: 'Preset successfully updated' });
+  },
+  onError: (err) => {
+    toastErrorHandler(err, 'There was a problem updating the preset.');
+  },
+});
 
 async function updatePreset() {
   if (selectedPreset.value === undefined) return;
-  try {
-    await systemPresetStore.updateSystemPreset({
-      id: selectedPreset.value.id,
-      name: name.value,
-      text: text.value,
-    });
-    // preset has to be re-selected because the modeled object has changed
-    selectedPreset.value = systemPresetStore.presetList?.find(
-      (preset) => preset.id === selectedPreset.value?.id,
-    );
-    toastStore.add({ variant: 'success', title: 'Preset successfully updated' });
-  } catch (err) {
-    toastErrorHandler(err, 'There was a problem updating the preset.');
-  }
+  update.mutate({ id: selectedPreset.value.id, name: name.value, text: text.value });
 }
 
-async function deletePreset() {
-  if (selectedPreset.value?.id === undefined) return;
-  try {
-    await systemPresetStore.deleteSystemPreset(selectedPreset.value.id);
+const $delete = client.api.systemPresets[':id'].$delete;
+const remove = useMutation<
+  InferResponseType<typeof $delete>,
+  Error,
+  InferRequestType<typeof $delete>['param']
+>({
+  mutationFn: async (params) => {
+    const res = await $delete({ param: { id: params.id } });
+    return await res.json();
+  },
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({ queryKey: ['presetList'] });
     selectedPreset.value = undefined;
     isConfirmOpen.value = false;
     toastStore.add({ variant: 'success', title: 'Preset successfully deleted' });
-  } catch (err) {
+  },
+  onError: (err) => {
     toastErrorHandler(err, 'There was a problem deleting the preset.');
-  }
+  },
+});
+async function deletePreset() {
+  if (selectedPreset.value === undefined) return;
+  remove.mutate({ id: selectedPreset.value.id.toString() });
 }
 
 function handleDeletePreset() {
@@ -73,15 +126,6 @@ function handleDeletePreset() {
   confirmPresetName = selectedPreset.value?.name ?? '';
   isConfirmOpen.value = true;
 }
-
-onBeforeMount(() => {
-  // fetch the preset system messages if they are not already loaded
-  if (systemPresetStore.presetList === null) {
-    systemPresetStore.fetchPresetList().catch((err) => {
-      toastErrorHandler(err, 'There was a problem fetching presets.');
-    });
-  }
-});
 </script>
 
 <template>
@@ -105,12 +149,7 @@ onBeforeMount(() => {
           class="px-3 py-2"
         >
           <option value="" disabled class="py-1">Select Preset</option>
-          <option
-            v-for="preset in systemPresetStore.presetList"
-            :key="preset.id"
-            :value="preset"
-            class="py-1"
-          >
+          <option v-for="preset in presetList" :key="preset.id" :value="preset" class="py-1">
             {{ preset.name }}
           </option>
         </DSelect>

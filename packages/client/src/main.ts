@@ -1,3 +1,4 @@
+import { VueQueryPlugin } from '@tanstack/vue-query';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 
@@ -10,9 +11,8 @@ const app = createApp(App);
 
 const pinia = createPinia();
 pinia.use(resetStore);
+app.use(VueQueryPlugin);
 app.use(pinia);
 app.use(router);
-
-// app.use(auth0);
 
 app.mount('#app');

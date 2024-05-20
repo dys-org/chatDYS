@@ -64,14 +64,16 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
         enter-active-class="transition-opacity delay-200 duration-300"
         leave-active-class="transition-opacity duration-100"
       >
-        <slot v-if="isSidebarExpanded" name="side" />
+        <div v-show="isSidebarExpanded">
+          <slot name="side" />
+        </div>
       </Transition>
     </aside>
   </div>
 
   <!-- MOBILE SIDEBAR -->
   <TransitionRoot as="template" :show="sidebarOpen">
-    <Dialog as="div" class="relative z-50 lg:hidden" @close="sidebarOpen = false">
+    <Dialog as="div" class="relative z-50 lg:hidden" u @close="sidebarOpen = false">
       <TransitionChild
         as="template"
         enter="transition-opacity ease-linear duration-300"

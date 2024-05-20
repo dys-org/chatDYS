@@ -62,6 +62,6 @@ export const System_Presets = sqliteTable('System_Presets', {
 
 export type SystemPresetsInsert = typeof System_Presets.$inferInsert;
 export const insertSystemPresetsSchema = createInsertSchema(System_Presets, {
-  user_id: z.string().optional(),
+  user_id: (schema) => schema.user_id.optional(),
 });
 export const selectSystemPresetsSchema = createSelectSchema(System_Presets);

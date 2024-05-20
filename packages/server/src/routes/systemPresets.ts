@@ -37,12 +37,11 @@ const systemPresets = new Hono<{
       if (!user) return c.json({ message: 'User is null.' }, 401);
 
       const preset = c.req.valid('json');
-      const ps = db
+      const res = await db
         .insert(System_Presets)
         .values({ ...preset, user_id: user.id })
-        .prepare();
-      const info = ps.run();
-      return c.json(info, 201);
+        .returning();
+      return c.json(res[0], 201);
     },
   )
   .put(
@@ -59,13 +58,13 @@ const systemPresets = new Hono<{
       }
 
       const preset = c.req.valid('json');
-      const ps = db
+      const res = await db
         .update(System_Presets)
         .set({ ...preset, user_id: user.id })
         .where(eq(System_Presets.id, parseInt(c.req.param('id'))))
-        .prepare();
-      const info = ps.run();
-      return c.json(info);
+        .returning();
+
+      return c.json(res[0]);
     },
   )
   .delete('/:id', async (c) => {

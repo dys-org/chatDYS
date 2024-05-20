@@ -1,20 +1,39 @@
 <script setup lang="ts">
+import { useQuery } from '@tanstack/vue-query';
 import { useStorage } from '@vueuse/core';
 import { DCollapse, DDropdown, DRange, DSelect, DTextarea } from 'deez-components';
-import { computed, onBeforeMount } from 'vue';
+import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { toastErrorHandler } from '@/lib';
+import { client } from '@/lib/apiClient';
 import { MODELS, useChatStore } from '@/stores/chat';
-import { useSystemPresetsStore } from '@/stores/systemPresets';
 
 const router = useRouter();
-
 const chatStore = useChatStore();
-const systemPresetStore = useSystemPresetsStore();
+
+const {
+  isPending,
+  isError,
+  data: presetList,
+  error,
+} = useQuery({
+  queryKey: ['presetList'],
+  queryFn: fetchPresetList,
+  refetchOnMount: false,
+});
+
+watch(isError, (newVal) => {
+  if (newVal) toastErrorHandler(error, 'There was a problem fetching presets.');
+});
+
+async function fetchPresetList() {
+  const res = await client.api.systemPresets.$get();
+  if (res.ok) return await res.json();
+}
 
 const options = computed(() => {
-  const opts = systemPresetStore.presetList?.map((preset) => ({
+  const opts = presetList.value?.map((preset) => ({
     label: preset.name,
     key: preset.id,
     fn: () => (chatStore.systemMessage = preset.text ?? ''),
@@ -31,15 +50,6 @@ const options = computed(() => {
 });
 
 const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
-
-onBeforeMount(() => {
-  // fetch the preset system messages if they are not already loaded
-  if (systemPresetStore.presetList === null) {
-    systemPresetStore.fetchPresetList().catch((err) => {
-      toastErrorHandler(err, 'There was a problem fetching presets.');
-    });
-  }
-});
 </script>
 
 <template>
