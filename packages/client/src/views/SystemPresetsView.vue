@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
+import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { DButton, DInput, DLink, DModal, DSelect, DTextarea } from 'deez-components';
 import { InferRequestType, InferResponseType } from 'hono';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { useSystemPresets } from '@/composables/queries';
 import OneColumn from '@/layouts/OneColumn.vue';
 import { toastErrorHandler } from '@/lib';
 import { client } from '@/lib/apiClient';
@@ -25,28 +26,10 @@ watch(selectedPreset, (newVal, _) => {
   text.value = newVal?.text || '';
 });
 
-const {
-  isPending,
-  isError,
-  data: presetList,
-  error,
-} = useQuery({
-  queryKey: ['presetList'],
-  queryFn: fetchPresetList,
-  refetchOnMount: false,
-});
-
-watch(isError, (newVal) => {
-  if (newVal) toastErrorHandler(error, 'There was a problem fetching presets.');
-});
-
-async function fetchPresetList() {
-  const res = await client.api.systemPresets.$get();
-  if (res.ok) return await res.json();
-}
+const { data: presetList } = useSystemPresets();
 
 const $post = client.api.systemPresets.$post;
-const create = useMutation<
+const createMutation = useMutation<
   InferResponseType<typeof $post>,
   Error,
   InferRequestType<typeof $post>['json']
@@ -66,11 +49,11 @@ const create = useMutation<
 });
 
 function addNewPreset() {
-  create.mutate({ name: 'New Preset', text: 'You are a helpful assistant.' });
+  createMutation.mutate({ name: 'New Preset', text: 'You are a helpful assistant.' });
 }
 
 const $put = client.api.systemPresets[':id'].$put;
-const update = useMutation<
+const updateMutation = useMutation<
   InferResponseType<typeof $put>,
   Error,
   InferRequestType<typeof $put>['json']
@@ -93,11 +76,11 @@ const update = useMutation<
 
 async function updatePreset() {
   if (selectedPreset.value === undefined) return;
-  update.mutate({ id: selectedPreset.value.id, name: name.value, text: text.value });
+  updateMutation.mutate({ id: selectedPreset.value.id, name: name.value, text: text.value });
 }
 
 const $delete = client.api.systemPresets[':id'].$delete;
-const remove = useMutation<
+const deleteMutation = useMutation<
   InferResponseType<typeof $delete>,
   Error,
   InferRequestType<typeof $delete>['param']
@@ -118,7 +101,7 @@ const remove = useMutation<
 });
 async function deletePreset() {
   if (selectedPreset.value === undefined) return;
-  remove.mutate({ id: selectedPreset.value.id.toString() });
+  deleteMutation.mutate({ id: selectedPreset.value.id.toString() });
 }
 
 function handleDeletePreset() {

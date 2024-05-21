@@ -1,36 +1,16 @@
 <script setup lang="ts">
-import { useQuery } from '@tanstack/vue-query';
 import { useStorage } from '@vueuse/core';
 import { DCollapse, DDropdown, DRange, DSelect, DTextarea } from 'deez-components';
-import { computed, watch } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { toastErrorHandler } from '@/lib';
-import { client } from '@/lib/apiClient';
+import { useSystemPresets } from '@/composables/queries';
 import { MODELS, useChatStore } from '@/stores/chat';
 
 const router = useRouter();
 const chatStore = useChatStore();
 
-const {
-  isPending,
-  isError,
-  data: presetList,
-  error,
-} = useQuery({
-  queryKey: ['presetList'],
-  queryFn: fetchPresetList,
-  refetchOnMount: false,
-});
-
-watch(isError, (newVal) => {
-  if (newVal) toastErrorHandler(error, 'There was a problem fetching presets.');
-});
-
-async function fetchPresetList() {
-  const res = await client.api.systemPresets.$get();
-  if (res.ok) return await res.json();
-}
+const { data: presetList } = useSystemPresets();
 
 const options = computed(() => {
   const opts = presetList.value?.map((preset) => ({
