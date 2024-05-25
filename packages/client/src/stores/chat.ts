@@ -5,21 +5,8 @@ import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { useTokenize } from '@/composables/useTokenize';
+import { client } from '@/lib/apiClient';
 import { IDB_APIKEY_OPENAI } from '@/lib/constants';
-import http from '@/lib/http';
-
-export interface Conversation {
-  id: number;
-  sub: string;
-  model: Model;
-  temperature: number;
-  max_tokens: number;
-  system_message: string;
-  messages?: string;
-  title?: string;
-  created_at?: string;
-  updated_at?: string;
-}
 
 export interface Message {
   role: 'user' | 'system' | 'assistant';
@@ -71,8 +58,8 @@ export const useChatStore = defineStore('chat', () => {
       body: JSON.stringify({ chatCompletionParams, apiKey }),
     });
     if (!res.ok) {
-      const error = await res.json();
-      return Promise.reject(error);
+      const error = await res.text();
+      return Promise.reject(new Error(error));
     }
     if (!(res.body instanceof ReadableStream)) {
       return Promise.reject(new Error('Response is not a stream'));
@@ -110,8 +97,10 @@ export const useChatStore = defineStore('chat', () => {
 
   async function fetchChat(id: number) {
     loading.value = true;
-    const convo = await http.get<Conversation>(`/api/conversations/${id}`);
+    const res = await client.api.conversations[':id'].$get({ param: { id: id.toString() } });
+    const convo = await res.json();
     if (convo.messages) messages.value = JSON.parse(convo.messages);
+    // @ts-expect-error model is not returning the union type
     model.value = convo.model;
     systemMessage.value = convo.system_message;
     temperature.value = convo.temperature;

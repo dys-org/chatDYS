@@ -29,7 +29,7 @@ watch(selectedPreset, (newVal, _) => {
 const { data: presetList } = useSystemPresets();
 
 const $post = client.api.systemPresets.$post;
-const createMutation = useMutation<
+const createSystemPreset = useMutation<
   InferResponseType<typeof $post>,
   Error,
   InferRequestType<typeof $post>['json']
@@ -40,7 +40,7 @@ const createMutation = useMutation<
   },
   onSuccess: async (data) => {
     await queryClient.invalidateQueries({ queryKey: ['presetList'] });
-    // @ts-expect-error - data shoould by 201 type
+    // @ts-expect-error - data should by 201 type
     selectedPreset.value = presetList.value?.find((preset) => preset.id === data.id);
   },
   onError: (err) => {
@@ -49,11 +49,11 @@ const createMutation = useMutation<
 });
 
 function addNewPreset() {
-  createMutation.mutate({ name: 'New Preset', text: 'You are a helpful assistant.' });
+  createSystemPreset.mutate({ name: 'New Preset', text: 'You are a helpful assistant.' });
 }
 
 const $put = client.api.systemPresets[':id'].$put;
-const updateMutation = useMutation<
+const updateSystemPreset = useMutation<
   InferResponseType<typeof $put>,
   Error,
   InferRequestType<typeof $put>['json']
@@ -65,7 +65,7 @@ const updateMutation = useMutation<
   },
   onSuccess: async (data) => {
     await queryClient.invalidateQueries({ queryKey: ['presetList'] });
-    // @ts-expect-error - info object is not getting typed correctly
+    // @ts-expect-error - data should by 201 type
     selectedPreset.value = presetList.value?.find((preset) => preset.id === data.id);
     toastStore.add({ variant: 'success', title: 'Preset successfully updated' });
   },
@@ -76,17 +76,17 @@ const updateMutation = useMutation<
 
 async function updatePreset() {
   if (selectedPreset.value === undefined) return;
-  updateMutation.mutate({ id: selectedPreset.value.id, name: name.value, text: text.value });
+  updateSystemPreset.mutate({ id: selectedPreset.value.id, name: name.value, text: text.value });
 }
 
 const $delete = client.api.systemPresets[':id'].$delete;
-const deleteMutation = useMutation<
+const deleteSystemPreset = useMutation<
   InferResponseType<typeof $delete>,
   Error,
-  InferRequestType<typeof $delete>['param']
+  InferRequestType<typeof $delete>['param']['id']
 >({
-  mutationFn: async (params) => {
-    const res = await $delete({ param: { id: params.id } });
+  mutationFn: async (id) => {
+    const res = await $delete({ param: { id } });
     return await res.json();
   },
   onSuccess: async () => {
@@ -101,7 +101,7 @@ const deleteMutation = useMutation<
 });
 async function deletePreset() {
   if (selectedPreset.value === undefined) return;
-  deleteMutation.mutate({ id: selectedPreset.value.id.toString() });
+  deleteSystemPreset.mutate(selectedPreset.value.id.toString());
 }
 
 function handleDeletePreset() {

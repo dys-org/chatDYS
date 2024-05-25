@@ -23,7 +23,7 @@ const userStore = useUserStore();
       </DLink>
 
       <div class="flex items-center gap-6 text-white/60">
-        <NewChatButton v-if="userStore.isLoggedIn" />
+        <NewChatButton v-if="userStore.data" />
         <LoginButton />
       </div>
     </div>

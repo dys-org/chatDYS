@@ -13,7 +13,7 @@ async function http<T>(path: string, config: RequestInit): Promise<T> {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    if ([401, 403].includes(res.status) && userStore.isLoggedIn) {
+    if ([401, 403].includes(res.status) && userStore.data) {
       userStore.logout();
     }
     return Promise.reject(data);

@@ -70,9 +70,9 @@ const auth = new Hono()
       console.log(err);
       if (err instanceof OAuth2RequestError) {
         // bad verification code, invalid credentials, etc
-        return c.json(err, 400);
+        return c.text(err.description || 'OAuth2RequestError', 400);
       }
-      return c.json(err, 500);
+      return c.body(null, 500);
     }
   })
   .get('/logout', async (c) => {

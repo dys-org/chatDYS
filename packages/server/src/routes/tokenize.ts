@@ -17,7 +17,7 @@ const tokenize = new Hono().post(
       ]),
     }),
     (result, c) => {
-      if (!result.success) c.json({ message: result.error.message }, 400);
+      if (!result.success) c.text(result.error.message, 400);
     },
   ),
   async (c) => {
