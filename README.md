@@ -3,7 +3,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./src/assets/img/chat-dys.svg">
       <source media="(prefers-color-scheme: light)" srcset="./src/assets/img/chat-dys-light.svg">
-      <img alt="deez components" src="./src/assets/img/chat-dys-light.svg" width="350" style="max-width: 100%;">
+      <img alt="deez components" src="./packages/client/src/assets/img/chat-dys-light.svg" width="350" style="max-width: 100%;">
     </picture>
   </a>
 </p>
