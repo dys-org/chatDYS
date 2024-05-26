@@ -1,12 +1,16 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import OpenAI from 'openai';
-import { Stream } from 'openai/streaming.mjs';
+import type { Stream } from 'openai/streaming.mjs';
 import { z } from 'zod';
 
 const chatParamsSchema = z.object({
   chatCompletionParams: z.object({
-    model: z.string(),
+    model: z.union([
+      z.literal('gpt-3.5-turbo'),
+      z.literal('gpt-4'),
+      z.literal('gpt-4-1106-preview'),
+    ]),
     messages: z.array(
       z.object({
         role: z.union([z.literal('user'), z.literal('system'), z.literal('assistant')]),
@@ -22,7 +26,7 @@ const chatParamsSchema = z.object({
 const chat = new Hono().post(
   '/',
   zValidator('json', chatParamsSchema, (result, c) => {
-    if (!result.success) c.json({ message: result.error.message }, 400);
+    if (!result.success) c.text(result.error.message, 400);
   }),
   async (c) => {
     const headers = new Headers({ 'Content-Type': 'text/event-stream' });

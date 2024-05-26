@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { Session, User } from 'lucia';
+import type { Session, User } from 'lucia';
 
 import { db } from '../drizzle/db.js';
 import { Users } from '../drizzle/schema.js';
@@ -19,11 +19,11 @@ const users = new Hono<{
   })
   .get('/current', async (c) => {
     const user = c.get('user');
-    if (!user) return c.json({ message: 'User is null.' }, 401);
+    if (!user) return c.text('User is not logged in.', 401);
 
     const ps = db.select().from(Users).where(eq(Users.id, user.id)).prepare();
     const data = ps.get();
-    if (data === undefined) return c.json({ message: 'User not found.' }, 404);
+    if (data === undefined) return c.text('User not found.', 404);
 
     return c.json(data);
   });
@@ -34,7 +34,7 @@ const users = new Hono<{
 //     .where(eq(Users.id, c.req.param('id')))
 //     .prepare();
 //   const data = ps.get();
-//   if (data === undefined) return c.json({ message: 'User not found.' }, 404);
+//   if (data === undefined) return c.text('User not found.', 404);
 
 //   return c.json(data);
 // });

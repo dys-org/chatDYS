@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { asc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { Session, User } from 'lucia';
+import type { Session, User } from 'lucia';
 
 import { db } from '../drizzle/db.js';
 import { System_Presets, insertSystemPresetsSchema } from '../drizzle/schema.js';
@@ -15,7 +15,7 @@ const systemPresets = new Hono<{
 }>()
   .get('/', async (c) => {
     const user = c.get('user');
-    if (!user) return c.json({ message: 'User is null.' }, 401);
+    if (!user) return c.text('User is not logged in.', 401);
 
     const { id, user_id, name, text, created_at, updated_at } = System_Presets;
     const ps = db
@@ -30,50 +30,49 @@ const systemPresets = new Hono<{
   .post(
     '/',
     zValidator('json', insertSystemPresetsSchema, (result, c) => {
-      if (!result.success) c.json({ message: result.error.message }, 400);
+      if (!result.success) c.text(result.error.message, 400);
     }),
     async (c) => {
       const user = c.get('user');
-      if (!user) return c.json({ message: 'User is null.' }, 401);
+      if (!user) return c.text('User is not logged in.', 401);
 
       const preset = c.req.valid('json');
-      const ps = db
+      const res = await db
         .insert(System_Presets)
         .values({ ...preset, user_id: user.id })
-        .prepare();
-      const info = ps.run();
-      return c.json(info, 201);
+        .returning();
+      return c.json(res[0], 201);
     },
   )
   .put(
     '/:id',
     zValidator('json', insertSystemPresetsSchema, (result, c) => {
-      if (!result.success) c.json({ message: result.error.message }, 400);
+      if (!result.success) c.text(result.error.message, 400);
     }),
     async (c) => {
       const user = c.get('user');
-      if (!user) return c.json({ message: 'User is null.' }, 401);
+      if (!user) return c.text('User is not logged in.', 401);
 
       if (!userCanEdit(user.id, parseInt(c.req.param('id')), System_Presets)) {
-        return c.json({ message: 'User cannot edit this conversation.' }, 403);
+        return c.text('User cannot edit this conversation.', 403);
       }
 
       const preset = c.req.valid('json');
-      const ps = db
+      const res = await db
         .update(System_Presets)
         .set({ ...preset, user_id: user.id })
         .where(eq(System_Presets.id, parseInt(c.req.param('id'))))
-        .prepare();
-      const info = ps.run();
-      return c.json(info);
+        .returning();
+
+      return c.json(res[0]);
     },
   )
   .delete('/:id', async (c) => {
     const user = c.get('user');
-    if (!user) return c.json({ message: 'User is null.' }, 401);
+    if (!user) return c.text('User is not logged in.', 401);
 
     if (!userCanEdit(user.id, parseInt(c.req.param('id')), System_Presets)) {
-      return c.json({ message: 'User cannot edit this conversation.' }, 403);
+      return c.text('User cannot edit this conversation.', 403);
     }
 
     const ps = db

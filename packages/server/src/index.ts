@@ -5,8 +5,8 @@ import { Hono } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { csrf } from 'hono/csrf';
 import { HTTPException } from 'hono/http-exception';
-import { StatusCode } from 'hono/utils/http-status';
-import { Session, User } from 'lucia';
+import type { StatusCode } from 'hono/utils/http-status';
+import type { Session, User } from 'lucia';
 import OpenAI from 'openai';
 
 import { lucia } from './lucia.js';
@@ -47,19 +47,19 @@ const app = new Hono<{
     c.set('session', session);
     return next();
   })
-  .notFound((c) => c.json({ message: `Not Found - ${c.req.url}`, ok: false }, 404))
+  .notFound((c) => c.json(`Not Found - ${c.req.url}`, 404))
   .onError((err, c) => {
     console.log(err);
     if (err instanceof OpenAI.APIError) {
-      const { status, message, code, type } = err;
-      return c.json({ status, message, code, type }, (status as StatusCode) ?? 500);
+      const { status, message } = err;
+      return c.text(message, (status as StatusCode) ?? 500);
     }
     if (err instanceof HTTPException) {
       console.log(err);
-      const { status, message, stack } = err;
-      return c.json({ status, message, stack }, status);
+      const { status, message } = err;
+      return c.text(message, status);
     }
-    return c.json({ message: err.message, stack: err.stack }, 500);
+    return c.text(err.message, 500);
   });
 
 const api = new Hono()

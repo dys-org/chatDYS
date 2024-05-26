@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { desc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { Session, User } from 'lucia';
+import type { Session, User } from 'lucia';
 import { z } from 'zod';
 
 import { db } from '../drizzle/db.js';
@@ -16,7 +16,7 @@ const conversations = new Hono<{
 }>()
   .get('/', async (c) => {
     const user = c.get('user');
-    if (!user) return c.json({ message: 'User is null.' }, 401);
+    if (!user) return c.text('User is not logged in.', 401);
 
     const { id, user_id, title, model, created_at, updated_at } = Conversations;
     const ps = db
@@ -31,11 +31,11 @@ const conversations = new Hono<{
   .post(
     '/',
     zValidator('json', insertConversationsSchema, (result, c) => {
-      if (!result.success) c.json({ message: result.error.message }, 400);
+      if (!result.success) c.text(result.error.message, 400);
     }),
     async (c) => {
       const user = c.get('user');
-      if (!user) return c.json({ message: 'User is null.' }, 401);
+      if (!user) return c.text('User is not logged in.', 401);
 
       const convo = c.req.valid('json');
 
@@ -59,11 +59,11 @@ const conversations = new Hono<{
   // .put(
   //   '/:id',
   //   zValidator('json', insertConversationsSchema, (result, c) => {
-  //     if (!result.success) c.json({ message: result.error.message }, 400);
+  //     if (!result.success) c.text(result.error.message, 400);
   //   }),
   //   async (c) => {
   //     const user = c.get('user');
-  //     if (!user) return c.json({ message: 'User is null.' }, 401);
+  //     if (!user) return c.text('User is not logged in.', 401);
 
   //     if (!userCanEdit(user.id, parseInt(c.req.param('id')), Conversations)) {
   //       return c.json({ message: 'User cannot edit this conversation.' }, 403);
@@ -90,15 +90,15 @@ const conversations = new Hono<{
         }),
       ),
       (result, c) => {
-        if (!result.success) c.json({ message: result.error.message }, 400);
+        if (!result.success) c.text(result.error.message, 400);
       },
     ),
     async (c) => {
       const user = c.get('user');
-      if (!user) return c.json({ message: 'User is null.' }, 401);
+      if (!user) return c.text('User is not logged in.', 401);
 
       if (!userCanEdit(user.id, parseInt(c.req.param('id')), Conversations)) {
-        return c.json({ message: 'User cannot edit this conversation.' }, 403);
+        return c.text('User cannot edit this conversation.', 403);
       }
 
       const messages = c.req.valid('json');
@@ -113,10 +113,10 @@ const conversations = new Hono<{
   )
   .delete('/:id', async (c) => {
     const user = c.get('user');
-    if (!user) return c.json({ message: 'User is null.' }, 401);
+    if (!user) return c.text('User is not logged in.', 401);
 
     if (!userCanEdit(user.id, parseInt(c.req.param('id')), Conversations)) {
-      return c.json({ message: 'User cannot edit this conversation.' }, 403);
+      return c.text('User cannot edit this conversation.', 403);
     }
 
     const ps = db

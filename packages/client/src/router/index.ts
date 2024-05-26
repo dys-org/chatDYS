@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import { fetchCurrentUser } from '@/composables/queries';
 import { useUserStore } from '@/stores/user';
 
 import HomeView from '../views/HomeView.vue';
@@ -73,9 +74,10 @@ router.beforeEach(async (to) => {
     try {
       // if not logged in, try to fetch the current user
       // if that triggers an error, redirect to login
-      if (userStore.user === null) await userStore.fetchCurrentUser();
-    } catch (err: any) {
-      console.error(err);
+      // just checking for userStore.data causes another redirect to login page after redirect from Github
+      if (userStore.data == null) await fetchCurrentUser();
+    } catch (err) {
+      if (err instanceof Error) console.error(err.message);
       return '/login';
     }
   }

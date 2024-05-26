@@ -46,6 +46,7 @@ export const Conversations = sqliteTable('Conversations', {
 export type ConversationsInsert = typeof Conversations.$inferInsert;
 export const insertConversationsSchema = createInsertSchema(Conversations, {
   user_id: z.string().optional(),
+  model: z.union([z.literal('gpt-3.5-turbo'), z.literal('gpt-4'), z.literal('gpt-4-1106-preview')]),
 });
 export const selectConversationsSchema = createSelectSchema(Conversations);
 
@@ -62,6 +63,6 @@ export const System_Presets = sqliteTable('System_Presets', {
 
 export type SystemPresetsInsert = typeof System_Presets.$inferInsert;
 export const insertSystemPresetsSchema = createInsertSchema(System_Presets, {
-  user_id: z.string().optional(),
+  user_id: (schema) => schema.user_id.optional(),
 });
 export const selectSystemPresetsSchema = createSelectSchema(System_Presets);

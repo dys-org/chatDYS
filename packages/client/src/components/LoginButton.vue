@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DAvatar, DButton, DDropdown, DLink } from 'deez-components';
+import { DAvatar, DDropdown, DLink } from 'deez-components';
 
 import { useUserStore } from '@/stores/user';
 
@@ -24,12 +24,12 @@ const userDropdownOptions = [
 
 <template>
   <DDropdown
-    v-if="userStore.user !== null"
+    v-if="userStore.data"
     label="User"
     :options="userDropdownOptions"
     button-class="flex text-gray-400 p-0 dark:bg-transparent dark:hover:bg-transparent"
   >
-    <DAvatar :image="userStore.user.avatar_url ?? ''" class="size-8 max-w-fit" />
+    <DAvatar :image="userStore.data.avatar_url ?? ''" class="size-8 max-w-fit" />
   </DDropdown>
   <DLink
     v-else

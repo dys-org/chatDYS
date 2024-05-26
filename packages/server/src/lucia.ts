@@ -3,7 +3,8 @@ import { GitHub } from 'arctic';
 import { Lucia, TimeSpan } from 'lucia';
 
 import { db } from './drizzle/db.js';
-import { Sessions, Users, UsersInsert } from './drizzle/schema.js';
+import type { UsersInsert } from './drizzle/schema.js';
+import { Sessions, Users } from './drizzle/schema.js';
 
 const adapter = new DrizzleSQLiteAdapter(db, Sessions, Users);
 

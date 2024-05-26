@@ -15,17 +15,17 @@ const chatStore = useChatStore();
 <template>
   <OneColumn>
     <h1 class="mb-6 mt-12 text-4xl font-semibold">My Profile</h1>
-    <div v-if="userStore.user === null" class="flex w-full flex-col items-center gap-2">
+    <div v-if="userStore.data === undefined" class="flex w-full flex-col items-center gap-2">
       <DSpinner />
     </div>
     <div v-else class="grid gap-4 pb-32">
       <img
-        :src="userStore.user.avatar_url ?? ''"
-        :alt="userStore.user.name ?? ''"
+        :src="userStore.data.avatar_url ?? ''"
+        :alt="userStore.data.name ?? ''"
         class="mt-6 size-24 rounded-full"
       />
-      <h2 class="mt-2 text-3xl">{{ userStore.user.name }}</h2>
-      <h3 class="text-lg text-white/60">{{ userStore.user.email }}</h3>
+      <h2 class="mt-2 text-3xl">{{ userStore.data.name }}</h2>
+      <h3 class="text-lg text-white/60">{{ userStore.data.email }}</h3>
       <div>
         <DButton class="mt-6" @click="chatStore.isApiKeyModalOpen = true"> Change API Key</DButton>
       </div>
@@ -34,7 +34,7 @@ const chatStore = useChatStore();
         <dd class="mt-1">
           <pre
             class="max-w-lg overflow-auto bg-gray-950 p-3 text-xs"
-          ><code>{{ userStore.user }}</code></pre>
+          ><code>{{ userStore.data }}</code></pre>
         </dd>
       </dl>
     </div>

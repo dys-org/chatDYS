@@ -7,7 +7,7 @@ import { generateIdFromEntropySize } from 'lucia';
 import { db } from '../drizzle/db.js';
 import { Users } from '../drizzle/schema.js';
 import { github, lucia } from '../lucia.js';
-import { GithubUser } from '../types.js';
+import type { GithubUser } from '../types.js';
 
 const auth = new Hono()
   .get('/login/github', async (c) => {
@@ -66,13 +66,13 @@ const auth = new Hono()
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       return c.body(null, 302, { Location: '/chat', 'Set-Cookie': sessionCookie.serialize() });
-    } catch (err: any) {
+    } catch (err) {
       console.log(err);
       if (err instanceof OAuth2RequestError) {
         // bad verification code, invalid credentials, etc
-        return c.json(err, 400);
+        return c.text(err.description || 'OAuth2RequestError', 400);
       }
-      return c.json(err, 500);
+      return c.body(null, 500);
     }
   })
   .get('/logout', async (c) => {
