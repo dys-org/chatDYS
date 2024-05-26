@@ -1,15 +1,15 @@
 <p align="center">
   <a href="https://chatdys.soards.dev" target="_blank">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./src/assets/img/chat-dys.svg">
-      <source media="(prefers-color-scheme: light)" srcset="./src/assets/img/chat-dys-light.svg">
-      <img alt="deez components" src="./packages/client/src/assets/img/chat-dys-light.svg" width="350" style="max-width: 100%;">
+      <source media="(prefers-color-scheme: dark)" srcset="./packages/client/src/assets/img/chat-dys.svg">
+      <source media="(prefers-color-scheme: light)" srcset="./packages/client/src/assets/img/chat-dys-light.svg">
+      <img alt="chatDYS logo" width="350" style="max-width: 100%;">
     </picture>
   </a>
 </p>
 
 <p align="center">
-  An AI chat app built on Cloudflare Pages with Vue JS.
+  An AI chat app built with VueJS, Hono, Drizzle, SQLite, and Tanstack Query.
 </p>
 
 # chatDYS
