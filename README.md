@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://chatdys.pages.dev" target="_blank">
+  <a href="https://chatdys.soards.dev" target="_blank">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="./src/assets/img/chat-dys.svg">
       <source media="(prefers-color-scheme: light)" srcset="./src/assets/img/chat-dys-light.svg">
@@ -44,4 +44,4 @@ Auth uses Github OAuth thru Lucia. Chat history is saved to a SQLite database.
 
 After logging in you will be prompted to save your OpenAI API key locally in your browser because I don't feel like setting up billing for this side project and I don't want to pay for other people's potential usage. The API Key is **NOT** saved to my database.
 
-Check it out here: https://chatdys.pages.dev
+Check it out here: https://chatdys.soards.dev
