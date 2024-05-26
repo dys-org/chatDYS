@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { TableConfig } from 'drizzle-orm/sqlite-core';
-import { SQLiteTableWithColumns } from 'drizzle-orm/sqlite-core';
+import type { TableConfig } from 'drizzle-orm/sqlite-core';
+import type { SQLiteTableWithColumns } from 'drizzle-orm/sqlite-core';
 
 import { db } from './drizzle/db.js';
 

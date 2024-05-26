@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import OpenAI from 'openai';
-import { Stream } from 'openai/streaming.mjs';
+import type { Stream } from 'openai/streaming.mjs';
 import { z } from 'zod';
 
 const chatParamsSchema = z.object({

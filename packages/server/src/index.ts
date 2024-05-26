@@ -5,8 +5,8 @@ import { Hono } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { csrf } from 'hono/csrf';
 import { HTTPException } from 'hono/http-exception';
-import { StatusCode } from 'hono/utils/http-status';
-import { Session, User } from 'lucia';
+import type { StatusCode } from 'hono/utils/http-status';
+import type { Session, User } from 'lucia';
 import OpenAI from 'openai';
 
 import { lucia } from './lucia.js';

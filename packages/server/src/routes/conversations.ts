@@ -1,7 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { desc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { Session, User } from 'lucia';
+import type { Session, User } from 'lucia';
 import { z } from 'zod';
 
 import { db } from '../drizzle/db.js';
