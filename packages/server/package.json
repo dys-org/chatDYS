@@ -7,6 +7,7 @@
     "dev": "tsx watch src/",
     "build": "npx tsc",
     "generate:sqlite": "drizzle-kit generate:sqlite",
+    "migrate": "tsx src/drizzle/migrate.ts",
     "type-check": "npx tsc --noEmit",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path ../../.gitignore",
     "format": "prettier --write src/"
