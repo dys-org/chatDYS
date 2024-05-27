@@ -115,6 +115,7 @@ export const useChatStore = defineStore('chat', () => {
     model.value = convo.model;
     systemMessage.value = convo.system_message;
     temperature.value = convo.temperature;
+    maxTokens.value = convo.max_tokens;
     loading.value = false;
   }
 
