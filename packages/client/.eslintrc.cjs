@@ -15,7 +15,6 @@ module.exports = {
   rules: {
     'vue/no-undef-components': ['error', { ignorePatterns: [] }],
     'vue/v-on-event-hyphenation': 'off',
-    // '@typescript-eslint/consistent-type-imports': 'error',
   },
   overrides: [
     {
