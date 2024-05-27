@@ -39,7 +39,7 @@ const deleteConversation = useMutation<
   },
   onSuccess: async (data, id) => {
     await queryClient.invalidateQueries({ queryKey: ['conversationList'] });
-    toastStore.add({ variant: 'success', title: 'Conversation deleted!' });
+    toastStore.add({ variant: 'success', title: 'Conversation deleted!', duration: 5000 });
     if (id === route.params.id) {
       chatStore.$reset();
       await router.push({ name: 'chat' });
@@ -57,7 +57,7 @@ const deleteConversation = useMutation<
     <ul class="flex grow flex-col gap-1">
       <li v-for="chat in conversationList" :key="chat.id" class="group relative -mx-2">
         <DLink
-          class="flex rounded px-2 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:bg-transparent dark:group-hover:bg-white/5"
+          class="focus-visible:outline-primary-500 flex rounded px-2 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:bg-transparent dark:group-hover:bg-white/5"
           :to="{ name: 'chat', params: { id: chat.id } }"
           :title="chat.title"
           active-class="font-bold dark:bg-white/5"

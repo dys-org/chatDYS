@@ -67,7 +67,7 @@ const updateSystemPreset = useMutation<
     await queryClient.invalidateQueries({ queryKey: ['presetList'] });
     // @ts-expect-error - data should by 201 type
     selectedPreset.value = presetList.value?.find((preset) => preset.id === data.id);
-    toastStore.add({ variant: 'success', title: 'Preset successfully updated' });
+    toastStore.add({ variant: 'success', title: 'Preset successfully updated', duration: 5000 });
   },
   onError: (err) => {
     toastErrorHandler(err, 'There was a problem updating the preset.');
@@ -93,7 +93,7 @@ const deleteSystemPreset = useMutation<
     await queryClient.invalidateQueries({ queryKey: ['presetList'] });
     selectedPreset.value = undefined;
     isConfirmOpen.value = false;
-    toastStore.add({ variant: 'success', title: 'Preset successfully deleted' });
+    toastStore.add({ variant: 'success', title: 'Preset successfully deleted', duration: 5000 });
   },
   onError: (err) => {
     toastErrorHandler(err, 'There was a problem deleting the preset.');
@@ -115,7 +115,7 @@ function handleDeletePreset() {
   <OneColumn>
     <DLink
       to=""
-      class="mb-2 mt-12 transition-colors hover:underline focus:underline dark:text-primary-500 dark:hover:text-primary-400"
+      class="dark:text-primary-500 dark:hover:text-primary-400 mb-2 mt-12 transition-colors hover:underline focus:underline"
       @click="router.go(-1)"
     >
       <span class="i-majesticons-chevron-left -ml-1 size-5" aria-hidden="true"></span>

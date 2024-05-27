@@ -21,6 +21,7 @@ async function handleSubmit() {
       variant: 'success',
       title: 'API key successfully saved',
       description: 'You can change your API Key anytime from the Profile page.',
+      duration: 5000,
     });
   } catch (err) {
     toastErrorHandler(err, 'Error saving API Key');
@@ -58,7 +59,7 @@ onMounted(async () => {
             href="https://platform.openai.com/docs/quickstart?context=node"
             target="_blank"
             rel="noopener noreferrer"
-            class="font-bold text-primary-400 hover:underline"
+            class="text-primary-400 font-bold hover:underline"
             >here</a
           >.
         </p>
