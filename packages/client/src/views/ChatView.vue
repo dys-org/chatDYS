@@ -98,7 +98,7 @@ async function scrollToBottom() {
 async function fetchChat(paramsId: string | string[]) {
   const id = typeof paramsId === 'string' ? paramsId : paramsId[0];
   chatStore.$reset();
-  await chatStore.fetchChat(parseInt(id));
+  await chatStore.fetchChat(id);
 }
 
 watch(

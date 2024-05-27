@@ -1,6 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { encodingForModel } from 'js-tiktoken';
+// import type { TiktokenModel } from 'js-tiktoken';
 import { z } from 'zod';
 
 const tokenize = new Hono().post(
@@ -11,6 +12,8 @@ const tokenize = new Hono().post(
       stringToTokenize: z.string(),
       // TiktokenModel has a lot more options, but we only use these atm
       model: z.union([
+        z.literal('gpt-4o'),
+        z.literal('gpt-4-turbo'),
         z.literal('gpt-3.5-turbo'),
         z.literal('gpt-4'),
         z.literal('gpt-4-1106-preview'),

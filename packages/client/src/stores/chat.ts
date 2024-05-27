@@ -13,7 +13,13 @@ export interface Message {
   content: string;
 }
 
-export const MODELS = ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-1106-preview'] as const;
+export const MODELS = [
+  'gpt-4o',
+  'gpt-4-turbo',
+  'gpt-3.5-turbo',
+  'gpt-4',
+  'gpt-4-1106-preview',
+] as const;
 type Model = (typeof MODELS)[number];
 
 export const useChatStore = defineStore('chat', () => {
@@ -23,7 +29,7 @@ export const useChatStore = defineStore('chat', () => {
   const loading = ref(false);
   const maxTokens = ref(1024);
   const messages = ref<Message[]>([]);
-  const model = ref<Model>('gpt-4');
+  const model = ref<Model>('gpt-4o');
   const prompt = ref<Message[]>([]);
   const systemMessage = ref('');
   const temperature = ref(0);
@@ -95,11 +101,16 @@ export const useChatStore = defineStore('chat', () => {
     loading.value = false;
   }
 
-  async function fetchChat(id: number) {
+  async function fetchChat(id: string) {
     loading.value = true;
-    const res = await client.api.conversations[':id'].$get({ param: { id: id.toString() } });
+    const res = await client.api.conversations[':id'].$get({ param: { id } });
     const convo = await res.json();
-    if (convo.messages) messages.value = JSON.parse(convo.messages);
+    // TODO can i validate the JSON before parsing?
+    try {
+      if (convo.messages) messages.value = JSON.parse(convo.messages);
+    } catch (err) {
+      console.error(err);
+    }
     // @ts-expect-error model is not returning the union type
     model.value = convo.model;
     systemMessage.value = convo.system_message;

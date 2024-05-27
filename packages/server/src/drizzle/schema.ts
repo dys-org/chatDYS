@@ -46,7 +46,6 @@ export const Conversations = sqliteTable('Conversations', {
 export type ConversationsInsert = typeof Conversations.$inferInsert;
 export const insertConversationsSchema = createInsertSchema(Conversations, {
   user_id: z.string().optional(),
-  model: z.union([z.literal('gpt-3.5-turbo'), z.literal('gpt-4'), z.literal('gpt-4-1106-preview')]),
 });
 export const selectConversationsSchema = createSelectSchema(Conversations);
 
