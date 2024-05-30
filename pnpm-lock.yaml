@@ -43,8 +43,8 @@ importers:
         specifier: ^10.10.0
         version: 10.10.0(vue@3.4.27(typescript@5.4.5))
       deez-components:
-        specifier: ^0.6.1
-        version: 0.6.1(@egoist/tailwindcss-icons@1.8.0(tailwindcss@3.4.3))(@headlessui/vue@1.7.22(vue@3.4.27(typescript@5.4.5)))(@iconify/json@2.2.214)(@tailwindcss/forms@0.5.7(tailwindcss@3.4.3))(tailwind-merge@2.3.0)(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5))
+        specifier: ^0.6.2
+        version: 0.6.2(@egoist/tailwindcss-icons@1.8.0(tailwindcss@3.4.3))(@headlessui/vue@1.7.22(vue@3.4.27(typescript@5.4.5)))(@iconify/json@2.2.214)(@tailwindcss/forms@0.5.7(tailwindcss@3.4.3))(tailwind-merge@2.3.0)(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5))
       idb-keyval:
         specifier: ^6.2.1
         version: 6.2.1
@@ -1494,8 +1494,8 @@ packages:
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
-  deez-components@0.6.1:
-    resolution: {integrity: sha512-dd4YKxdXAk+wl0WGQbDwhfE5FcDcrdJIZTeKWo82rCU47D4+bxNjVX9S0Jk4CjlF2XZH0VJWPPbu7JNJD5t2MQ==}
+  deez-components@0.6.2:
+    resolution: {integrity: sha512-tfPkqYupNix2oM/lQnG6yfI1Z5N65r7XDQObse1BiDgnytArSrky5tmqvepE1+4kts/SmDzOkgNBzhHxd8IniQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@egoist/tailwindcss-icons': ^1.8.0
@@ -4022,7 +4022,7 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  deez-components@0.6.1(@egoist/tailwindcss-icons@1.8.0(tailwindcss@3.4.3))(@headlessui/vue@1.7.22(vue@3.4.27(typescript@5.4.5)))(@iconify/json@2.2.214)(@tailwindcss/forms@0.5.7(tailwindcss@3.4.3))(tailwind-merge@2.3.0)(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5)):
+  deez-components@0.6.2(@egoist/tailwindcss-icons@1.8.0(tailwindcss@3.4.3))(@headlessui/vue@1.7.22(vue@3.4.27(typescript@5.4.5)))(@iconify/json@2.2.214)(@tailwindcss/forms@0.5.7(tailwindcss@3.4.3))(tailwind-merge@2.3.0)(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5)):
     dependencies:
       '@egoist/tailwindcss-icons': 1.8.0(tailwindcss@3.4.3)
       '@headlessui/vue': 1.7.22(vue@3.4.27(typescript@5.4.5))
