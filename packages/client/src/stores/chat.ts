@@ -1,5 +1,6 @@
 import { get as getIDB } from 'idb-keyval';
 import OpenAI from 'openai';
+import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -7,11 +8,6 @@ import { useRoute } from 'vue-router';
 import { useTokenize } from '@/composables/useTokenize';
 import { client } from '@/lib/apiClient';
 import { IDB_APIKEY_OPENAI } from '@/lib/constants';
-
-export interface Message {
-  role: 'user' | 'system' | 'assistant';
-  content: string;
-}
 
 export const MODELS = [
   'gpt-4o',
@@ -22,19 +18,27 @@ export const MODELS = [
 ] as const;
 type Model = (typeof MODELS)[number];
 
+function get1stTextValue(content: ChatCompletionMessageParam['content']) {
+  if (!Array.isArray(content)) return content;
+  for (const part of content) {
+    if (part.type === 'text') return part.text;
+  }
+}
+
 export const useChatStore = defineStore('chat', () => {
   const route = useRoute();
   const { checkTokens, tokenLength } = useTokenize();
 
   const loading = ref(false);
   const maxTokens = ref(1024);
-  const messages = ref<Message[]>([]);
+  const messages = ref<ChatCompletionMessageParam[]>([]);
   const model = ref<Model>('gpt-4o');
-  const prompt = ref<Message[]>([]);
+  const prompt = ref<ChatCompletionMessageParam[]>([]);
   const systemMessage = ref('');
   const temperature = ref(0);
   const textStream = ref('');
   const userMessage = ref('');
+  const base64ImgUpload = ref<string>();
   const isApiKeyModalOpen = ref(false);
   const id = ref('');
 
@@ -45,11 +49,11 @@ export const useChatStore = defineStore('chat', () => {
     max_tokens: maxTokens.value,
     system_message: getSystemMessage.value,
     messages: JSON.stringify(messages.value),
-    title: messages.value[0].content,
+    title: get1stTextValue(messages.value[0].content) ?? '',
   }));
 
-  function addMessage(role: Message['role'], content: string) {
-    messages.value.push({ role, content });
+  function addMessage(param: ChatCompletionMessageParam) {
+    messages.value.push(param);
   }
   function createPrompt() {
     prompt.value = [{ role: 'system', content: getSystemMessage.value }, ...messages.value];
@@ -82,13 +86,23 @@ export const useChatStore = defineStore('chat', () => {
       // console.log(chunk);
       textStream.value += chunk;
     }
-    addMessage('assistant', textStream.value);
+    addMessage({ role: 'assistant', content: textStream.value }); // addMessage({ role: 'assistant', content: [{ type: 'text', text: textStream.value }] });
     textStream.value = '';
   }
   async function sendPrompt() {
-    addMessage('user', userMessage.value);
+    addMessage({
+      role: 'user',
+      content: base64ImgUpload.value
+        ? [
+            { type: 'image_url', image_url: { url: base64ImgUpload.value } },
+            { type: 'text', text: userMessage.value },
+          ]
+        : userMessage.value,
+    });
+
     createPrompt();
     userMessage.value = '';
+    base64ImgUpload.value = undefined;
 
     loading.value = true;
     const params: OpenAI.ChatCompletionCreateParams = {
@@ -140,6 +154,7 @@ export const useChatStore = defineStore('chat', () => {
     textStream,
     tokenLength, // from useTokenize
     userMessage,
+    base64ImgUpload,
     currentChat,
     fetchChat,
     isApiKeyModalOpen,

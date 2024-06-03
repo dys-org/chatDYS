@@ -4,6 +4,8 @@ import { encodingForModel } from 'js-tiktoken';
 // import type { TiktokenModel } from 'js-tiktoken';
 import { z } from 'zod';
 
+import { formatZodError } from '../utils.js';
+
 const tokenize = new Hono().post(
   '/',
   zValidator(
@@ -20,7 +22,10 @@ const tokenize = new Hono().post(
       ]),
     }),
     (result, c) => {
-      if (!result.success) c.text(result.error.message, 400);
+      if (!result.success) {
+        console.log(result.error);
+        return c.text(formatZodError(result.error), 400);
+      }
     },
   ),
   async (c) => {
