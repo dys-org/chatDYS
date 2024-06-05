@@ -4,6 +4,16 @@ import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming.mjs';
 import { z } from 'zod';
 
+import { formatZodError } from '../utils.js';
+
+export const contentSchema = z.union([
+  z.object({
+    type: z.literal('image_url'),
+    image_url: z.object({ url: z.string().url() }),
+  }),
+  z.object({ type: z.literal('text'), text: z.string() }),
+]);
+
 const chatParamsSchema = z.object({
   chatCompletionParams: z.object({
     model: z.union([
@@ -16,7 +26,7 @@ const chatParamsSchema = z.object({
     messages: z.array(
       z.object({
         role: z.union([z.literal('user'), z.literal('system'), z.literal('assistant')]),
-        content: z.string(),
+        content: z.union([z.string(), z.array(contentSchema)]),
       }),
     ),
     temperature: z.number(),
@@ -28,7 +38,10 @@ const chatParamsSchema = z.object({
 const chat = new Hono().post(
   '/',
   zValidator('json', chatParamsSchema, (result, c) => {
-    if (!result.success) c.text(result.error.message, 400);
+    if (!result.success) {
+      console.log(result.error);
+      return c.text(formatZodError(result.error), 400);
+    }
   }),
   async (c) => {
     const headers = new Headers({ 'Content-Type': 'text/event-stream' });
@@ -38,6 +51,7 @@ const chat = new Hono().post(
     const openai = new OpenAI({ apiKey: apiKey });
 
     // make our request to the OpenAI API
+    // @ts-expect-error - the messages are typed weird
     const stream = await openai.chat.completions.create({
       ...chatCompletionParams,
       stream: true,

@@ -2,13 +2,12 @@
 import { DButton } from 'deez-components';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
-import { ref } from 'vue';
-
-import { type Message } from '@/stores/chat';
+import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
+import { computed, ref } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    message: Message;
+    message: ChatCompletionMessageParam;
     disableCopy?: boolean;
   }>(),
   { disableCopy: false },
@@ -45,6 +44,25 @@ async function handleCopy(content: string) {
     console.error('Failed to copy: ', err);
   }
 }
+
+const textContent = computed(() => {
+  if (typeof props.message.content === 'string') return props.message.content;
+  if (Array.isArray(props.message.content)) {
+    for (const part of props.message.content) {
+      if (part.type === 'text') return part.text;
+    }
+  }
+  return '';
+});
+
+const imgContent = computed(() => {
+  if (Array.isArray(props.message.content)) {
+    for (const part of props.message.content) {
+      if (part.type === 'image_url') return part.image_url.url;
+    }
+  }
+  return undefined;
+});
 </script>
 
 <template>
@@ -58,16 +76,21 @@ async function handleCopy(content: string) {
       <div class="basis-24">
         <span class="text-xs font-semibold uppercase">{{ props.message.role }}</span>
       </div>
-      <div
-        class="chat-message mx-auto w-full max-w-[60ch] leading-7"
-        v-html="md.render(props.message.content)"
-      />
+      <div class="w-full max-w-[60ch] flex-1">
+        <img
+          v-if="imgContent"
+          :src="imgContent"
+          alt="Uploaded Image"
+          class="mb-2 block max-h-80 w-auto rounded-lg"
+        />
+        <div class="chat-message text-sm leading-7" v-html="md.render(textContent)" />
+      </div>
       <div class="min-w-[28px]">
         <DButton
           v-if="props.message.role === 'assistant'"
           class="-mt-1 p-1 dark:bg-transparent dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white"
           :disabled="props.disableCopy"
-          @click="handleCopy(props.message.content)"
+          @click="handleCopy(props.message.content ?? '')"
         >
           <span class="sr-only">{{ isCopying ? 'Copied' : 'Copy' }}</span>
           <span
@@ -84,8 +107,6 @@ async function handleCopy(content: string) {
 
 <style>
 .chat-message {
-  @apply text-sm leading-6;
-
   & ol {
     list-style: decimal;
     margin-left: 1rem;

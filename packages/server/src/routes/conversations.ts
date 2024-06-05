@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { db } from '../drizzle/db.js';
 import { Conversations, insertConversationsSchema } from '../drizzle/schema.js';
-import { userCanEdit } from '../utils.js';
+import { formatZodError, userCanEdit } from '../utils.js';
 
 const conversations = new Hono<{
   Variables: {
@@ -31,7 +31,10 @@ const conversations = new Hono<{
   .post(
     '/',
     zValidator('json', insertConversationsSchema, (result, c) => {
-      if (!result.success) c.text(result.error.message, 400);
+      if (!result.success) {
+        console.log(result.error);
+        return c.text(formatZodError(result.error), 400);
+      }
     }),
     async (c) => {
       const user = c.get('user');
@@ -56,43 +59,14 @@ const conversations = new Hono<{
     const data = ps.get();
     return c.json(data);
   })
-  // .put(
-  //   '/:id',
-  //   zValidator('json', insertConversationsSchema, (result, c) => {
-  //     if (!result.success) c.text(result.error.message, 400);
-  //   }),
-  //   async (c) => {
-  //     const user = c.get('user');
-  //     if (!user) return c.text('User is not logged in.', 401);
-
-  //     if (!userCanEdit(user.id, parseInt(c.req.param('id')), Conversations)) {
-  //       return c.json({ message: 'User cannot edit this conversation.' }, 403);
-  //     }
-
-  //     const convo = c.req.valid('json');
-  //     const ps = db
-  //       .update(Conversations)
-  //       .set({ ...convo, user_id: user.id })
-  //       .where(eq(Conversations.id, parseInt(c.req.param('id'))))
-  //       .prepare();
-  //     const info = ps.run();
-  //     return c.json(info);
-  //   },
-  // )
   .patch(
     '/:id',
-    zValidator(
-      'json',
-      z.array(
-        z.object({
-          role: z.union([z.literal('user'), z.literal('system'), z.literal('assistant')]),
-          content: z.string(),
-        }),
-      ),
-      (result, c) => {
-        if (!result.success) c.text(result.error.message, 400);
-      },
-    ),
+    zValidator('json', z.string(), (result, c) => {
+      if (!result.success) {
+        console.log(result.error);
+        return c.text(formatZodError(result.error), 400);
+      }
+    }),
     async (c) => {
       const user = c.get('user');
       if (!user) return c.text('User is not logged in.', 401);
@@ -104,7 +78,7 @@ const conversations = new Hono<{
       const messages = c.req.valid('json');
       const ps = db
         .update(Conversations)
-        .set({ messages: JSON.stringify(messages) })
+        .set({ messages })
         .where(eq(Conversations.id, parseInt(c.req.param('id'))))
         .prepare();
       const info = ps.run();

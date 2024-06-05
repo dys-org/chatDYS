@@ -5,7 +5,7 @@ import type { Session, User } from 'lucia';
 
 import { db } from '../drizzle/db.js';
 import { System_Presets, insertSystemPresetsSchema } from '../drizzle/schema.js';
-import { userCanEdit } from '../utils.js';
+import { formatZodError, userCanEdit } from '../utils.js';
 
 const systemPresets = new Hono<{
   Variables: {
@@ -30,7 +30,10 @@ const systemPresets = new Hono<{
   .post(
     '/',
     zValidator('json', insertSystemPresetsSchema, (result, c) => {
-      if (!result.success) c.text(result.error.message, 400);
+      if (!result.success) {
+        console.log(result.error);
+        return c.text(formatZodError(result.error), 400);
+      }
     }),
     async (c) => {
       const user = c.get('user');
@@ -47,7 +50,10 @@ const systemPresets = new Hono<{
   .put(
     '/:id',
     zValidator('json', insertSystemPresetsSchema, (result, c) => {
-      if (!result.success) c.text(result.error.message, 400);
+      if (!result.success) {
+        console.log(result.error);
+        return c.text(formatZodError(result.error), 400);
+      }
     }),
     async (c) => {
       const user = c.get('user');

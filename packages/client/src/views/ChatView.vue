@@ -51,7 +51,7 @@ const updateMessages = useMutation<
   mutationFn: async (id) => {
     const res = await $patch({
       param: { id },
-      json: chatStore.messages,
+      json: JSON.stringify(chatStore.messages),
     });
     return await res.json();
   },
@@ -101,10 +101,10 @@ async function fetchChat(paramsId: string | string[]) {
   await chatStore.fetchChat(id);
 }
 
-watch(
-  () => chatStore.textStream,
-  () => scrollToBottom(),
-);
+// watch(
+//   () => chatStore.textStream,
+//   () => scrollToBottom(),
+// );
 
 watch(
   () => chatStore.messages,
@@ -163,7 +163,11 @@ onMounted(() => {
       <!-- INPUT -->
       <div class="absolute bottom-0 flex w-full justify-center">
         <div class="w-full bg-gradient-to-t from-gray-800 from-60% px-4 pb-8 pt-6">
-          <UserMessageInput v-model="chatStore.userMessage" @send="handleSend" />
+          <UserMessageInput
+            v-model="chatStore.userMessage"
+            v-model:base64Img="chatStore.base64ImgUpload"
+            @send="handleSend"
+          />
         </div>
       </div>
     </template>
