@@ -2,8 +2,8 @@
 import { DButton, DTextarea } from 'deez-components';
 import { ref } from 'vue';
 
-const model = defineModel<string>();
-const base64Img = defineModel<string>('base64Img');
+const model = defineModel<string>({ required: true });
+const base64Img = defineModel<string>('base64Img', { default: '' });
 
 const emit = defineEmits<{
   send: [];
@@ -41,7 +41,7 @@ function handleImageSelected(e: Event) {
         <div
           :class="[
             'invisible max-h-52 overflow-y-hidden whitespace-pre-wrap px-10 py-1.5 sm:text-sm sm:leading-6',
-            !!base64Img ? 'min-h-[108px]' : 'min-h-[36px]',
+            base64Img ? 'min-h-[108px]' : 'min-h-[36px]',
           ]"
         >
           {{ model }}&nbsp;
@@ -51,7 +51,7 @@ function handleImageSelected(e: Event) {
           <div v-if="base64Img" class="group relative z-10 h-14 w-14">
             <DButton
               class="hover:dark:bg-primary-500 absolute -right-1.5 -top-1.5 rounded-full p-0.5 opacity-0 focus:opacity-100 group-hover:opacity-100 dark:bg-gray-600"
-              @click="base64Img = undefined"
+              @click="base64Img = ''"
             >
               <span class="sr-only">Delete Image</span>
               <span class="i-majesticons-close text-base"></span

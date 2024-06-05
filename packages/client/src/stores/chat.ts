@@ -38,7 +38,7 @@ export const useChatStore = defineStore('chat', () => {
   const temperature = ref(0);
   const textStream = ref('');
   const userMessage = ref('');
-  const base64ImgUpload = ref<string>();
+  const base64ImgUpload = ref('');
   const isApiKeyModalOpen = ref(false);
   const id = ref('');
 
@@ -102,7 +102,7 @@ export const useChatStore = defineStore('chat', () => {
 
     createPrompt();
     userMessage.value = '';
-    base64ImgUpload.value = undefined;
+    base64ImgUpload.value = '';
 
     loading.value = true;
     const params: OpenAI.ChatCompletionCreateParams = {
