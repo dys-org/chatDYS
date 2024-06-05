@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.22",
-    "@tanstack/vue-query": "^5.38.0",
+    "@tanstack/vue-query": "^5.40.1",
     "@vueuse/core": "^10.10.0",
     "deez-components": "^0.6.2",
     "idb-keyval": "^6.2.1",
@@ -31,13 +31,13 @@
   },
   "devDependencies": {
     "@egoist/tailwindcss-icons": "^1.8.0",
-    "@iconify/json": "^2.2.214",
+    "@iconify/json": "^2.2.216",
     "@playwright/test": "^1.44.1",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tailwindcss/forms": "^0.5.7",
     "@types/lodash.clonedeep": "^4.5.9",
-    "@types/markdown-it": "^13.0.8",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@types/markdown-it": "^14.1.1",
+    "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "autoprefixer": "^10.4.19",
@@ -45,10 +45,10 @@
     "eslint-plugin-vue": "^9.26.0",
     "npm-run-all2": "^6.2.0",
     "postcss": "^8.4.38",
-    "prettier-plugin-tailwindcss": "^0.5.14",
+    "prettier-plugin-tailwindcss": "^0.6.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.3",
-    "vite": "^5.2.11",
+    "vite": "^5.2.12",
     "vue-tsc": "^2.0.19"
   }
 }
