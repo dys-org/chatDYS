@@ -21,7 +21,7 @@
     "@headlessui/vue": "^1.7.22",
     "@tanstack/vue-query": "^5.40.1",
     "@vueuse/core": "^10.10.0",
-    "deez-components": "^0.6.2",
+    "deez-components": "^0.6.3",
     "idb-keyval": "^6.2.1",
     "lodash.clonedeep": "^4.5.0",
     "markdown-it": "^14.1.0",
