@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { DButton } from 'deez-components';
+import { DAvatar, DButton } from 'deez-components';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
 import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { computed, ref } from 'vue';
+
+import { useUserStore } from '@/stores/user';
 
 const props = withDefaults(
   defineProps<{
@@ -12,6 +14,8 @@ const props = withDefaults(
   }>(),
   { disableCopy: false },
 );
+
+const userStore = useUserStore();
 
 const md: MarkdownIt = new MarkdownIt({
   highlight: (code, language) => {
@@ -72,10 +76,21 @@ const imgContent = computed(() => {
       props.message.role === 'assistant' && 'bg-white/5',
     ]"
   >
-    <div class="mx-auto flex w-full max-w-[72ch] gap-x-4">
-      <div class="basis-24">
-        <span class="text-xs font-semibold uppercase">{{ props.message.role }}</span>
+    <div class="mx-auto flex w-full max-w-[72ch] gap-x-6 md:gap-x-8">
+      <DAvatar
+        v-if="userStore.data && props.message.role === 'user'"
+        alt="User Avatar"
+        :image="userStore.data.avatar_url ?? ''"
+        class="size-8"
+      />
+
+      <div
+        v-else-if="props.message.role === 'assistant'"
+        class="grid size-8 place-items-center rounded-full p-1 ring-1 ring-gray-600"
+      >
+        <span class="i-majesticons-robot-line -mt-0.5 size-full" title="assistant"> </span>
       </div>
+      <span v-else class="text-xs font-semibold uppercase">{{ props.message.role }}</span>
       <div class="w-full max-w-[60ch] flex-1">
         <img
           v-if="imgContent"
