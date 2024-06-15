@@ -33,9 +33,18 @@ importers:
 
   packages/client:
     dependencies:
+      '@egoist/tailwindcss-icons':
+        specifier: ^1.8.0
+        version: 1.8.0(tailwindcss@3.4.3)
       '@headlessui/vue':
         specifier: ^1.7.22
         version: 1.7.22(vue@3.4.27(typescript@5.4.5))
+      '@iconify-json/lucide':
+        specifier: ^1.1.192
+        version: 1.1.192
+      '@iconify-json/majesticons':
+        specifier: ^1.1.11
+        version: 1.1.11
       '@tanstack/vue-query':
         specifier: ^5.40.1
         version: 5.40.1(vue@3.4.27(typescript@5.4.5))
@@ -57,6 +66,12 @@ importers:
       pinia:
         specifier: ^2.1.7
         version: 2.1.7(typescript@5.4.5)(vue@3.4.27(typescript@5.4.5))
+      tailwind-merge:
+        specifier: ^2.3.0
+        version: 2.3.0
+      tailwindcss:
+        specifier: ^3.4.3
+        version: 3.4.3
       vue:
         specifier: ~3.4.27
         version: 3.4.27(typescript@5.4.5)
@@ -64,12 +79,6 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2(vue@3.4.27(typescript@5.4.5))
     devDependencies:
-      '@egoist/tailwindcss-icons':
-        specifier: ^1.8.0
-        version: 1.8.0(tailwindcss@3.4.3)
-      '@iconify/json':
-        specifier: ^2.2.216
-        version: 2.2.216
       '@playwright/test':
         specifier: ^1.44.1
         version: 1.44.1
@@ -112,12 +121,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.6.1
         version: 0.6.1(@trivago/prettier-plugin-sort-imports@4.3.0(@vue/compiler-sfc@3.4.27)(prettier@3.3.0))(prettier@3.3.0)
-      tailwind-merge:
-        specifier: ^2.3.0
-        version: 2.3.0
-      tailwindcss:
-        specifier: ^3.4.3
-        version: 3.4.3
       vite:
         specifier: ^5.2.12
         version: 5.2.12(@types/node@20.14.1)
@@ -749,6 +752,12 @@ packages:
   '@humanwhocodes/retry@0.3.0':
     resolution: {integrity: sha512-d2CGZR2o7fS6sWB7DG/3a95bGKQyHMACZ5aW8qGkkqQpUoZV6C0X7Pc7l4ZNMZkfNBf4VWNe9E1jRsf0G146Ew==}
     engines: {node: '>=18.18'}
+
+  '@iconify-json/lucide@1.1.192':
+    resolution: {integrity: sha512-ulKR9JoaAT1pvsutNQe6jN4F3+9SNrXNp369LfZJUb8F368abgwiQapuNkN9UjVtU5dfn7g2uvuWisOYPMESdQ==}
+
+  '@iconify-json/majesticons@1.1.11':
+    resolution: {integrity: sha512-8iSktgGbIInt/4y3tvZ/Dyzvzeze/2cc//ZtHMx5zPuHSiENE/nORGZAlO7yGf29oC2oECwl5a7YYqCPChiYiA==}
 
   '@iconify/json@2.2.216':
     resolution: {integrity: sha512-dS2yVIAel1oIAGnaxR+EJyDRjKV9GGm9tUd8Pd8VEF91HB4HJrsMzkvz23GHDWyIITGdinx4ZUjMz3hOAv+D4Q==}
@@ -3351,6 +3360,14 @@ snapshots:
   '@humanwhocodes/object-schema@2.0.3': {}
 
   '@humanwhocodes/retry@0.3.0': {}
+
+  '@iconify-json/lucide@1.1.192':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/majesticons@1.1.11':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify/json@2.2.216':
     dependencies:
