@@ -55,10 +55,8 @@ const updateMessages = useMutation<
     });
     return await res.json();
   },
-  onSuccess: async (data) => {
+  onSuccess: async () => {
     await queryClient.invalidateQueries({ queryKey: ['conversationList'] });
-    // @ts-expect-error - data should by 201 type
-    await router.push({ name: 'chat', params: { id: data.lastInsertRowid } });
   },
   onError: (err) => {
     toastErrorHandler(err, 'There was a problem updating the messages.');
@@ -101,10 +99,10 @@ async function fetchChat(paramsId: string | string[]) {
   await chatStore.fetchChat(id);
 }
 
-// watch(
-//   () => chatStore.textStream,
-//   () => scrollToBottom(),
-// );
+watch(
+  () => chatStore.textStream,
+  () => scrollToBottom(),
+);
 
 watch(
   () => chatStore.messages,
