@@ -52,8 +52,8 @@ importers:
         specifier: ^10.10.0
         version: 10.10.0(vue@3.4.27(typescript@5.4.5))
       deez-components:
-        specifier: ^0.6.3
-        version: 0.6.3(@egoist/tailwindcss-icons@1.8.0(tailwindcss@3.4.3))(@headlessui/vue@1.7.22(vue@3.4.27(typescript@5.4.5)))(@iconify/json@2.2.216)(@tailwindcss/forms@0.5.7(tailwindcss@3.4.3))(tailwind-merge@2.3.0)(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5))
+        specifier: ^0.6.5
+        version: 0.6.5(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5))
       idb-keyval:
         specifier: ^6.2.1
         version: 6.2.1
@@ -265,6 +265,11 @@ packages:
 
   '@egoist/tailwindcss-icons@1.8.0':
     resolution: {integrity: sha512-75LfllKL2lq0sGH+wcpsn/sLtJ0kMkDWmcZTLAB76QLDTmfsFu4QHwZVbtCD2woGyKl9c8KvtOUW9JSjRqOVtA==}
+    peerDependencies:
+      tailwindcss: '*'
+
+  '@egoist/tailwindcss-icons@1.8.1':
+    resolution: {integrity: sha512-hqZeASrhT6BOeaBHYDPB0yBH/zgMKqmm7y2Rsq0c4iRnNVv1RWEiXMBMJB38JsDMTHME450FKa/wvdaIhED+Iw==}
     peerDependencies:
       tailwindcss: '*'
 
@@ -718,8 +723,8 @@ packages:
     resolution: {integrity: sha512-fdI7VJjP3Rvc70lC4xkFXHB0fiPeojiL1PxVG6t1ZvXQrarj893PweuBTujxDUFk0Fxj4R7PIIAZ/aiiyZPZcg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/object-schema@2.1.3':
-    resolution: {integrity: sha512-HAbhAYKfsAC2EkTqve00ibWIZlaU74Z1EHwAjYr4PXF0YU2VEA1zSIKSSpKszRLRWwHzzRZXvK632u+uXzvsvw==}
+  '@eslint/object-schema@2.1.4':
+    resolution: {integrity: sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@headlessui/vue@1.7.22':
@@ -758,9 +763,6 @@ packages:
 
   '@iconify-json/majesticons@1.1.11':
     resolution: {integrity: sha512-8iSktgGbIInt/4y3tvZ/Dyzvzeze/2cc//ZtHMx5zPuHSiENE/nORGZAlO7yGf29oC2oECwl5a7YYqCPChiYiA==}
-
-  '@iconify/json@2.2.216':
-    resolution: {integrity: sha512-dS2yVIAel1oIAGnaxR+EJyDRjKV9GGm9tUd8Pd8VEF91HB4HJrsMzkvz23GHDWyIITGdinx4ZUjMz3hOAv+D4Q==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -1308,6 +1310,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  acorn@8.12.0:
+    resolution: {integrity: sha512-RTvkC4w+KNXrM39/lWCUaG0IbRkWdCv7W/IOW9oU6SawyxulvkQy5HQPVTKxEjczcUvapcrw3cFx/60VN/NRNw==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
   agentkeepalive@4.5.0:
     resolution: {integrity: sha512-5GG/5IbQQpC9FpkRGsSvZI5QYeSCzlJHdpBQntCsuTOxhKD8lqKhrleg2Yi7yvMIf82Ycmmqln9U8V9qwEiJew==}
     engines: {node: '>= 8.0.0'}
@@ -1523,17 +1530,12 @@ packages:
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
-  deez-components@0.6.3:
-    resolution: {integrity: sha512-vlIiz54yk0rjHrH9tsD6W2C/VkbWI9sMMmDOhn8i7OCxHCJ6buh/KJAXwoyMYhtRfUtFA3hQE9W2cqpZpRgHyg==}
+  deez-components@0.6.5:
+    resolution: {integrity: sha512-zi/nEcVM7qTvd+2LnX3M060wsJ2df4l7Tu9HFs7ZW7xRe+fQKCDvVzFohCJiknqfa8axVFoacLkFz1/v6M+H0Q==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@egoist/tailwindcss-icons': ^1.8.0
-      '@headlessui/vue': ~1.7.22
-      '@iconify/json': ^2.2.213
-      '@tailwindcss/forms': ^0.5.7
-      tailwind-merge: ^2.3.0
-      tailwindcss: ^3.4.3
-      vue: ~3.4.27
+      tailwindcss: ^3.4.4
+      vue: ~3.4.29
       vue-router: ^4.3.2
 
   delayed-stream@1.0.0:
@@ -1800,8 +1802,8 @@ packages:
     resolution: {integrity: sha512-kTUIGKQ/mDPFoJ0oVfcmyJn4iBDRptjNVIzwIFR7tqWXdVI9xfA2RMwY/gbSpJG3lkdWNEjLap/NqVHZiJsdfg==}
     engines: {node: '>=0.10'}
 
-  espree@10.0.1:
-    resolution: {integrity: sha512-MWkrWZbJsL2UwnjxTX3gG8FneachS/Mwg7tdGXce011sJd5b0JG54vat5KHnfSBODZ3Wvzd2WnjxyzsRoVv+ww==}
+  espree@10.1.0:
+    resolution: {integrity: sha512-M1M6CpiE6ffoigIOWYO9UDP8TMUw9kqb21tf+08IgDYjCsOvCuDt4jQcZmoYxx+w7zlKw9/N0KXfto+I8/FrXA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   espree@9.6.1:
@@ -3057,6 +3059,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@egoist/tailwindcss-icons@1.8.1(tailwindcss@3.4.3)':
+    dependencies:
+      '@iconify/utils': 2.1.24
+      tailwindcss: 3.4.3
+    transitivePeerDependencies:
+      - supports-color
+
   '@emnapi/core@0.45.0':
     dependencies:
       tslib: 2.6.3
@@ -3295,7 +3304,7 @@ snapshots:
 
   '@eslint/config-array@0.15.1':
     dependencies:
-      '@eslint/object-schema': 2.1.3
+      '@eslint/object-schema': 2.1.4
       debug: 4.3.5
       minimatch: 3.1.2
     transitivePeerDependencies:
@@ -3319,7 +3328,7 @@ snapshots:
     dependencies:
       ajv: 6.12.6
       debug: 4.3.5
-      espree: 10.0.1
+      espree: 10.1.0
       globals: 14.0.0
       ignore: 5.3.1
       import-fresh: 3.3.0
@@ -3333,7 +3342,7 @@ snapshots:
 
   '@eslint/js@9.4.0': {}
 
-  '@eslint/object-schema@2.1.3': {}
+  '@eslint/object-schema@2.1.4': {}
 
   '@headlessui/vue@1.7.22(vue@3.4.27(typescript@5.4.5))':
     dependencies:
@@ -3368,11 +3377,6 @@ snapshots:
   '@iconify-json/majesticons@1.1.11':
     dependencies:
       '@iconify/types': 2.0.0
-
-  '@iconify/json@2.2.216':
-    dependencies:
-      '@iconify/types': 2.0.0
-      pathe: 1.1.2
 
   '@iconify/types@2.0.0': {}
 
@@ -3914,7 +3918,13 @@ snapshots:
     dependencies:
       acorn: 8.11.3
 
+  acorn-jsx@5.3.2(acorn@8.12.0):
+    dependencies:
+      acorn: 8.12.0
+
   acorn@8.11.3: {}
+
+  acorn@8.12.0: {}
 
   agentkeepalive@4.5.0:
     dependencies:
@@ -4122,16 +4132,18 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  deez-components@0.6.3(@egoist/tailwindcss-icons@1.8.0(tailwindcss@3.4.3))(@headlessui/vue@1.7.22(vue@3.4.27(typescript@5.4.5)))(@iconify/json@2.2.216)(@tailwindcss/forms@0.5.7(tailwindcss@3.4.3))(tailwind-merge@2.3.0)(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5)):
+  deez-components@0.6.5(tailwindcss@3.4.3)(vue-router@4.3.2(vue@3.4.27(typescript@5.4.5)))(vue@3.4.27(typescript@5.4.5)):
     dependencies:
-      '@egoist/tailwindcss-icons': 1.8.0(tailwindcss@3.4.3)
+      '@egoist/tailwindcss-icons': 1.8.1(tailwindcss@3.4.3)
       '@headlessui/vue': 1.7.22(vue@3.4.27(typescript@5.4.5))
-      '@iconify/json': 2.2.216
+      '@iconify-json/lucide': 1.1.192
       '@tailwindcss/forms': 0.5.7(tailwindcss@3.4.3)
       tailwind-merge: 2.3.0
       tailwindcss: 3.4.3
       vue: 3.4.27(typescript@5.4.5)
       vue-router: 4.3.2(vue@3.4.27(typescript@5.4.5))
+    transitivePeerDependencies:
+      - supports-color
 
   delayed-stream@1.0.0: {}
 
@@ -4432,7 +4444,7 @@ snapshots:
       escape-string-regexp: 4.0.0
       eslint-scope: 8.0.1
       eslint-visitor-keys: 4.0.0
-      espree: 10.0.1
+      espree: 10.1.0
       esquery: 1.5.0
       esutils: 2.0.3
       fast-deep-equal: 3.1.3
@@ -4461,10 +4473,10 @@ snapshots:
       event-emitter: 0.3.5
       type: 2.7.3
 
-  espree@10.0.1:
+  espree@10.1.0:
     dependencies:
-      acorn: 8.11.3
-      acorn-jsx: 5.3.2(acorn@8.11.3)
+      acorn: 8.12.0
+      acorn-jsx: 5.3.2(acorn@8.12.0)
       eslint-visitor-keys: 4.0.0
 
   espree@9.6.1:
