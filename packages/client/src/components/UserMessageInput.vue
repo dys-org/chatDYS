@@ -2,6 +2,10 @@
 import { DButton, DTextarea } from 'deez-components';
 import { ref } from 'vue';
 
+import { useToastStore } from '@/stores/toast';
+
+const toastStore = useToastStore();
+
 const model = defineModel<string>({ required: true });
 const base64Img = defineModel<string>('base64Img', { default: '' });
 
@@ -16,13 +20,22 @@ function onUploadImgClick() {
 }
 
 function handleImageSelected(e: Event) {
-  // TODO validate image size
   const file = (e.target as HTMLInputElement).files?.[0];
   if (file === undefined) return;
   const fileReader = new FileReader();
+  // Check if the file size is under 5MB
+  const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
+  if (file.size > maxSizeInBytes) {
+    toastStore.add({
+      variant: 'error',
+      title: 'File size exceeds 2MB. Please select a smaller file.',
+    });
+    base64Img.value = '';
+    return;
+  }
   fileReader.onload = (e) => {
     base64Img.value = e.target?.result as string;
-    console.log(base64Img.value);
+    // console.log(base64Img.value);
   };
   fileReader.readAsDataURL(file);
 }
@@ -34,7 +47,7 @@ function handleImageSelected(e: Event) {
       id="userMessage"
       v-model="model"
       label="User Message"
-      :class="['absolute inset-0 max-h-52 resize-none px-10', { 'pl-20 ': !!base64Img }]"
+      :class="['absolute inset-0 max-h-52 resize-none px-10', { 'pl-20': !!base64Img }]"
       @keydown.enter.exact.prevent="emit('send')"
     >
       <template #before>
