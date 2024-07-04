@@ -2,17 +2,22 @@
 import { useStorage } from '@vueuse/core';
 import { DCollapse, DDropdown, DRadioGroup, DRange, DSelect, DTextarea } from 'deez-components';
 import { computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { useSystemPresets } from '@/composables/queries';
+import { useApiKeyStore } from '@/stores/apiKey';
 import { ANTHROPIC_MODELS, OPENAI_MODELS, useChatStore } from '@/stores/chat';
 
 const router = useRouter();
+const route = useRoute();
 const chatStore = useChatStore();
+const apiKeyStore = useApiKeyStore();
 
 const { data: presetList } = useSystemPresets();
 
 const models = computed(() => (chatStore.provider === 'openai' ? OPENAI_MODELS : ANTHROPIC_MODELS));
+
+const shouldDisableSettings = computed(() => !!route.params.id);
 
 const options = computed(() => {
   const opts = presetList.value?.map((preset) => ({
@@ -31,6 +36,13 @@ const options = computed(() => {
   ];
 });
 
+const providerOptions = computed(() => [
+  ...(apiKeyStore.openAiKey ? [{ id: 'openai', label: 'Open AI', value: 'openai' }] : []),
+  ...(apiKeyStore.anthropicKey
+    ? [{ id: 'anthropic', label: 'Anthropic', value: 'anthropic' }]
+    : []),
+]);
+
 watch(
   () => chatStore.provider,
   (newVal) => {
@@ -39,25 +51,21 @@ watch(
   },
 );
 
-const providerOptions = computed(() => [
-  ...(chatStore.openAiKey ? [{ id: 'openai', label: 'Open AI', value: 'openai' }] : []),
-  ...(chatStore.anthropicKey ? [{ id: 'anthropic', label: 'Anthropic', value: 'anthropic' }] : []),
-]);
-
 const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
 </script>
 
 <template>
   <DCollapse v-model:defaultOpen="isExpanded" button-text="Settings">
-    <div class="flex flex-col gap-8 px-4 pb-6 pt-3">
+    <div :class="['flex flex-col gap-8 px-4 pb-6 pt-3', shouldDisableSettings && 'opacity-50']">
       <DRadioGroup
         v-model="chatStore.provider"
         name="provider"
         legend="Choose Provider"
         inline
         :options="providerOptions"
+        :disabled="shouldDisableSettings"
       />
-      <DSelect id="model" v-model="chatStore.model" label="Model">
+      <DSelect id="model" v-model="chatStore.model" label="Model" :disabled="shouldDisableSettings">
         <option value="" disabled>Choose an LLM</option>
         <option v-for="model in models" :key="model">
           {{ model }}
@@ -72,6 +80,7 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
           :min="0"
           :max="2"
           :step="0.1"
+          :disabled="shouldDisableSettings"
         />
       </div>
 
@@ -83,10 +92,11 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
           :min="256"
           :max="4096"
           :step="256"
+          :disabled="shouldDisableSettings"
         />
       </div>
 
-      <fieldset class="relative">
+      <fieldset class="relative" :disabled="shouldDisableSettings">
         <div class="mb-2 flex items-center justify-between">
           <legend class="text-sm font-semibold">System Message</legend>
           <DDropdown

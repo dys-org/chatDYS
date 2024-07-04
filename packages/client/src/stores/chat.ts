@@ -7,6 +7,8 @@ import { useRoute } from 'vue-router';
 import { useTokenize } from '@/composables/useTokenize';
 import { client } from '@/lib/apiClient';
 
+import { useApiKeyStore } from './apiKey';
+
 export const OPENAI_MODELS = [
   'gpt-4o',
   'gpt-4-turbo',
@@ -41,11 +43,10 @@ export const useChatStore = defineStore('chat', () => {
   const isApiKeyModalOpen = ref(false);
   const id = ref('');
   const provider = ref<'openai' | 'anthropic'>('openai');
-  const openAiKey = ref<string>();
-  const anthropicKey = ref<string>();
 
   const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
   const currentChat = computed(() => ({
+    provider: provider.value,
     model: model.value,
     temperature: temperature.value,
     max_tokens: maxTokens.value,
@@ -55,7 +56,9 @@ export const useChatStore = defineStore('chat', () => {
   }));
 
   async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
-    const apiKey = provider.value === 'openai' ? openAiKey.value : anthropicKey.value;
+    const apiKeyStore = useApiKeyStore();
+    // const apiKey = provider.value === 'openai' ? await getIDB(IDB_APIKEY_OPENAI) : await getIDB(IDB_APIKEY_ANTHROPIC
+    const apiKey = provider.value === 'openai' ? apiKeyStore.openAiKey : apiKeyStore.anthropicKey;
     const url = provider.value === 'openai' ? '/api/chat' : '/api/claude';
 
     const res = await fetch(url, {
@@ -157,6 +160,8 @@ export const useChatStore = defineStore('chat', () => {
     } catch (err) {
       console.error(err);
     }
+    // @ts-expect-error provider is not returning the union type
+    provider.value = convo.provider;
     // @ts-expect-error model is not returning the union type
     model.value = convo.model;
     systemMessage.value = convo.system_message;
@@ -192,7 +197,5 @@ export const useChatStore = defineStore('chat', () => {
     isApiKeyModalOpen,
     id,
     provider,
-    openAiKey,
-    anthropicKey,
   };
 });

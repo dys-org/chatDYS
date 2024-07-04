@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { DInput, DModal } from 'deez-components';
-import { get as getIDB, set as setIDB } from 'idb-keyval';
 import { onMounted, ref } from 'vue';
 
-import { IDB_APIKEY_ANTHROPIC, IDB_APIKEY_OPENAI } from '@/lib/constants';
+import { useApiKeyStore } from '@/stores/apiKey';
 import { useChatStore } from '@/stores/chat';
 import { useToastStore } from '@/stores/toast';
 
 const chatStore = useChatStore();
 const toastStore = useToastStore();
+const apiKeyStore = useApiKeyStore();
 
 const openaiApiKeyInput = ref('');
 const anthropicApiKeyInput = ref('');
@@ -21,8 +21,8 @@ async function handleSubmit() {
       throw new Error('Please enter at least one API Key.');
     }
 
-    if (openaiApiKeyInput.value) await setIDB(IDB_APIKEY_OPENAI, openaiApiKeyInput.value);
-    if (anthropicApiKeyInput.value) await setIDB(IDB_APIKEY_ANTHROPIC, anthropicApiKeyInput.value);
+    if (openaiApiKeyInput.value) apiKeyStore.setApiKey('openai', openaiApiKeyInput.value);
+    if (anthropicApiKeyInput.value) apiKeyStore.setApiKey('anthropic', anthropicApiKeyInput.value);
 
     chatStore.isApiKeyModalOpen = false;
 
@@ -41,10 +41,8 @@ async function handleSubmit() {
 }
 
 onMounted(async () => {
-  chatStore.openAiKey = await getIDB(IDB_APIKEY_OPENAI);
-  chatStore.anthropicKey = await getIDB(IDB_APIKEY_ANTHROPIC);
-
-  if (!chatStore.openAiKey && !chatStore.anthropicKey) {
+  await apiKeyStore.getApiKeys();
+  if (!apiKeyStore.openAiKey && !apiKeyStore.anthropicKey) {
     console.log('No API Keys found in indexedDB.');
     chatStore.isApiKeyModalOpen = true;
   }

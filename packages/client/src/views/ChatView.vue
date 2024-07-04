@@ -14,12 +14,14 @@ import TwoColumn from '@/layouts/TwoColumn.vue';
 import { toastErrorHandler } from '@/lib';
 import { client } from '@/lib/apiClient';
 import { IDB_CHAT } from '@/lib/constants';
+import { useApiKeyStore } from '@/stores/apiKey';
 import { useChatStore } from '@/stores/chat';
 
 const route = useRoute();
 const router = useRouter();
 
 const chatStore = useChatStore();
+const apiKeyStore = useApiKeyStore();
 const queryClient = useQueryClient();
 
 const $post = client.api.conversations.$post;
@@ -64,7 +66,7 @@ const updateMessages = useMutation<
 });
 
 async function handleSend() {
-  const apiKey = chatStore.provider === 'openai' ? chatStore.openAiKey : chatStore.anthropicKey;
+  const apiKey = chatStore.provider === 'openai' ? apiKeyStore.openAiKey : apiKeyStore.anthropicKey;
   if (!apiKey) {
     chatStore.isApiKeyModalOpen = true;
     return;
