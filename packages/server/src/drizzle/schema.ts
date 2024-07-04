@@ -33,6 +33,7 @@ export const Conversations = sqliteTable('Conversations', {
   user_id: text('user_id')
     .notNull()
     .references(() => Users.id),
+  provider: text('provider').default('openai').notNull(),
   model: text('model').notNull(),
   temperature: integer('temperature').notNull(),
   max_tokens: integer('max_tokens').notNull(),
