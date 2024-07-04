@@ -1,4 +1,3 @@
-import { get as getIDB } from 'idb-keyval';
 import OpenAI from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { defineStore } from 'pinia';
@@ -7,16 +6,17 @@ import { useRoute } from 'vue-router';
 
 import { useTokenize } from '@/composables/useTokenize';
 import { client } from '@/lib/apiClient';
-import { IDB_APIKEY_OPENAI } from '@/lib/constants';
 
-export const MODELS = [
+export const OPENAI_MODELS = [
   'gpt-4o',
   'gpt-4-turbo',
   'gpt-3.5-turbo',
   'gpt-4',
   'gpt-4-1106-preview',
 ] as const;
-type Model = (typeof MODELS)[number];
+export const ANTHROPIC_MODELS = ['claude-3-5-sonnet-20240620', 'claude-3-haiku-20240307'] as const;
+type OpenAiModel = (typeof OPENAI_MODELS)[number];
+type AnthropicModel = (typeof ANTHROPIC_MODELS)[number];
 
 function get1stTextValue(content: ChatCompletionMessageParam['content']) {
   if (!Array.isArray(content)) return content;
@@ -32,8 +32,7 @@ export const useChatStore = defineStore('chat', () => {
   const loading = ref(false);
   const maxTokens = ref(1024);
   const messages = ref<ChatCompletionMessageParam[]>([]);
-  const model = ref<Model>('gpt-4o');
-  const prompt = ref<ChatCompletionMessageParam[]>([]);
+  const model = ref<OpenAiModel | AnthropicModel>('gpt-4o');
   const systemMessage = ref('');
   const temperature = ref(0);
   const textStream = ref('');
@@ -41,6 +40,9 @@ export const useChatStore = defineStore('chat', () => {
   const base64ImgUpload = ref('');
   const isApiKeyModalOpen = ref(false);
   const id = ref('');
+  const provider = ref<'openai' | 'anthropic'>('openai');
+  const openAiKey = ref<string>();
+  const anthropicKey = ref<string>();
 
   const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
   const currentChat = computed(() => ({
@@ -52,17 +54,11 @@ export const useChatStore = defineStore('chat', () => {
     title: get1stTextValue(messages.value[0].content) ?? '',
   }));
 
-  function addMessage(param: ChatCompletionMessageParam) {
-    messages.value.push(param);
-  }
-  function createPrompt() {
-    prompt.value = [{ role: 'system', content: getSystemMessage.value }, ...messages.value];
-    const stringToTokenize = prompt.value.map((m) => m.content).join('');
-    checkTokens({ stringToTokenize, model: model.value });
-  }
   async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
-    const apiKey = await getIDB(IDB_APIKEY_OPENAI);
-    const res = await fetch('/api/chat', {
+    const apiKey = provider.value === 'openai' ? openAiKey.value : anthropicKey.value;
+    const url = provider.value === 'openai' ? '/api/chat' : '/api/claude';
+
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chatCompletionParams, apiKey }),
@@ -86,11 +82,12 @@ export const useChatStore = defineStore('chat', () => {
       // console.log(chunk);
       textStream.value += chunk;
     }
-    addMessage({ role: 'assistant', content: textStream.value }); // addMessage({ role: 'assistant', content: [{ type: 'text', text: textStream.value }] });
+    messages.value.push({ role: 'assistant', content: textStream.value });
     textStream.value = '';
   }
-  async function sendPrompt() {
-    addMessage({
+  async function sendOpenAiPrompt() {
+    // add the first user message
+    messages.value.push({
       role: 'user',
       content: base64ImgUpload.value
         ? [
@@ -100,16 +97,51 @@ export const useChatStore = defineStore('chat', () => {
         : userMessage.value,
     });
 
-    createPrompt();
+    // create the full prompt with the system message
+    const prompt: ChatCompletionMessageParam[] = [
+      { role: 'system', content: getSystemMessage.value },
+      ...messages.value,
+    ];
+    const stringToTokenize = prompt.map((m) => m.content).join('');
+    checkTokens({ stringToTokenize, model: model.value as OpenAiModel });
+
     userMessage.value = '';
     base64ImgUpload.value = '';
 
     loading.value = true;
     const params: OpenAI.ChatCompletionCreateParams = {
       model: model.value,
-      messages: prompt.value,
+      messages: prompt,
       temperature: temperature.value,
       max_tokens: maxTokens.value,
+    };
+    await streamResponse(params);
+    loading.value = false;
+  }
+  async function sendAnthropicPrompt() {
+    // add first user message
+    messages.value.push({
+      role: 'user',
+      content: base64ImgUpload.value
+        ? [
+            { type: 'image_url', image_url: { url: base64ImgUpload.value } },
+            { type: 'text', text: userMessage.value },
+          ]
+        : userMessage.value,
+    });
+
+    // TODO check tokens, maybe from usage returned in response?
+
+    userMessage.value = '';
+    base64ImgUpload.value = '';
+
+    loading.value = true;
+    const params = {
+      model: model.value,
+      max_tokens: maxTokens.value,
+      temperature: temperature.value,
+      system: systemMessage.value,
+      messages: [...messages.value],
     };
     await streamResponse(params);
     loading.value = false;
@@ -147,8 +179,8 @@ export const useChatStore = defineStore('chat', () => {
     maxTokens,
     messages,
     model,
-    prompt,
-    sendPrompt,
+    sendOpenAiPrompt,
+    sendAnthropicPrompt,
     systemMessage,
     temperature,
     textStream,
@@ -159,5 +191,8 @@ export const useChatStore = defineStore('chat', () => {
     fetchChat,
     isApiKeyModalOpen,
     id,
+    provider,
+    openAiKey,
+    anthropicKey,
   };
 });

@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
-import { DCollapse, DDropdown, DRange, DSelect, DTextarea } from 'deez-components';
-import { computed } from 'vue';
+import { DCollapse, DDropdown, DRadioGroup, DRange, DSelect, DTextarea } from 'deez-components';
+import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { useSystemPresets } from '@/composables/queries';
-import { MODELS, useChatStore } from '@/stores/chat';
+import { ANTHROPIC_MODELS, OPENAI_MODELS, useChatStore } from '@/stores/chat';
 
 const router = useRouter();
 const chatStore = useChatStore();
 
 const { data: presetList } = useSystemPresets();
+
+const models = computed(() => (chatStore.provider === 'openai' ? OPENAI_MODELS : ANTHROPIC_MODELS));
 
 const options = computed(() => {
   const opts = presetList.value?.map((preset) => ({
@@ -29,15 +31,35 @@ const options = computed(() => {
   ];
 });
 
+watch(
+  () => chatStore.provider,
+  (newVal) => {
+    if (newVal === 'anthropic') chatStore.model = ANTHROPIC_MODELS[0];
+    if (newVal === 'openai') chatStore.model = OPENAI_MODELS[0];
+  },
+);
+
+const providerOptions = computed(() => [
+  ...(chatStore.openAiKey ? [{ id: 'openai', label: 'Open AI', value: 'openai' }] : []),
+  ...(chatStore.anthropicKey ? [{ id: 'anthropic', label: 'Anthropic', value: 'anthropic' }] : []),
+]);
+
 const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
 </script>
 
 <template>
   <DCollapse v-model:defaultOpen="isExpanded" button-text="Settings">
     <div class="flex flex-col gap-8 px-4 pb-6 pt-3">
+      <DRadioGroup
+        v-model="chatStore.provider"
+        name="provider"
+        legend="Choose Provider"
+        inline
+        :options="providerOptions"
+      />
       <DSelect id="model" v-model="chatStore.model" label="Model">
         <option value="" disabled>Choose an LLM</option>
-        <option v-for="model in MODELS" :key="model">
+        <option v-for="model in models" :key="model">
           {{ model }}
         </option>
       </DSelect>

@@ -12,6 +12,7 @@ import OpenAI from 'openai';
 import { lucia } from './lucia.js';
 import auth from './routes/auth.js';
 import chat from './routes/chat.js';
+import claude from './routes/claude.js';
 import conversations from './routes/conversations.js';
 import systemPresets from './routes/systemPresets.js';
 import tokenize from './routes/tokenize.js';
@@ -64,6 +65,7 @@ const app = new Hono<{
 
 const api = new Hono()
   .route('/chat', chat)
+  .route('/claude', claude)
   .route('/conversations', conversations)
   .route('/systemPresets', systemPresets)
   .route('/tokenize', tokenize)

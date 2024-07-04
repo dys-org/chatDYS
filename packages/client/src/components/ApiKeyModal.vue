@@ -3,8 +3,7 @@ import { DInput, DModal } from 'deez-components';
 import { get as getIDB, set as setIDB } from 'idb-keyval';
 import { onMounted, ref } from 'vue';
 
-import { toastErrorHandler } from '@/lib';
-import { IDB_APIKEY_OPENAI } from '@/lib/constants';
+import { IDB_APIKEY_ANTHROPIC, IDB_APIKEY_OPENAI } from '@/lib/constants';
 import { useChatStore } from '@/stores/chat';
 import { useToastStore } from '@/stores/toast';
 
@@ -12,26 +11,41 @@ const chatStore = useChatStore();
 const toastStore = useToastStore();
 
 const openaiApiKeyInput = ref('');
+const anthropicApiKeyInput = ref('');
+const errorText = ref('');
 
 async function handleSubmit() {
+  errorText.value = '';
   try {
-    await setIDB(IDB_APIKEY_OPENAI, openaiApiKeyInput.value);
+    if (!openaiApiKeyInput.value && !anthropicApiKeyInput.value) {
+      throw new Error('Please enter at least one API Key.');
+    }
+
+    if (openaiApiKeyInput.value) await setIDB(IDB_APIKEY_OPENAI, openaiApiKeyInput.value);
+    if (anthropicApiKeyInput.value) await setIDB(IDB_APIKEY_ANTHROPIC, anthropicApiKeyInput.value);
+
     chatStore.isApiKeyModalOpen = false;
+
     toastStore.add({
       variant: 'success',
-      title: 'API key successfully saved',
-      description: 'You can change your API Key anytime from the Profile page.',
+      title: 'API key(s) successfully saved',
+      description: 'You can change your API Keys anytime from the Profile page.',
       duration: 5000,
     });
-  } catch (err) {
-    toastErrorHandler(err, 'Error saving API Key');
+
+    openaiApiKeyInput.value = '';
+    anthropicApiKeyInput.value = '';
+  } catch (err: any) {
+    errorText.value = err.message;
   }
 }
 
 onMounted(async () => {
-  const apiKey = await getIDB(IDB_APIKEY_OPENAI);
-  if (!apiKey) {
-    console.log('No API Key found in indexedDB.');
+  chatStore.openAiKey = await getIDB(IDB_APIKEY_OPENAI);
+  chatStore.anthropicKey = await getIDB(IDB_APIKEY_ANTHROPIC);
+
+  if (!chatStore.openAiKey && !chatStore.anthropicKey) {
+    console.log('No API Keys found in indexedDB.');
     chatStore.isApiKeyModalOpen = true;
   }
 });
@@ -40,27 +54,51 @@ onMounted(async () => {
 <template>
   <DModal
     v-model:open="chatStore.isApiKeyModalOpen"
-    title="Please enter your OpenAI API Key."
+    title="Please enter your key(s)."
     confirm-text="Save"
     confirm-form-attr="apiKeyForm"
   >
     <template #content>
       <div class="grid gap-3">
-        <p class="text-sm text-white/60">
-          To use the chat you need an OpenAI API Key. It will be saved in your browser's indexedDB.
-          We <strong>DO NOT</strong> store your API Key on our servers.
+        <p class="text-sm leading-normal text-white/60">
+          To use the chat you need an OpenAI and/or Anthropic API Key. They will be saved in your
+          browser's indexedDB. We <strong>DO NOT</strong> store your API Keys on our servers.
         </p>
-        <form id="apiKeyForm" @submit.prevent="handleSubmit">
-          <DInput id="openaiApiKey" v-model="openaiApiKeyInput" label="OpenAI API Key" required />
+        <form id="apiKeyForm" class="grid gap-6" @submit.prevent="handleSubmit">
+          <DInput id="openaiApiKey" v-model="openaiApiKeyInput" label="OpenAI API Key" />
+          <DInput id="anthropicApiKey" v-model="anthropicApiKeyInput" label="Anthropic API Key" />
+          <!-- ERROR -->
+          <div v-if="errorText" class="bg-danger-400/10 border-l-4 border-red-400 p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <span
+                  class="i-majesticons-exclamation block size-5 text-red-400"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="ml-3">
+                <p class="text-danger-200 text-sm">{{ errorText }}</p>
+              </div>
+            </div>
+          </div>
         </form>
-        <p class="text-sm text-white/60">
-          If you don't have an API Key, you can create one
+        <p class="text-sm leading-normal text-white/60">
+          If you don't have API Keys, you can create them
           <a
             href="https://platform.openai.com/docs/quickstart?context=node"
             target="_blank"
             rel="noopener noreferrer"
             class="text-primary-400 font-bold hover:underline"
-            >here</a
+          >
+            OpenAI
+          </a>
+          or
+          <a
+            href="https://console.anthropic.com/settings/keys"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-primary-400 font-bold hover:underline"
+            >Anthropic</a
           >.
         </p>
       </div>

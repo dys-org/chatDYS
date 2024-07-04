@@ -13,7 +13,7 @@ import UserMessageInput from '@/components/UserMessageInput.vue';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { toastErrorHandler } from '@/lib';
 import { client } from '@/lib/apiClient';
-import { IDB_APIKEY_OPENAI, IDB_CHAT } from '@/lib/constants';
+import { IDB_CHAT } from '@/lib/constants';
 import { useChatStore } from '@/stores/chat';
 
 const route = useRoute();
@@ -64,18 +64,22 @@ const updateMessages = useMutation<
 });
 
 async function handleSend() {
-  const apiKey = await getIDB(IDB_APIKEY_OPENAI);
+  const apiKey = chatStore.provider === 'openai' ? chatStore.openAiKey : chatStore.anthropicKey;
   if (!apiKey) {
     chatStore.isApiKeyModalOpen = true;
     return;
   }
   if (!chatStore.userMessage) {
-    // TODO use a modal or toast here?
     alert('You have not added any text to analyze.');
     return;
   }
   try {
-    await chatStore.sendPrompt();
+    if (chatStore.provider === 'openai') {
+      await chatStore.sendOpenAiPrompt();
+    }
+    if (chatStore.provider === 'anthropic') {
+      await chatStore.sendAnthropicPrompt();
+    }
     if (route.params.id) {
       const id = typeof route.params.id === 'string' ? route.params.id : route.params.id[0];
       updateMessages.mutate(id.toString());

@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "pnpm@9.4.0",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
     "hono": "^4.4.3",
     "openai": "^4.48.1"
   },
