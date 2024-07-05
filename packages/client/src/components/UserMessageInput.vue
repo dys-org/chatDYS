@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ImageBlockParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { DButton, DTextarea } from 'deez-components';
 import { ref } from 'vue';
 
@@ -7,7 +8,12 @@ import { useToastStore } from '@/stores/toast';
 const toastStore = useToastStore();
 
 const model = defineModel<string>({ required: true });
-const base64Img = defineModel<string>('base64Img', { default: '' });
+const base64Img = defineModel<{
+  data: string;
+  type?: ImageBlockParam.Source['media_type'];
+}>('base64Img', {
+  default: { data: '' },
+});
 
 const emit = defineEmits<{
   send: [];
@@ -30,12 +36,12 @@ function handleImageSelected(e: Event) {
       variant: 'error',
       title: 'File size exceeds 2MB. Please select a smaller file.',
     });
-    base64Img.value = '';
+    base64Img.value = { data: '' };
     return;
   }
   fileReader.onload = (e) => {
-    base64Img.value = e.target?.result as string;
-    // console.log(base64Img.value);
+    base64Img.value.data = e.target?.result as string;
+    base64Img.value.type = file.type as ImageBlockParam.Source['media_type'];
   };
   fileReader.readAsDataURL(file);
 }
@@ -47,30 +53,30 @@ function handleImageSelected(e: Event) {
       id="userMessage"
       v-model="model"
       label="User Message"
-      :class="['absolute inset-0 max-h-52 resize-none px-10', { 'pl-20': !!base64Img }]"
+      :class="['absolute inset-0 max-h-52 resize-none px-10', { 'pl-20': !!base64Img.data }]"
       @keydown.enter.exact.prevent="emit('send')"
     >
       <template #before>
         <div
           :class="[
             'invisible max-h-52 overflow-y-hidden whitespace-pre-wrap px-10 py-1.5 sm:text-sm sm:leading-6',
-            base64Img ? 'min-h-[108px]' : 'min-h-[36px]',
+            base64Img.data ? 'min-h-[108px]' : 'min-h-[36px]',
           ]"
         >
           {{ model }}&nbsp;
         </div>
         <!-- Display the image preview -->
         <div class="absolute left-2 top-2">
-          <div v-if="base64Img" class="group relative z-10 h-14 w-14">
+          <div v-if="base64Img.data" class="group relative z-10 h-14 w-14">
             <DButton
               class="hover:dark:bg-primary-500 absolute -right-1.5 -top-1.5 rounded-full p-0.5 opacity-0 focus:opacity-100 group-hover:opacity-100 dark:bg-gray-600"
-              @click="base64Img = ''"
+              @click="base64Img = { data: '' }"
             >
               <span class="sr-only">Delete Image</span>
               <span class="i-majesticons-close text-base"></span
             ></DButton>
             <img
-              :src="base64Img"
+              :src="base64Img.data"
               class="h-full w-full rounded bg-gray-700 object-cover"
               alt="Image Preview"
             />

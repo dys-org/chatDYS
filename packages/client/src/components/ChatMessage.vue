@@ -9,7 +9,7 @@ import { useUserStore } from '@/stores/user';
 
 const props = withDefaults(
   defineProps<{
-    message: ChatCompletionMessageParam;
+    message: ChatCompletionMessageParam | MessageParam;
     disableCopy?: boolean;
   }>(),
   { disableCopy: false },

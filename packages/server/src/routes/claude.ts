@@ -51,7 +51,6 @@ const chat = new Hono().post(
     const init = { status: 200, statusText: 'ok', headers };
     const { chatCompletionParams, apiKey } = c.req.valid('json');
 
-    // const anthropic = new Anthropic({ apiKey: apiKey });
     const anthropic = new Anthropic({ apiKey });
     // @ts-expect-error MessageParam has to many options
     const stream = await anthropic.messages.create({

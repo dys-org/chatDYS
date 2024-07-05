@@ -1,5 +1,12 @@
-import OpenAI from 'openai';
-import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
+import {
+  ImageBlockParam,
+  MessageCreateParamsBase,
+  MessageParam,
+} from '@anthropic-ai/sdk/resources/messages.mjs';
+import type {
+  ChatCompletionCreateParams,
+  ChatCompletionMessageParam,
+} from 'openai/resources/index.mjs';
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -20,7 +27,7 @@ export const ANTHROPIC_MODELS = ['claude-3-5-sonnet-20240620', 'claude-3-haiku-2
 type OpenAiModel = (typeof OPENAI_MODELS)[number];
 type AnthropicModel = (typeof ANTHROPIC_MODELS)[number];
 
-function get1stTextValue(content: ChatCompletionMessageParam['content']) {
+function get1stTextValue(content: ChatCompletionMessageParam['content'] | MessageParam['content']) {
   if (!Array.isArray(content)) return content;
   for (const part of content) {
     if (part.type === 'text') return part.text;
@@ -33,13 +40,14 @@ export const useChatStore = defineStore('chat', () => {
 
   const loading = ref(false);
   const maxTokens = ref(1024);
-  const messages = ref<ChatCompletionMessageParam[]>([]);
+  const messages = ref<(ChatCompletionMessageParam | MessageParam)[]>([]);
+  // const messages = ref<MessageParam[]>([]);
   const model = ref<OpenAiModel | AnthropicModel>('gpt-4o');
   const systemMessage = ref('');
   const temperature = ref(0);
   const textStream = ref('');
   const userMessage = ref('');
-  const base64ImgUpload = ref('');
+  const base64ImgUpload = ref<{ data: string; type?: ImageBlockParam.Source['media_type'] }>();
   const isApiKeyModalOpen = ref(false);
   const id = ref('');
   const provider = ref<'openai' | 'anthropic'>('openai');
@@ -55,9 +63,10 @@ export const useChatStore = defineStore('chat', () => {
     title: get1stTextValue(messages.value[0].content) ?? '',
   }));
 
-  async function streamResponse(chatCompletionParams: OpenAI.ChatCompletionCreateParams) {
+  async function streamResponse(
+    chatCompletionParams: ChatCompletionCreateParams | MessageCreateParamsBase,
+  ) {
     const apiKeyStore = useApiKeyStore();
-    // const apiKey = provider.value === 'openai' ? await getIDB(IDB_APIKEY_OPENAI) : await getIDB(IDB_APIKEY_ANTHROPIC
     const apiKey = provider.value === 'openai' ? apiKeyStore.openAiKey : apiKeyStore.anthropicKey;
     const url = provider.value === 'openai' ? '/api/chat' : '/api/claude';
 
@@ -94,7 +103,7 @@ export const useChatStore = defineStore('chat', () => {
       role: 'user',
       content: base64ImgUpload.value
         ? [
-            { type: 'image_url', image_url: { url: base64ImgUpload.value } },
+            { type: 'image_url', image_url: { url: base64ImgUpload.value.data } },
             { type: 'text', text: userMessage.value },
           ]
         : userMessage.value,
@@ -103,16 +112,16 @@ export const useChatStore = defineStore('chat', () => {
     // create the full prompt with the system message
     const prompt: ChatCompletionMessageParam[] = [
       { role: 'system', content: getSystemMessage.value },
-      ...messages.value,
+      ...(messages.value as ChatCompletionMessageParam[]),
     ];
     const stringToTokenize = prompt.map((m) => m.content).join('');
     checkTokens({ stringToTokenize, model: model.value as OpenAiModel });
 
     userMessage.value = '';
-    base64ImgUpload.value = '';
+    base64ImgUpload.value = { data: '' };
 
     loading.value = true;
-    const params: OpenAI.ChatCompletionCreateParams = {
+    const params: ChatCompletionCreateParams = {
       model: model.value,
       messages: prompt,
       temperature: temperature.value,
@@ -121,13 +130,21 @@ export const useChatStore = defineStore('chat', () => {
     await streamResponse(params);
     loading.value = false;
   }
+
   async function sendAnthropicPrompt() {
     // add first user message
     messages.value.push({
       role: 'user',
-      content: base64ImgUpload.value
+      content: base64ImgUpload.value?.data
         ? [
-            { type: 'image_url', image_url: { url: base64ImgUpload.value } },
+            {
+              type: 'image',
+              source: {
+                data: base64ImgUpload.value?.data ?? '',
+                media_type: base64ImgUpload.value?.type ?? 'image/jpeg',
+                type: 'base64',
+              },
+            },
             { type: 'text', text: userMessage.value },
           ]
         : userMessage.value,
@@ -136,15 +153,15 @@ export const useChatStore = defineStore('chat', () => {
     // TODO check tokens, maybe from usage returned in response?
 
     userMessage.value = '';
-    base64ImgUpload.value = '';
+    base64ImgUpload.value = { data: '' };
 
     loading.value = true;
-    const params = {
+    const params: MessageCreateParamsBase = {
       model: model.value,
       max_tokens: maxTokens.value,
       temperature: temperature.value,
       system: systemMessage.value,
-      messages: [...messages.value],
+      messages: [...(messages.value as MessageParam[])],
     };
     await streamResponse(params);
     loading.value = false;
