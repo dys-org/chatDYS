@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { DAvatar, DButton } from 'deez-components';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
-import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
+import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { computed, ref } from 'vue';
 
 import { useUserStore } from '@/stores/user';

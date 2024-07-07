@@ -1,4 +1,5 @@
-import { QueryCache, VueQueryPlugin, VueQueryPluginOptions } from '@tanstack/vue-query';
+import type { VueQueryPluginOptions } from '@tanstack/vue-query';
+import { QueryCache, VueQueryPlugin } from '@tanstack/vue-query';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 
