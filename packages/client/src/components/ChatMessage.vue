@@ -137,7 +137,7 @@ const imgContent = computed(() => {
   }
 
   & .hljs {
-    @apply my-4 max-w-lg overflow-auto p-3 text-xs;
+    @apply my-4 max-w-[70vw] overflow-auto p-3 text-xs;
   }
 }
 </style>

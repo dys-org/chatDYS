@@ -12,14 +12,26 @@ const props = withDefaults(
 );
 
 const sidebarOpen = ref(false);
+const chatAreaScroll = ref(0);
 const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
+
+function handleScroll(e: Event) {
+  const target = e.target as HTMLElement;
+  console.log(target.scrollTop);
+  chatAreaScroll.value = target.scrollTop;
+}
+
+function backToTop() {
+  const container = document.querySelector('#chatArea');
+  container?.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 
 <template>
   <div class="flex h-full overflow-hidden">
     <!-- MAIN LEFT COLUMN -->
     <main class="relative flex-1">
-      <div id="chatArea" class="h-full overflow-auto">
+      <div id="chatArea" class="h-full overflow-auto" @scroll="handleScroll">
         <slot name="heading">
           <h1 class="my-4 px-4 text-xl font-semibold sm:px-6">
             {{ props.h1 }}
@@ -28,7 +40,7 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
         <slot name="main" />
         <div class="absolute right-0 top-0 flex justify-center pt-3.5">
           <DButton
-            class="hidden rounded-r-none p-1.5 dark:bg-gray-700 hover:dark:bg-gray-600 lg:block"
+            class="hidden rounded-r-none p-1.5 lg:block dark:bg-gray-700 hover:dark:bg-gray-600"
             @click="isSidebarExpanded = !isSidebarExpanded"
           >
             <span class="sr-only">{{ isSidebarExpanded ? 'Collapse' : 'Expand' }} Settings</span>
@@ -41,7 +53,7 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
             ></span>
           </DButton>
           <DButton
-            class="rounded-r-none p-1.5 dark:bg-gray-700 hover:dark:bg-gray-600 lg:hidden"
+            class="rounded-r-none p-1.5 lg:hidden dark:bg-gray-700 hover:dark:bg-gray-600"
             @click="sidebarOpen = true"
           >
             <span class="sr-only">Open sidebar</span>
@@ -49,6 +61,14 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
           </DButton>
         </div>
       </div>
+      <DButton
+        class="dark:hover:bg-primary-500 absolute bottom-36 end-6 size-11 justify-center rounded-full p-0.5 shadow-lg transition-all duration-300 ease-in-out active:shadow-xl"
+        :class="[chatAreaScroll < 20 ? 'invisible opacity-0' : 'visible']"
+        @click="backToTop"
+      >
+        <span class="sr-only">Scroll to top</span>
+        <span class="i-lucide-arrow-big-up mt-0.5 size-7" />
+      </DButton>
     </main>
 
     <!-- DESKTOP STATIC LEFT COLUMN -->
@@ -109,7 +129,7 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
               <div class="absolute right-full top-0 flex w-16 justify-center pt-5">
                 <button
                   type="button"
-                  class="-m-2.5 rounded p-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
+                  class="focus-visible:outline-primary-500 -m-2.5 rounded p-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                   @click="sidebarOpen = false"
                 >
                   <span class="sr-only">Close sidebar</span>

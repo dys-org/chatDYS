@@ -92,13 +92,15 @@ async function handleSend() {
     toastErrorHandler(err, 'Failed to send prompt.');
   }
 }
+
 async function scrollToBottom() {
+  const container = document.querySelector('#chatArea');
   await nextTick();
-  let container = document.querySelector('#chatArea');
   if (container) {
     container.scrollTop = container.scrollHeight;
   }
 }
+
 async function fetchChat(paramsId: string | string[]) {
   const id = typeof paramsId === 'string' ? paramsId : paramsId[0];
   chatStore.$reset();
