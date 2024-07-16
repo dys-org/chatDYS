@@ -103,7 +103,7 @@ const imgContent = computed(() => {
       </div>
       <div class="min-w-[28px]">
         <DButton
-          v-if="props.message.role === 'assistant'"
+          v-if="props.message.role === 'assistant' && typeof props.message.content === 'string'"
           class="-mt-1 p-1 dark:bg-transparent dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white"
           :disabled="props.disableCopy"
           @click="handleCopy(props.message.content ?? '')"

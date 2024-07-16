@@ -57,8 +57,8 @@ const updateMessages = useMutation<
     });
     return await res.json();
   },
-  onSuccess: async () => {
-    await queryClient.invalidateQueries({ queryKey: ['conversationList'] });
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['conversationList'] });
   },
   onError: (err) => {
     toastErrorHandler(err, 'There was a problem updating the messages.');
