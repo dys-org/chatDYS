@@ -118,7 +118,7 @@ export const useChatStore = defineStore('chat', () => {
     checkTokens({ stringToTokenize, model: model.value as OpenAiModel });
 
     userMessage.value = '';
-    base64ImgUpload.value = { data: '' };
+    base64ImgUpload.value = undefined;
 
     loading.value = true;
     const params: ChatCompletionCreateParams = {
@@ -153,7 +153,7 @@ export const useChatStore = defineStore('chat', () => {
     // TODO check tokens, maybe from usage returned in response?
 
     userMessage.value = '';
-    base64ImgUpload.value = { data: '' };
+    base64ImgUpload.value = undefined;
 
     loading.value = true;
     const params: MessageCreateParamsBase = {

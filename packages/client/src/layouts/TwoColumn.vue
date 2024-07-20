@@ -61,6 +61,8 @@ function backToTop() {
           </DButton>
         </div>
       </div>
+
+      <!-- SCROLL TO TOP BUTTON -->
       <DButton
         class="dark:hover:bg-primary-500 absolute bottom-36 end-6 size-11 justify-center rounded-full p-0.5 shadow-lg transition-all duration-300 ease-in-out active:shadow-xl"
         :class="[chatAreaScroll < 20 ? 'invisible opacity-0' : 'visible']"
