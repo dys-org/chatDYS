@@ -12,7 +12,7 @@ RUN pnpm run -r build
 RUN pnpm deploy --filter=server --prod /app-server
 RUN mkdir -p /app-server/db-data
 
-FROM nginx:1.26-alpine-slim as client
+FROM nginx:1.26-alpine-slim AS client
 COPY --from=build /app/packages/client/dist /usr/share/nginx/html
 COPY --from=build /app/packages/client/nginx.conf /etc/nginx/conf.d/default.conf
 
