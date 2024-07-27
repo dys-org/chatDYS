@@ -42,7 +42,7 @@ export const useChatStore = defineStore('chat', () => {
   const maxTokens = ref(1024);
   const messages = ref<(ChatCompletionMessageParam | MessageParam)[]>([]);
   // const messages = ref<MessageParam[]>([]);
-  const model = ref<OpenAiModel | AnthropicModel>('gpt-4o');
+  const model = ref<OpenAiModel | AnthropicModel>('claude-3-5-sonnet-20240620');
   const systemMessage = ref('');
   const temperature = ref(0);
   const textStream = ref('');
