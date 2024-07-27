@@ -50,7 +50,7 @@ export const useChatStore = defineStore('chat', () => {
   const base64ImgUpload = ref<{ data: string; type?: ImageBlockParam.Source['media_type'] }>();
   const isApiKeyModalOpen = ref(false);
   const id = ref('');
-  const provider = ref<'openai' | 'anthropic'>('openai');
+  const provider = ref<'openai' | 'anthropic'>('anthropic');
 
   const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
   const currentChat = computed(() => ({
