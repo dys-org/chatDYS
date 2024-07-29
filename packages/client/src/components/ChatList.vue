@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { DDropdown, DLink } from 'deez-components';
+import { DDropdown, DLink, DSpinner } from 'deez-components';
 import { InferRequestType, InferResponseType } from 'hono';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -17,7 +17,7 @@ const chatStore = useChatStore();
 const toastStore = useToastStore();
 const queryClient = useQueryClient();
 
-const { data: conversationList } = useConversations();
+const { data: conversationList, isPending, error } = useConversations();
 
 async function handleDelete(id: number) {
   try {
@@ -37,7 +37,7 @@ const deleteConversation = useMutation<
     const res = await $delete({ param: { id } });
     return await res.json();
   },
-  onSuccess: async (data, id) => {
+  onSuccess: async (_, id) => {
     await queryClient.invalidateQueries({ queryKey: ['conversationList'] });
     toastStore.add({ variant: 'success', title: 'Conversation deleted!', duration: 5000 });
     if (id === route.params.id) {
@@ -54,7 +54,11 @@ const deleteConversation = useMutation<
 <template>
   <nav class="px-4 py-3">
     <h2 class="mb-2 text-sm font-bold text-white/60">Conversations</h2>
-    <ul class="flex grow flex-col gap-1">
+
+    <DSpinner v-if="isPending" />
+    <span v-else-if="error" class="i-lucide-triangle-alert size-5"></span>
+
+    <ul v-else class="flex grow flex-col gap-1">
       <li v-for="chat in conversationList" :key="chat.id" class="group relative -mx-2">
         <DLink
           class="focus-visible:outline-primary-500 flex rounded px-2 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:bg-transparent dark:group-hover:bg-white/5"
@@ -78,7 +82,7 @@ const deleteConversation = useMutation<
                 fn: () => handleDelete(chat.id),
               },
             ]"
-          ></DDropdown>
+          />
         </div>
       </li>
     </ul>
