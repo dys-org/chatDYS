@@ -61,7 +61,7 @@ const conversations = new Hono<{
   })
   .patch(
     '/:id',
-    zValidator('json', z.string(), (result, c) => {
+    zValidator('json', insertConversationsSchema.partial(), (result, c) => {
       if (!result.success) {
         console.log(result.error);
         return c.text(formatZodError(result.error), 400);
@@ -75,10 +75,10 @@ const conversations = new Hono<{
         return c.text('User cannot edit this conversation.', 403);
       }
 
-      const messages = c.req.valid('json');
+      const convo = c.req.valid('json');
       const ps = db
         .update(Conversations)
-        .set({ messages })
+        .set(convo)
         .where(eq(Conversations.id, parseInt(c.req.param('id'))))
         .prepare();
       const info = ps.run();

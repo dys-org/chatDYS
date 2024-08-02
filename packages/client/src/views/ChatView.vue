@@ -1,69 +1,26 @@
 <script setup lang="ts">
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { DSpinner } from 'deez-components';
-import { InferRequestType, InferResponseType } from 'hono';
 import { get as getIDB, set as setIDB } from 'idb-keyval';
 import { nextTick, onBeforeMount, onMounted, watch } from 'vue';
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 import ApiKeyModal from '@/components/ApiKeyModal.vue';
 import ChatMessage from '@/components/ChatMessage.vue';
 import ChatSidebar from '@/components/ChatSidebar.vue';
 import UserMessageInput from '@/components/UserMessageInput.vue';
+import { useCreateConversation, useUpdateConversation } from '@/composables/mutations';
 import TwoColumn from '@/layouts/TwoColumn.vue';
 import { toastErrorHandler } from '@/lib';
-import { client } from '@/lib/apiClient';
 import { IDB_CHAT } from '@/lib/constants';
 import { useApiKeyStore } from '@/stores/apiKey';
 import { useChatStore } from '@/stores/chat';
 
 const route = useRoute();
-const router = useRouter();
 
 const chatStore = useChatStore();
 const apiKeyStore = useApiKeyStore();
-const queryClient = useQueryClient();
-
-const $post = client.api.conversations.$post;
-const createConversation = useMutation<
-  InferResponseType<typeof $post>,
-  Error,
-  InferRequestType<typeof $post>['json']
->({
-  mutationFn: async (convo) => {
-    const res = await $post({ json: convo });
-    return await res.json();
-  },
-  onSuccess: async (data) => {
-    await queryClient.invalidateQueries({ queryKey: ['conversationList'] });
-    // @ts-expect-error - data should by 201 type
-    await router.push({ name: 'chat', params: { id: data.lastInsertRowid } });
-  },
-  onError: (err) => {
-    toastErrorHandler(err, 'There was a problem creating the conversation.');
-  },
-});
-
-const $patch = client.api.conversations[':id'].$patch;
-const updateMessages = useMutation<
-  InferResponseType<typeof $patch>,
-  Error,
-  InferRequestType<typeof $patch>['param']['id']
->({
-  mutationFn: async (id) => {
-    const res = await $patch({
-      param: { id },
-      json: JSON.stringify(chatStore.messages),
-    });
-    return await res.json();
-  },
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['conversationList'] });
-  },
-  onError: (err) => {
-    toastErrorHandler(err, 'There was a problem updating the messages.');
-  },
-});
+const createConversation = useCreateConversation();
+const updateConversation = useUpdateConversation();
 
 async function handleSend() {
   const apiKey = chatStore.provider === 'openai' ? apiKeyStore.openAiKey : apiKeyStore.anthropicKey;
@@ -84,7 +41,12 @@ async function handleSend() {
     }
     if (route.params.id) {
       const id = typeof route.params.id === 'string' ? route.params.id : route.params.id[0];
-      updateMessages.mutate(id.toString());
+      updateConversation.mutate({
+        id,
+        data: {
+          messages: JSON.stringify(chatStore.messages),
+        },
+      });
     } else {
       createConversation.mutate(chatStore.currentChat);
     }

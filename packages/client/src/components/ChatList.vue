@@ -1,23 +1,14 @@
 <script setup lang="ts">
-import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { DDropdown, DLink, DSpinner } from 'deez-components';
-import { InferRequestType, InferResponseType } from 'hono';
-import { useRoute, useRouter } from 'vue-router';
+import { DSpinner } from 'deez-components';
 
+import ChatItem from '@/components/ChatItem.vue';
+import { useDeleteConversation, useUpdateConversation } from '@/composables/mutations';
 import { useConversations } from '@/composables/queries';
 import { toastErrorHandler } from '@/lib';
-import { client } from '@/lib/apiClient';
-import { useChatStore } from '@/stores/chat';
-import { useToastStore } from '@/stores/toast';
-
-const route = useRoute();
-const router = useRouter();
-
-const chatStore = useChatStore();
-const toastStore = useToastStore();
-const queryClient = useQueryClient();
 
 const { data: conversationList, isPending, error } = useConversations();
+const deleteConversation = useDeleteConversation();
+const updateConversation = useUpdateConversation();
 
 async function handleDelete(id: number) {
   try {
@@ -27,28 +18,13 @@ async function handleDelete(id: number) {
   }
 }
 
-const $delete = client.api.conversations[':id'].$delete;
-const deleteConversation = useMutation<
-  InferResponseType<typeof $delete>,
-  Error,
-  InferRequestType<typeof $delete>['param']['id']
->({
-  mutationFn: async (id) => {
-    const res = await $delete({ param: { id } });
-    return await res.json();
-  },
-  onSuccess: async (_, id) => {
-    await queryClient.invalidateQueries({ queryKey: ['conversationList'] });
-    toastStore.add({ variant: 'success', title: 'Conversation deleted!', duration: 5000 });
-    if (id === route.params.id) {
-      chatStore.$reset();
-      await router.push({ name: 'chat' });
-    }
-  },
-  onError: (err) => {
-    toastErrorHandler(err, 'There was a problem deleting the conversation.');
-  },
-});
+async function handleSave(id: string, title: string) {
+  try {
+    updateConversation.mutate({ id, data: { title } });
+  } catch (err) {
+    toastErrorHandler(err, 'There was a problem updating your conversation.');
+  }
+}
 </script>
 
 <template>
@@ -59,32 +35,13 @@ const deleteConversation = useMutation<
     <span v-else-if="error" class="i-lucide-triangle-alert size-5"></span>
 
     <ul v-else class="flex grow flex-col gap-1">
-      <li v-for="chat in conversationList" :key="chat.id" class="group relative -mx-2">
-        <DLink
-          class="focus-visible:outline-primary-500 flex rounded px-2 py-1.5 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:bg-transparent dark:group-hover:bg-white/5"
-          :to="{ name: 'chat', params: { id: chat.id } }"
-          :title="chat.title"
-          active-class="font-bold dark:bg-white/5"
-        >
-          <span class="max-w-56 truncate">{{ chat.title }}</span>
-        </DLink>
-        <div class="absolute right-1 top-1">
-          <DDropdown
-            minimal
-            label="Action Menu"
-            button-class="dark:bg-transparent"
-            :options="[
-              {
-                key: 'delete_conversation',
-                label: 'Delete',
-                icon: 'i-lucide-trash-2',
-                danger: true,
-                fn: () => handleDelete(chat.id),
-              },
-            ]"
-          />
-        </div>
-      </li>
+      <ChatItem
+        v-for="chat in conversationList"
+        :key="chat.id"
+        :chat
+        @delete="handleDelete"
+        @save="($event) => handleSave(chat.id.toString(), $event)"
+      />
     </ul>
   </nav>
 </template>
