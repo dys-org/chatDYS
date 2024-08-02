@@ -24,7 +24,7 @@
     "@iconify-json/majesticons": "^1.1.11",
     "@tanstack/vue-query": "^5.51.15",
     "@vueuse/core": "^10.11.0",
-    "deez-components": "^0.6.5",
+    "deez-components": "^0.6.6",
     "idb-keyval": "^6.2.1",
     "lodash.clonedeep": "^4.5.0",
     "markdown-it": "^14.1.0",
