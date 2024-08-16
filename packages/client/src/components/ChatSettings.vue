@@ -78,7 +78,7 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
           v-model="chatStore.temperature"
           label="Temperature"
           :min="0"
-          :max="2"
+          :max="chatStore.provider === 'anthropic' ? 1 : 2"
           :step="0.1"
           :disabled="shouldDisableSettings"
         />
