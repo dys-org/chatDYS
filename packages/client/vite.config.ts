@@ -1,10 +1,18 @@
-import { fileURLToPath, URL } from 'node:url';
+import { URL, fileURLToPath } from 'node:url';
 
 import vue from '@vitejs/plugin-vue';
+import autoprefixer from 'autoprefixer';
+import tailwind from 'tailwindcss';
+import twNesting from 'tailwindcss/nesting';
 import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  css: {
+    postcss: {
+      plugins: [twNesting(), tailwind(), autoprefixer()],
+    },
+  },
   plugins: [vue()],
   resolve: {
     alias: {
