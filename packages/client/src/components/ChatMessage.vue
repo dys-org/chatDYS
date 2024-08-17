@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { DAvatar, DButton } from 'deez-components';
-import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
+import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
-import { computed, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
+import { sleep } from '@/lib';
 import { useUserStore } from '@/stores/user';
 
 const props = withDefaults(
@@ -20,18 +21,22 @@ const userStore = useUserStore();
 
 const md: MarkdownIt = new MarkdownIt({
   highlight: (code, language) => {
+    const wrapStart =
+      '<pre class="hljs relative">' +
+      '<div class="code-container">' +
+      `<button type="button" class="copy-button absolute right-0 top-1 rounded px-2.5 py-1.5 leading-none text-white opacity-60 transition-opacity hover:opacity-100 dark:bg-[#011627] disabled:pointer-events-none" aria-label="Copy Code" title="Copy Code" ${props.disableCopy ? 'disabled' : ''}>` +
+      '<span class="i-majesticons-clipboard-line size-4" aria-hidden="true"></span>' +
+      '</button><code>';
+    const wrapEnd = '</code></div></pre>';
+
     if (language && hljs.getLanguage(language)) {
       try {
-        return (
-          '<pre class="hljs"><code>' +
-          hljs.highlight(code, { language, ignoreIllegals: true }).value +
-          '</code></pre>'
-        );
+        return wrapStart + hljs.highlight(code, { language, ignoreIllegals: true }).value + wrapEnd;
       } catch (err) {
         console.warn('Error highlighting code block.', err);
       }
     }
-    return '<pre class="hljs"><code>' + md.utils.escapeHtml(code) + '</code></pre>';
+    return wrapStart + md.utils.escapeHtml(code) + wrapEnd;
   },
 });
 
@@ -42,9 +47,7 @@ async function handleCopy(content: string) {
   try {
     await navigator.clipboard.writeText(content);
     isCopying.value = true;
-    setTimeout(() => {
-      isCopying.value = false;
-    }, 1500);
+    await sleep(1500);
   } catch (err) {
     console.error('Failed to copy: ', err);
   }
@@ -68,6 +71,33 @@ const imgContent = computed(() => {
   }
   return undefined;
 });
+
+async function onCodeCopyClick(button: Element) {
+  const container = button.closest('.code-container')?.querySelector('code');
+  try {
+    await navigator.clipboard.writeText(container?.textContent ?? '');
+    const icon = button.querySelector('span');
+    icon?.classList.replace('i-majesticons-clipboard-line', 'i-majesticons-clipboard-check-line');
+    icon?.classList.add('text-green-400');
+    await sleep(1500);
+    icon?.classList.replace('i-majesticons-clipboard-check-line', 'i-majesticons-clipboard-line');
+    icon?.classList.remove('text-green-400');
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+  }
+}
+
+onMounted(() => {
+  // Attach click handlers to copy buttons rendered with MarkdownIt
+  document.querySelectorAll('.copy-button').forEach((button) => {
+    button.addEventListener('click', () => onCodeCopyClick(button));
+  });
+});
+onUnmounted(() => {
+  document.querySelectorAll('.copy-button').forEach((button) => {
+    button.removeEventListener('click', () => onCodeCopyClick(button));
+  });
+});
 </script>
 
 <template>
@@ -77,7 +107,7 @@ const imgContent = computed(() => {
       props.message.role === 'assistant' && 'bg-white/5',
     ]"
   >
-    <div class="mx-auto flex w-full max-w-[72ch] gap-x-6 md:gap-x-8">
+    <div class="mx-auto flex w-full max-w-[72ch] gap-x-6 md:gap-x-7">
       <DAvatar
         v-if="userStore.data && props.message.role === 'user'"
         alt="User Avatar"
@@ -87,7 +117,7 @@ const imgContent = computed(() => {
 
       <div
         v-else-if="props.message.role === 'assistant'"
-        class="grid size-8 place-items-center rounded-full p-1 ring-1 ring-gray-600"
+        class="grid size-8 flex-shrink-0 place-items-center rounded-full p-1 ring-1 ring-gray-600"
       >
         <span class="i-majesticons-robot-line -mt-0.5 size-full" title="assistant"> </span>
       </div>
@@ -100,12 +130,13 @@ const imgContent = computed(() => {
           class="mb-2 block max-h-80 w-auto rounded-lg"
         />
         <div class="chat-message text-sm leading-7" v-html="md.render(textContent)" />
-      </div>
-      <div class="min-w-[28px]">
+
+        <!-- COPY FULL MESSAGE -->
         <DButton
           v-if="props.message.role === 'assistant' && typeof props.message.content === 'string'"
           class="-mt-1 p-1 dark:bg-transparent dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white"
           :disabled="props.disableCopy"
+          title="Copy Entire Message"
           @click="handleCopy(props.message.content ?? '')"
         >
           <span class="sr-only">{{ isCopying ? 'Copied' : 'Copy' }}</span>
@@ -137,7 +168,10 @@ const imgContent = computed(() => {
   }
 
   & .hljs {
-    @apply my-4 max-w-[70vw] overflow-auto p-3 text-xs;
+    @apply my-4 max-w-[70vw] text-xs;
+  }
+  & .code-container {
+    @apply w-full overflow-auto p-3;
   }
 }
 </style>

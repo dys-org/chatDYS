@@ -17,7 +17,6 @@ const isSidebarExpanded = useStorage('chatDYS.sidebar.isExpanded', true);
 
 function handleScroll(e: Event) {
   const target = e.target as HTMLElement;
-  console.log(target.scrollTop);
   chatAreaScroll.value = target.scrollTop;
 }
 

@@ -5,3 +5,7 @@ export function toastErrorHandler(err: any, title: string) {
   toastStore.add({ variant: 'error', title, description: err.message ?? String(err) });
   console.error(err);
 }
+
+export function sleep(ms = 0) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
