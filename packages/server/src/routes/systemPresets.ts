@@ -21,10 +21,10 @@ const systemPresets = new Hono<{
     const ps = db
       .select({ id, user_id, name, text, created_at, updated_at })
       .from(System_Presets)
-      .where(eq(System_Presets.user_id, sql.placeholder('user_id')))
+      .where(eq(System_Presets.user_id, sql.placeholder('userId')))
       .orderBy(asc(System_Presets.name))
       .prepare();
-    const data = ps.all({ user_id: user.id });
+    const data = ps.all({ userId: user.id });
     return c.json(data);
   })
   .post(

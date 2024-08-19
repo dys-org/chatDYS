@@ -2,7 +2,6 @@ import { zValidator } from '@hono/zod-validator';
 import { desc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
 import type { Session, User } from 'lucia';
-import { z } from 'zod';
 
 import { db } from '../drizzle/db.js';
 import { Conversations, insertConversationsSchema } from '../drizzle/schema.js';
@@ -22,10 +21,10 @@ const conversations = new Hono<{
     const ps = db
       .select({ id, user_id, title, model, created_at, updated_at })
       .from(Conversations)
-      .where(eq(Conversations.user_id, sql.placeholder('user_id')))
+      .where(eq(Conversations.user_id, sql.placeholder('userId')))
       .orderBy(desc(Conversations.created_at))
       .prepare();
-    const data = ps.all({ user_id: user.id });
+    const data = ps.all({ userId: user.id });
     return c.json(data);
   })
   .post(
