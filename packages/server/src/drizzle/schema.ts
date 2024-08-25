@@ -1,7 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { integer, numeric, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { z } from 'zod';
 
 export const Users = sqliteTable('Users', {
   id: text('id').primaryKey(),
@@ -15,7 +14,10 @@ export const Users = sqliteTable('Users', {
 });
 
 export type UsersInsert = typeof Users.$inferInsert;
-export const insertUsersSchema = createInsertSchema(Users);
+export const insertUsersSchema = createInsertSchema(Users).omit({
+  created_at: true,
+  updated_at: true,
+});
 export const selectUsersSchema = createSelectSchema(Users);
 
 export const Sessions = sqliteTable('Session', {
@@ -45,8 +47,10 @@ export const Conversations = sqliteTable('Conversations', {
 });
 
 export type ConversationsInsert = typeof Conversations.$inferInsert;
-export const insertConversationsSchema = createInsertSchema(Conversations, {
-  user_id: z.string().optional(),
+export const insertConversationsSchema = createInsertSchema(Conversations).omit({
+  user_id: true,
+  created_at: true,
+  updated_at: true,
 });
 export const selectConversationsSchema = createSelectSchema(Conversations);
 
@@ -62,7 +66,9 @@ export const System_Presets = sqliteTable('System_Presets', {
 });
 
 export type SystemPresetsInsert = typeof System_Presets.$inferInsert;
-export const insertSystemPresetsSchema = createInsertSchema(System_Presets, {
-  user_id: (schema) => schema.user_id.optional(),
+export const insertSystemPresetsSchema = createInsertSchema(System_Presets).omit({
+  user_id: true,
+  created_at: true,
+  updated_at: true,
 });
 export const selectSystemPresetsSchema = createSelectSchema(System_Presets);
