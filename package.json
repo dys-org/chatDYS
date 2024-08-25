@@ -4,9 +4,9 @@
   "private": true,
   "packageManager": "pnpm@9.5.0",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.24.3",
+    "@anthropic-ai/sdk": "^0.27.0",
     "hono": "4.4.3",
-    "openai": "^4.53.2"
+    "openai": "^4.56.0"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.5.1",
