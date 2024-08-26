@@ -97,13 +97,13 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
       </div>
 
       <fieldset class="relative" :disabled="shouldDisableSettings">
-        <div class="mb-2 flex items-center justify-between">
+        <div class="w mb-2 flex items-center justify-between">
           <legend class="text-sm font-semibold">System Message</legend>
           <DDropdown
             :options="options"
             label="Preset"
             button-class="px-2 py-1 text-sm"
-            menu-class="w-[280px]"
+            menu-class="w-48"
           />
         </div>
         <DTextarea
