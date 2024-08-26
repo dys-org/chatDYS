@@ -127,7 +127,7 @@ function handleDeletePreset() {
         <DSelect
           id="preset"
           v-model="selectedPreset"
-          size="5"
+          :size="5"
           label="Preset Messages"
           class="px-3 py-2"
         >

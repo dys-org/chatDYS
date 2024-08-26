@@ -15,6 +15,7 @@ const tokenize = new Hono().post(
       // TiktokenModel has a lot more options, but we only use these atm
       model: z.union([
         z.literal('gpt-4o'),
+        // z.literal('gpt-4o-mini'),
         z.literal('gpt-4-turbo'),
         z.literal('gpt-3.5-turbo'),
         z.literal('gpt-4'),

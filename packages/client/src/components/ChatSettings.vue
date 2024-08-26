@@ -103,7 +103,7 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
             :options="options"
             label="Preset"
             button-class="px-2 py-1 text-sm"
-            menu-class="mt-1 -right-1"
+            menu-class="w-[280px]"
           />
         </div>
         <DTextarea

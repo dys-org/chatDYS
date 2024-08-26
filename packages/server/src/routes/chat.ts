@@ -18,6 +18,7 @@ const chatParamsSchema = z.object({
   chatCompletionParams: z.object({
     model: z.union([
       z.literal('gpt-4o'),
+      // z.literal('gpt-4o-mini'),
       z.literal('gpt-4-turbo'),
       z.literal('gpt-3.5-turbo'),
       z.literal('gpt-4'),
