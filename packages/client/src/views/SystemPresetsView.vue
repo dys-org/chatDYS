@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { DButton, DInput, DLink, DModal, DSelect, DTextarea } from 'deez-components';
+import { DButton, DDialog, DInput, DLink, DSelect, DTextarea } from 'deez-components';
 import { InferRequestType, InferResponseType } from 'hono';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -176,7 +176,7 @@ function handleDeletePreset() {
       </div>
     </form>
   </OneColumn>
-  <DModal
+  <DDialog
     v-model:open="isConfirmOpen"
     danger
     title="Delete Preset"
@@ -190,5 +190,5 @@ function handleDeletePreset() {
         >? This action cannot be undone.
       </p>
     </template>
-  </DModal>
+  </DDialog>
 </template>

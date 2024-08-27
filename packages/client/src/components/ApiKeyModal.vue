@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DInput, DModal } from 'deez-components';
+import { DDialog, DInput } from 'deez-components';
 import { onMounted, ref } from 'vue';
 
 import { useApiKeyStore } from '@/stores/apiKey';
@@ -50,7 +50,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <DModal
+  <DDialog
     v-model:open="chatStore.isApiKeyModalOpen"
     title="Please enter your key(s)."
     confirm-text="Save"
@@ -101,5 +101,5 @@ onMounted(async () => {
         </p>
       </div>
     </template>
-  </DModal>
+  </DDialog>
 </template>
