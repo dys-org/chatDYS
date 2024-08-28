@@ -7,7 +7,7 @@ export default {
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
-    './node_modules/deez-components/**/*.js',
+    './node_modules/deez-components/dist/deez-components.js',
   ],
   darkMode: 'class',
   theme: {

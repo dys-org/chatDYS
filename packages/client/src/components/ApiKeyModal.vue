@@ -56,6 +56,9 @@ onMounted(async () => {
     confirm-text="Save"
     confirm-form-attr="apiKeyForm"
   >
+    <template #trigger>
+      <slot />
+    </template>
     <template #content>
       <div class="grid gap-3">
         <p class="text-sm leading-normal text-white/60">

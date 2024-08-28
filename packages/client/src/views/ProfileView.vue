@@ -3,13 +3,11 @@ import { DButton, DSpinner } from 'deez-components';
 
 import ApiKeyModal from '@/components/ApiKeyModal.vue';
 import OneColumn from '@/layouts/OneColumn.vue';
-import { useChatStore } from '@/stores/chat';
 import { useUserStore } from '@/stores/user';
 
 const isDev = import.meta.env.DEV;
 
 const userStore = useUserStore();
-const chatStore = useChatStore();
 </script>
 
 <template>
@@ -26,8 +24,10 @@ const chatStore = useChatStore();
       />
       <h2 class="mt-2 text-3xl">{{ userStore.data.name }}</h2>
       <h3 class="text-lg text-white/60">{{ userStore.data.email }}</h3>
-      <div>
-        <DButton class="mt-6" @click="chatStore.isApiKeyModalOpen = true"> Change API Key</DButton>
+      <div class="mt-6">
+        <ApiKeyModal>
+          <DButton>Change API Key</DButton>
+        </ApiKeyModal>
       </div>
       <dl v-if="isDev">
         <dt class="mt-6">User Object</dt>
@@ -39,7 +39,4 @@ const chatStore = useChatStore();
       </dl>
     </div>
   </OneColumn>
-
-  <!-- MODAL -->
-  <ApiKeyModal />
 </template>
