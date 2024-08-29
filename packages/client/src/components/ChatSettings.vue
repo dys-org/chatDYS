@@ -104,6 +104,7 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
             label="Preset"
             button-class="px-2 py-1 text-sm"
             menu-class="w-48"
+            align="end"
           />
         </div>
         <DTextarea

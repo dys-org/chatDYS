@@ -28,6 +28,7 @@ const userDropdownOptions = [
     label="User"
     :options="userDropdownOptions"
     button-class="flex text-gray-400 p-0 dark:bg-transparent dark:hover:bg-transparent"
+    align="end"
   >
     <DAvatar :image="userStore.data.avatar_url ?? ''" class="size-8 max-w-fit" />
   </DDropdown>
