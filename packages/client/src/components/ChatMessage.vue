@@ -50,6 +50,8 @@ async function handleCopy(content: string) {
     await sleep(1500);
   } catch (err) {
     console.error('Failed to copy: ', err);
+  } finally {
+    isCopying.value = false;
   }
 }
 
