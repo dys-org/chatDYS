@@ -60,9 +60,6 @@ importers:
       deez-components:
         specifier: 0.7.0-beta.5
         version: 0.7.0-beta.5(tailwindcss@3.4.10)(vue-router@4.4.3(vue@3.4.38(typescript@5.4.5)))(vue@3.4.38(typescript@5.4.5))
-      highlightjs-vue:
-        specifier: ^1.0.0
-        version: 1.0.0
       idb-keyval:
         specifier: ^6.2.1
         version: 6.2.1
@@ -121,6 +118,9 @@ importers:
       eslint-plugin-vue:
         specifier: ^9.27.0
         version: 9.27.0(eslint@8.57.0)
+      highlight.js:
+        specifier: ^11.10.0
+        version: 11.10.0
       npm-run-all2:
         specifier: ^6.2.2
         version: 6.2.2
@@ -250,11 +250,6 @@ packages:
     resolution: {integrity: sha512-EStJpq4OuY8xYfhGVXngigBJRWxftKX9ksiGDnmlY3o7B/V7KIAc9X4oiK87uPJSc/vs5L869bem5fhZa8caZw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/parser@7.25.0':
-    resolution: {integrity: sha512-CzdIU9jdP0dg7HdyB+bHvDJGagUv+qtzZt5rYCWwW6tITNqV9odjp6Qu41gkG0ca5UfdDUWrKkiAnHHdGRnOrA==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
   '@babel/parser@7.25.4':
     resolution: {integrity: sha512-nq+eWrOgdtu3jG5Os4TQP3x3cLA8hR8TvJNjD8vnPa20WGycimcparWnLK4jJhElTK6SDyuJo1weMKO/5LpmLA==}
     engines: {node: '>=6.0.0'}
@@ -270,10 +265,6 @@ packages:
 
   '@babel/types@7.17.0':
     resolution: {integrity: sha512-TmKSNO4D5rzhL5bjWFcVHHLETzfQ/AmbKpKPOSjlP0WoHZ6L911fgoOKY4Alp/emzG4cHJdyN49zpgkbXFEHHw==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.25.0':
-    resolution: {integrity: sha512-LcnxQSsd9aXOIgmmSpvZ/1yo46ra2ESYyqLcryaBZOghxy5qqOBjvCWP5JfkI8yl9rlxRgdLTTMCQQRcN2hdCg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.25.4':
@@ -2123,8 +2114,9 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  highlightjs-vue@1.0.0:
-    resolution: {integrity: sha512-PDEfEF102G23vHmPhLyPboFCD+BkMGu+GuJe2d9/eH4FsCwvgBpnc9n0pGE+ffKdph38s6foEZiEjdgHdzp+IA==}
+  highlight.js@11.10.0:
+    resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
+    engines: {node: '>=12.0.0'}
 
   hono@4.4.3:
     resolution: {integrity: sha512-G7rTruKzrHXPz1KB4B50deKydPA9+aeei+WC1hikP0abN9N+a6yORuweageaqWocYfYNkpoqA5ezGV2mzQasvw==}
@@ -3055,33 +3047,33 @@ snapshots:
 
   '@babel/generator@7.17.7':
     dependencies:
-      '@babel/types': 7.17.0
+      '@babel/types': 7.25.4
       jsesc: 2.5.2
       source-map: 0.5.7
 
   '@babel/generator@7.25.0':
     dependencies:
-      '@babel/types': 7.25.0
+      '@babel/types': 7.25.4
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
       jsesc: 2.5.2
 
   '@babel/helper-environment-visitor@7.24.7':
     dependencies:
-      '@babel/types': 7.25.0
+      '@babel/types': 7.25.4
 
   '@babel/helper-function-name@7.24.7':
     dependencies:
       '@babel/template': 7.25.0
-      '@babel/types': 7.25.0
+      '@babel/types': 7.25.4
 
   '@babel/helper-hoist-variables@7.24.7':
     dependencies:
-      '@babel/types': 7.25.0
+      '@babel/types': 7.25.4
 
   '@babel/helper-split-export-declaration@7.24.7':
     dependencies:
-      '@babel/types': 7.25.0
+      '@babel/types': 7.25.4
 
   '@babel/helper-string-parser@7.24.8': {}
 
@@ -3094,10 +3086,6 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.0.1
 
-  '@babel/parser@7.25.0':
-    dependencies:
-      '@babel/types': 7.17.0
-
   '@babel/parser@7.25.4':
     dependencies:
       '@babel/types': 7.25.4
@@ -3105,8 +3093,8 @@ snapshots:
   '@babel/template@7.25.0':
     dependencies:
       '@babel/code-frame': 7.24.7
-      '@babel/parser': 7.25.0
-      '@babel/types': 7.25.0
+      '@babel/parser': 7.25.4
+      '@babel/types': 7.25.4
 
   '@babel/traverse@7.23.2':
     dependencies:
@@ -3116,8 +3104,8 @@ snapshots:
       '@babel/helper-function-name': 7.24.7
       '@babel/helper-hoist-variables': 7.24.7
       '@babel/helper-split-export-declaration': 7.24.7
-      '@babel/parser': 7.25.0
-      '@babel/types': 7.25.0
+      '@babel/parser': 7.25.4
+      '@babel/types': 7.25.4
       debug: 4.3.6
       globals: 11.12.0
     transitivePeerDependencies:
@@ -3125,12 +3113,6 @@ snapshots:
 
   '@babel/types@7.17.0':
     dependencies:
-      '@babel/helper-validator-identifier': 7.24.7
-      to-fast-properties: 2.0.0
-
-  '@babel/types@7.25.0':
-    dependencies:
-      '@babel/helper-string-parser': 7.24.8
       '@babel/helper-validator-identifier': 7.24.7
       to-fast-properties: 2.0.0
 
@@ -3816,7 +3798,7 @@ snapshots:
   '@trivago/prettier-plugin-sort-imports@4.3.0(@vue/compiler-sfc@3.4.38)(prettier@3.3.3)':
     dependencies:
       '@babel/generator': 7.17.7
-      '@babel/parser': 7.25.0
+      '@babel/parser': 7.25.4
       '@babel/traverse': 7.23.2
       '@babel/types': 7.17.0
       javascript-natural-sort: 0.7.1
@@ -4749,7 +4731,7 @@ snapshots:
 
   he@1.2.0: {}
 
-  highlightjs-vue@1.0.0: {}
+  highlight.js@11.10.0: {}
 
   hono@4.4.3: {}
 

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { DAvatar, DButton } from 'deez-components';
-import hljsDefineVue from 'highlightjs-vue';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { computed, ref } from 'vue';
 
 import { sleep } from '@/lib';
+import { hljsDefineVue } from '@/lib/highlightjs-vue';
 import { useUserStore } from '@/stores/user';
 
 const props = withDefaults(
@@ -20,7 +20,8 @@ const props = withDefaults(
 
 const userStore = useUserStore();
 
-hljsDefineVue(hljs);
+// add vue language support to highlight.js
+hljs.registerLanguage('vue', hljsDefineVue);
 
 const md: MarkdownIt = new MarkdownIt({
   highlight: (code, language) => {
