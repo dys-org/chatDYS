@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { DAvatar, DButton } from 'deez-components';
+import hljsDefineVue from 'highlightjs-vue';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { sleep } from '@/lib';
 import { useUserStore } from '@/stores/user';
@@ -18,6 +19,8 @@ const props = withDefaults(
 );
 
 const userStore = useUserStore();
+
+hljsDefineVue(hljs);
 
 const md: MarkdownIt = new MarkdownIt({
   highlight: (code, language) => {
@@ -89,17 +92,37 @@ async function onCodeCopyClick(button: Element) {
   }
 }
 
-onMounted(() => {
-  // Attach click handlers to copy buttons rendered with MarkdownIt
-  document.querySelectorAll('.copy-button').forEach((button) => {
-    button.addEventListener('click', () => onCodeCopyClick(button));
+function attachHandlers(el: HTMLElement) {
+  el.querySelectorAll('.copy-button').forEach((button) => {
+    const handler = () => onCodeCopyClick(button);
+    button.addEventListener('click', handler);
+    // Store the handler on the button element
+    (button as any)._copyHandler = handler;
   });
-});
-onUnmounted(() => {
-  document.querySelectorAll('.copy-button').forEach((button) => {
-    button.removeEventListener('click', () => onCodeCopyClick(button));
+}
+
+function removeHandlers(el: HTMLElement) {
+  el.querySelectorAll('.copy-button').forEach((button) => {
+    if ((button as any)._copyHandler) {
+      button.removeEventListener('click', (button as any)._copyHandler);
+      delete (button as any)._copyHandler;
+    }
   });
-});
+}
+
+// Custom directive to attach click handlers
+const vAttachCopyHandlers = {
+  mounted: (el: HTMLElement) => {
+    attachHandlers(el);
+  },
+  updated: (el: HTMLElement) => {
+    removeHandlers(el);
+    attachHandlers(el);
+  },
+  unmounted: (el: HTMLElement) => {
+    removeHandlers(el);
+  },
+};
 </script>
 
 <template>
@@ -131,7 +154,12 @@ onUnmounted(() => {
           alt="Uploaded Image"
           class="mb-2 block max-h-80 w-auto rounded-lg"
         />
-        <div class="chat-message text-sm leading-7" v-html="md.render(textContent)" />
+        <div
+          v-attach-copy-handlers
+          class="chat-message text-sm leading-7"
+          aria-live="polite"
+          v-html="md.render(textContent)"
+        />
 
         <!-- COPY FULL MESSAGE -->
         <DButton

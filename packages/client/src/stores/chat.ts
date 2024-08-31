@@ -42,11 +42,9 @@ export const useChatStore = defineStore('chat', () => {
   const loading = ref(false);
   const maxTokens = ref(1024);
   const messages = ref<(ChatCompletionMessageParam | MessageParam)[]>([]);
-  // const messages = ref<MessageParam[]>([]);
   const model = ref<OpenAiModel | AnthropicModel>('claude-3-5-sonnet-20240620');
   const systemMessage = ref('');
   const temperature = ref(0);
-  const textStream = ref('');
   const userMessage = ref('');
   const base64ImgUpload = ref<{ data: string; type?: ImageBlockParam.Source['media_type'] }>();
   const isApiKeyModalOpen = ref(false);
@@ -76,6 +74,7 @@ export const useChatStore = defineStore('chat', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chatCompletionParams, apiKey }),
     });
+
     if (!res.ok) {
       const error = await res.text();
       return Promise.reject(new Error(error));
@@ -83,6 +82,9 @@ export const useChatStore = defineStore('chat', () => {
     if (!(res.body instanceof ReadableStream)) {
       return Promise.reject(new Error('Response is not a stream'));
     }
+
+    const asstMsgIdx = messages.value.length;
+    messages.value.push({ content: '', role: 'assistant' });
     loading.value = false;
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -90,13 +92,9 @@ export const useChatStore = defineStore('chat', () => {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-
       const chunk = decoder.decode(value);
-      // console.log(chunk);
-      textStream.value += chunk;
+      messages.value[asstMsgIdx].content += chunk;
     }
-    messages.value.push({ role: 'assistant', content: textStream.value });
-    textStream.value = '';
   }
   async function sendOpenAiPrompt() {
     // add the first user message
@@ -206,7 +204,6 @@ export const useChatStore = defineStore('chat', () => {
     sendAnthropicPrompt,
     systemMessage,
     temperature,
-    textStream,
     tokenLength, // from useTokenize
     userMessage,
     base64ImgUpload,

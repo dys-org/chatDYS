@@ -70,13 +70,9 @@ async function fetchChat(paramsId: string | string[]) {
 }
 
 watch(
-  () => chatStore.textStream,
-  () => scrollToBottom(),
-);
-
-watch(
   () => chatStore.messages,
   () => scrollToBottom(),
+  { deep: true },
 );
 
 chatStore.$subscribe((mutation, state) => {
@@ -121,12 +117,6 @@ onMounted(() => {
           <DSpinner />
           <div v-if="chatStore.tokenLength" class="text-xs">{{ chatStore.tokenLength }} tokens</div>
         </div>
-        <!-- STREAM -->
-        <ChatMessage
-          v-if="chatStore.textStream"
-          :message="{ role: 'assistant', content: chatStore.textStream }"
-          disable-copy
-        />
       </div>
       <!-- INPUT -->
       <div class="absolute bottom-0 flex w-full justify-center">
