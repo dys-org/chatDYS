@@ -14,4 +14,4 @@ services:
       - '6969:6969'
     volumes:
       - './packages/server/db-data:/app/db-data'
-    command: 'node dist/index.js'
+    command: 'pm2-runtime dist/index.js'
