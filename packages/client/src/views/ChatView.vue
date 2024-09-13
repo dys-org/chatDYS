@@ -123,7 +123,7 @@ onMounted(() => {
         <div class="w-full bg-gradient-to-t from-gray-800 from-60% px-4 pb-8 pt-6">
           <UserMessageInput
             v-model="chatStore.userMessage"
-            v-model:base64Img="chatStore.base64ImgUpload"
+            v-model:base64-img="chatStore.base64ImgUpload"
             @send="handleSend"
           />
         </div>

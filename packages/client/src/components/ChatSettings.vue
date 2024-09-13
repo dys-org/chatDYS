@@ -55,7 +55,7 @@ const isExpanded = useStorage('chatDYS.sidebar.settings.isExpanded', true);
 </script>
 
 <template>
-  <DCollapse v-model:defaultOpen="isExpanded" button-text="Settings">
+  <DCollapse v-model:default-open="isExpanded" button-text="Settings">
     <div :class="['flex flex-col gap-8 px-4 pb-6 pt-3', shouldDisableSettings && 'opacity-50']">
       <DRadioGroup
         v-model="chatStore.provider"
