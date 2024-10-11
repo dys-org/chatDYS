@@ -58,8 +58,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(vue@3.5.11(typescript@5.6.2))
       deez-components:
-        specifier: 0.7.2
-        version: 0.7.2(tailwindcss@3.4.13)(vue-router@4.4.5(vue@3.5.11(typescript@5.6.2)))(vue@3.5.11(typescript@5.6.2))
+        specifier: 0.7.0-beta.5
+        version: 0.7.0-beta.5(tailwindcss@3.4.13)(vue-router@4.4.5(vue@3.5.11(typescript@5.6.2)))(vue@3.5.11(typescript@5.6.2))
       idb-keyval:
         specifier: ^6.2.1
         version: 6.2.1
@@ -1794,13 +1794,13 @@ packages:
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
-  deez-components@0.7.2:
-    resolution: {integrity: sha512-FleUAfyz+PGT8eiRVKakbzsAB6OzjHqRPef6/eEYuHt920mu4Z5GCc+jwWmgl+5HQTZw1uQFqoARKymtrhkXWw==}
+  deez-components@0.7.0-beta.5:
+    resolution: {integrity: sha512-poUAHMxDrLgPJlXiPyU/5UiGAzyDDggaKMfHE4cD1KxXGks9KiRoTZiQUmIZeTRoDL5B1cyH2fN5UvAhhg2DfA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      tailwindcss: ^3.4.13
-      vue: ~3.5.11
-      vue-router: ^4.4.5
+      tailwindcss: ^3.4.10
+      vue: ~3.4.38
+      vue-router: ^4.4.3
 
   defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
@@ -4494,7 +4494,7 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  deez-components@0.7.2(tailwindcss@3.4.13)(vue-router@4.4.5(vue@3.5.11(typescript@5.6.2)))(vue@3.5.11(typescript@5.6.2)):
+  deez-components@0.7.0-beta.5(tailwindcss@3.4.13)(vue-router@4.4.5(vue@3.5.11(typescript@5.6.2)))(vue@3.5.11(typescript@5.6.2)):
     dependencies:
       '@egoist/tailwindcss-icons': 1.8.1(tailwindcss@3.4.13)
       '@headlessui/vue': 1.7.23(vue@3.5.11(typescript@5.6.2))
