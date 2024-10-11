@@ -8,7 +8,7 @@ import { formatZodError } from '../utils.js';
 
 export const contentSchema = z.union([
   z.object({
-    type: z.literal('image_url'),
+    type: z.literal('image'),
     source: z.object({
       data: z.string(),
       media_type: z.union([
@@ -52,7 +52,6 @@ const chat = new Hono().post(
     const { chatCompletionParams, apiKey } = c.req.valid('json');
 
     const anthropic = new Anthropic({ apiKey });
-    // @ts-expect-error MessageParam has to many options
     const stream = await anthropic.messages.create({
       ...chatCompletionParams,
       stream: true,

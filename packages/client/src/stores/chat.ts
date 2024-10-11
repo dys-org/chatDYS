@@ -141,9 +141,9 @@ export const useChatStore = defineStore('chat', () => {
             {
               type: 'image',
               source: {
-                data: base64ImgUpload.value?.data ?? '',
-                media_type: base64ImgUpload.value?.type ?? 'image/jpeg',
                 type: 'base64',
+                media_type: base64ImgUpload.value?.type ?? 'image/jpeg',
+                data: base64ImgUpload.value?.data.split(',')[1] ?? '',
               },
             },
             { type: 'text', text: userMessage.value },
@@ -162,7 +162,8 @@ export const useChatStore = defineStore('chat', () => {
       max_tokens: maxTokens.value,
       temperature: temperature.value,
       system: systemMessage.value,
-      messages: [...(messages.value as MessageParam[])],
+      // @ts-expect-error - it's yelling about possible "system" type messages
+      messages: messages.value,
     };
     await streamResponse(params);
     loading.value = false;

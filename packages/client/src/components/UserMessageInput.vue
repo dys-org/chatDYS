@@ -29,7 +29,7 @@ function handleImageSelected(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (file === undefined) return;
   const fileReader = new FileReader();
-  // Check if the file size is under 5MB
+  // Check if the file size is under 2MB
   const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
   if (file.size > maxSizeInBytes) {
     toastStore.add({
@@ -40,8 +40,11 @@ function handleImageSelected(e: Event) {
     return;
   }
   fileReader.onload = (e) => {
-    base64Img.value.data = e.target?.result as string;
-    base64Img.value.type = file.type as ImageBlockParam.Source['media_type'];
+    // console.log('fileReader.onload', e.target?.result);
+    base64Img.value = {
+      data: e.target?.result as string,
+      type: file.type as ImageBlockParam.Source['media_type'],
+    };
   };
   fileReader.readAsDataURL(file);
 }

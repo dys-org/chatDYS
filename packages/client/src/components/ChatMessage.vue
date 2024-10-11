@@ -72,7 +72,9 @@ const textContent = computed(() => {
 const imgContent = computed(() => {
   if (Array.isArray(props.message.content)) {
     for (const part of props.message.content) {
+      // OpenAI returns image_url, Anthropic returns image
       if (part.type === 'image_url') return part.image_url.url;
+      if (part.type === 'image') return `data:${part.source.media_type};base64,${part.source.data}`;
     }
   }
   return undefined;
