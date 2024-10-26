@@ -1,5 +1,5 @@
 {
-  "include": ["env.d.ts", "src/**/*"],
+  "include": ["env.d.ts", "server/**/*"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -8,8 +8,7 @@
     "types": ["node"],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "outDir": "./dist",
+    "outDir": "./dist/server",
     "skipLibCheck": true
   },
-  "references": [{ "path": "./tsconfig.node.json" }]
 }

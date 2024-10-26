@@ -1,8 +1,8 @@
 <p align="center">
   <a href="https://chatdys.soards.dev" target="_blank">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./packages/client/src/assets/img/chat-dys.svg">
-      <source media="(prefers-color-scheme: light)" srcset="./packages/client/src/assets/img/chat-dys-light.svg">
+      <source media="(prefers-color-scheme: dark)" srcset="./src/assets/img/chat-dys.svg">
+      <source media="(prefers-color-scheme: light)" srcset="./src/assets/img/chat-dys-light.svg">
       <img alt="chatDYS logo" width="350" style="max-width: 100%;">
     </picture>
   </a>

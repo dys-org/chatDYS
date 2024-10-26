@@ -16,10 +16,4 @@ module.exports = {
     'vue/no-undef-components': ['error', { ignorePatterns: [] }],
     'vue/v-on-event-hyphenation': 'off',
   },
-  overrides: [
-    {
-      files: ['e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'],
-      extends: ['plugin:playwright/recommended'],
-    },
-  ],
 };

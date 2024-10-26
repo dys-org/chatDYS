@@ -1,5 +1,5 @@
 {
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["src/**/*", "src/**/*.vue"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -17,6 +17,5 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
-  "references": [{ "path": "./tsconfig.node.json" }]
+  }
 }
