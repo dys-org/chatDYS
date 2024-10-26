@@ -75,7 +75,7 @@ watch(
   { deep: true },
 );
 
-chatStore.$subscribe((mutation, state) => {
+chatStore.$subscribe((_, state) => {
   // persist the whole state to the indexedDB whenever it changes
   setIDB(IDB_CHAT, JSON.stringify(state)).catch(console.error);
 });
@@ -85,7 +85,7 @@ onBeforeMount(async () => {
   // use the persisted state if available and the id matches the route params
   const persistedState = await getIDB(IDB_CHAT);
   if (persistedState) {
-    const state = JSON.parse(persistedState);
+    const state = JSON.parse(persistedState) as any;
     if (state.id !== route.params.id) return;
     chatStore.$patch(state);
     return;

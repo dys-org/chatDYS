@@ -3,19 +3,19 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install pm2 -g
+COPY . /app
 WORKDIR /app
 
+FROM base AS prod-deps
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+
 FROM base AS build
-COPY . /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-ENV NODE_ENV=production
-RUN pnpm run -r build
-RUN pnpm deploy --filter=server --prod /app-server
-RUN mkdir -p /app-server/db-data
+RUN pnpm run build
 
-FROM nginx:1.26-alpine-slim AS client
-COPY --from=build /app/packages/client/dist /usr/share/nginx/html
-COPY --from=build /app/packages/client/nginx.conf /etc/nginx/conf.d/default.conf
-
-FROM base AS server
-COPY --from=build /app-server /app
+FROM base
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=build /app/dist /app/dist
+VOLUME /app/db-data
+EXPOSE 6969
+CMD ["pm2-runtime", "dist/server/index.js"]

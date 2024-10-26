@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { csrf } from 'hono/csrf';
@@ -63,6 +64,9 @@ const app = new Hono<{
     return c.text(err.message, 500);
   });
 
+// Serve static files from the 'dist' directory
+app.use('/*', serveStatic({ root: './dist/client' }));
+
 const api = new Hono()
   .route('/chat', chat)
   .route('/claude', claude)
@@ -72,6 +76,9 @@ const api = new Hono()
   .route('/users', users);
 
 export const routes = app.route('/auth', auth).route('/api', api);
+
+// Catch-all route for client-side routing
+app.get('*', (c) => c.html('./dist/client/index.html'));
 
 const port = 6969;
 console.log(`Server is running on port ${port}`);

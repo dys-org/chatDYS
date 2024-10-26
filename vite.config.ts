@@ -23,6 +23,9 @@ export default defineConfig({
     // enable devtools in prod https://github.com/vuejs/core/tree/main/packages/vue#bundler-build-feature-flags
     __VUE_PROD_DEVTOOLS__: true,
   },
+  build: {
+    outDir: './dist/client',
+  },
   server: {
     proxy: {
       '/api': 'http://localhost:6969',

@@ -16,6 +16,8 @@ import { client } from '@/lib/apiClient';
 
 import { useApiKeyStore } from './apiKey';
 
+type MessagesList = (ChatCompletionMessageParam | MessageParam)[];
+
 export const OPENAI_MODELS = [
   'gpt-4o',
   'gpt-4o-mini',
@@ -43,7 +45,7 @@ export const useChatStore = defineStore('chat', () => {
 
   const loading = ref(false);
   const maxTokens = ref(1024);
-  const messages = ref<(ChatCompletionMessageParam | MessageParam)[]>([]);
+  const messages = ref<MessagesList>([]);
   const model = ref<OpenAiModel | AnthropicModel>('claude-3-5-sonnet-20240620');
   const systemMessage = ref('');
   const temperature = ref(0);
@@ -175,7 +177,7 @@ export const useChatStore = defineStore('chat', () => {
     const convo = await res.json();
     // TODO can i validate the JSON before parsing?
     try {
-      if (convo.messages) messages.value = JSON.parse(convo.messages);
+      if (convo.messages) messages.value = JSON.parse(convo.messages) as MessagesList;
     } catch (err) {
       console.error(err);
     }

@@ -2,7 +2,7 @@ import { hc } from 'hono/client';
 
 import { useUserStore } from '@/stores/user';
 
-import type { AppType } from '../../packages/server/src';
+import type { AppType } from '../../server';
 import { HTTPError } from './exceptions';
 
 async function myFetch(input: string | URL | Request, init?: RequestInit) {
