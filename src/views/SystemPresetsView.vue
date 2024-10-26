@@ -115,7 +115,7 @@ function handleDeletePreset() {
   <OneColumn>
     <DLink
       to=""
-      class="dark:text-primary-500 dark:hover:text-primary-400 mb-2 mt-12 transition-colors hover:underline focus:underline"
+      class="mb-2 mt-12 transition-colors hover:underline focus:underline dark:text-primary-500 dark:hover:text-primary-400"
       @click="router.go(-1)"
     >
       <span class="i-majesticons-chevron-left -ml-1 size-5" aria-hidden="true"></span>

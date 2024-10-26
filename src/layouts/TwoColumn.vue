@@ -39,7 +39,7 @@ function backToTop() {
         <slot name="main" />
         <div class="absolute right-0 top-0 flex justify-center pt-3.5">
           <DButton
-            class="hidden rounded-r-none p-1.5 lg:block dark:bg-gray-700 hover:dark:bg-gray-600"
+            class="hidden rounded-r-none p-1.5 dark:bg-gray-700 hover:dark:bg-gray-600 lg:block"
             @click="isSidebarExpanded = !isSidebarExpanded"
           >
             <span class="sr-only">{{ isSidebarExpanded ? 'Collapse' : 'Expand' }} Settings</span>
@@ -52,7 +52,7 @@ function backToTop() {
             ></span>
           </DButton>
           <DButton
-            class="rounded-r-none p-1.5 lg:hidden dark:bg-gray-700 hover:dark:bg-gray-600"
+            class="rounded-r-none p-1.5 dark:bg-gray-700 hover:dark:bg-gray-600 lg:hidden"
             @click="sidebarOpen = true"
           >
             <span class="sr-only">Open sidebar</span>
@@ -63,7 +63,7 @@ function backToTop() {
 
       <!-- SCROLL TO TOP BUTTON -->
       <DButton
-        class="dark:hover:bg-primary-500 absolute bottom-36 end-6 size-11 justify-center rounded-full p-0.5 shadow-lg transition-all duration-300 ease-in-out active:shadow-xl"
+        class="absolute bottom-36 end-6 size-11 justify-center rounded-full p-0.5 shadow-lg transition-all duration-300 ease-in-out active:shadow-xl dark:hover:bg-primary-500"
         :class="[chatAreaScroll < 20 ? 'invisible opacity-0' : 'visible']"
         @click="backToTop"
       >
@@ -130,7 +130,7 @@ function backToTop() {
               <div class="absolute right-full top-0 flex w-16 justify-center pt-5">
                 <button
                   type="button"
-                  class="focus-visible:outline-primary-500 -m-2.5 rounded p-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  class="-m-2.5 rounded p-2.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500"
                   @click="sidebarOpen = false"
                 >
                   <span class="sr-only">Close sidebar</span>

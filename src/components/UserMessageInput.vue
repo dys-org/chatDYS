@@ -72,7 +72,7 @@ function handleImageSelected(e: Event) {
         <div class="absolute left-2 top-2">
           <div v-if="base64Img.data" class="group relative z-10 h-14 w-14">
             <DButton
-              class="hover:dark:bg-primary-500 absolute -right-1.5 -top-1.5 rounded-full p-0.5 opacity-0 focus:opacity-100 group-hover:opacity-100 dark:bg-gray-600"
+              class="absolute -right-1.5 -top-1.5 rounded-full p-0.5 opacity-0 focus:opacity-100 group-hover:opacity-100 dark:bg-gray-600 hover:dark:bg-primary-500"
               @click="base64Img = { data: '' }"
             >
               <span class="sr-only">Delete Image</span>
@@ -96,7 +96,7 @@ function handleImageSelected(e: Event) {
           @change="handleImageSelected"
         />
         <DButton
-          class="hover:dark:bg-primary-500 absolute bottom-1 left-1 z-10 p-1 dark:bg-transparent"
+          class="absolute bottom-1 left-1 z-10 p-1 dark:bg-transparent hover:dark:bg-primary-500"
           @click="onUploadImgClick"
         >
           <span id="uploadImgLabel" class="sr-only">Upload Image</span>
@@ -105,7 +105,7 @@ function handleImageSelected(e: Event) {
       </template>
       <template #after>
         <DButton
-          class="hover:dark:bg-primary-500 absolute bottom-1 right-1 p-1 dark:bg-transparent"
+          class="absolute bottom-1 right-1 p-1 dark:bg-transparent hover:dark:bg-primary-500"
           @click="emit('send')"
         >
           <span class="sr-only">Send</span>

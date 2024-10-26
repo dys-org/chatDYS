@@ -35,7 +35,7 @@ const userDropdownOptions = [
   <DLink
     v-else
     to="/login"
-    class="text-primary-400 rounded px-3 py-1.5 text-sm font-semibold transition-colors hover:bg-white/5 hover:text-white"
+    class="rounded px-3 py-1.5 text-sm font-semibold text-primary-400 transition-colors hover:bg-white/5 hover:text-white"
     active-class="text-white font-bold"
   >
     Login <span aria-hidden="true" class="i-majesticons-login-line text-lg">→</span>

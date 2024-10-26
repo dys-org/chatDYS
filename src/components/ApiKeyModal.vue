@@ -69,7 +69,7 @@ onMounted(async () => {
           <DInput id="openaiApiKey" v-model="openaiApiKeyInput" label="OpenAI API Key" />
           <DInput id="anthropicApiKey" v-model="anthropicApiKeyInput" label="Anthropic API Key" />
           <!-- ERROR -->
-          <div v-if="errorText" class="bg-danger-400/10 border-l-4 border-red-400 p-4">
+          <div v-if="errorText" class="border-l-4 border-red-400 bg-danger-400/10 p-4">
             <div class="flex">
               <div class="flex-shrink-0">
                 <span
@@ -78,7 +78,7 @@ onMounted(async () => {
                 />
               </div>
               <div class="ml-3">
-                <p class="text-danger-200 text-sm">{{ errorText }}</p>
+                <p class="text-sm text-danger-200">{{ errorText }}</p>
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@ onMounted(async () => {
             href="https://platform.openai.com/docs/quickstart?context=node"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-primary-400 font-bold hover:underline"
+            class="font-bold text-primary-400 hover:underline"
           >
             OpenAI
           </a>
@@ -98,7 +98,7 @@ onMounted(async () => {
             href="https://console.anthropic.com/settings/keys"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-primary-400 font-bold hover:underline"
+            class="font-bold text-primary-400 hover:underline"
             >Anthropic</a
           >.
         </p>

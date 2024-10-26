@@ -72,7 +72,7 @@ function onDelete() {
 <template>
   <li class="group relative -mx-2">
     <DLink
-      class="focus-visible:outline-primary-500 flex rounded px-2 py-1 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 dark:bg-transparent dark:group-hover:bg-white/5"
+      class="flex rounded px-2 py-1 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 dark:bg-transparent dark:group-hover:bg-white/5"
       :to="{ name: 'chat', params: { id: props.chat.id } }"
       :title="props.chat.title"
       active-class="font-bold dark:bg-white/5"
