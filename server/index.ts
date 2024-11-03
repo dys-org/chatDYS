@@ -76,11 +76,8 @@ export const routes = app.route('/auth', auth).route('/api', api);
 
 // Serve static files from the 'dist' directory
 app.use('/*', serveStatic({ root: './dist/client' }));
-
 // Catch-all route to serve index.html for any unmatched routes
-app.use('*', serveStatic({ path: './dist/client/index.html' }));
-// alternative way to write the above
-// app.use('*', serveStatic({ root: './dist/client', rewriteRequestPath: () => '/index.html' }));
+app.use('*', serveStatic({ path: './dist/client/index.html' })); // app.use('*', serveStatic({ root: './dist/client', rewriteRequestPath: () => '/index.html' }));
 
 const port = 6969;
 console.log(`Server is running on port ${port}`);

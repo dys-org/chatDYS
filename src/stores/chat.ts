@@ -28,7 +28,12 @@ export const OPENAI_MODELS = [
   'gpt-4',
   'gpt-4-1106-preview',
 ] as const;
-export const ANTHROPIC_MODELS = ['claude-3-5-sonnet-20240620', 'claude-3-haiku-20240307'] as const;
+export const ANTHROPIC_MODELS = [
+  'claude-3-5-sonnet-latest',
+  'claude-3-haiku-latest',
+  'claude-3-5-sonnet-20240620',
+  'claude-3-haiku-20240307',
+] as const;
 type OpenAiModel = (typeof OPENAI_MODELS)[number];
 type AnthropicModel = (typeof ANTHROPIC_MODELS)[number];
 
@@ -46,7 +51,7 @@ export const useChatStore = defineStore('chat', () => {
   const loading = ref(false);
   const maxTokens = ref(1024);
   const messages = ref<MessagesList>([]);
-  const model = ref<OpenAiModel | AnthropicModel>('claude-3-5-sonnet-20240620');
+  const model = ref<OpenAiModel | AnthropicModel>('claude-3-5-sonnet-latest');
   const systemMessage = ref('');
   const temperature = ref(0);
   const userMessage = ref('');

@@ -24,7 +24,12 @@ export const contentSchema = z.union([
 ]);
 const chatParamsSchema = z.object({
   chatCompletionParams: z.object({
-    model: z.union([z.literal('claude-3-5-sonnet-20240620'), z.literal('claude-3-haiku-20240307')]),
+    model: z.union([
+      z.literal('claude-3-5-sonnet-latest'),
+      z.literal('claude-3-haiku-latest'),
+      z.literal('claude-3-5-sonnet-20240620'),
+      z.literal('claude-3-haiku-20240307'),
+    ]),
     messages: z.array(
       z.object({
         role: z.union([z.literal('user'), z.literal('assistant')]),
