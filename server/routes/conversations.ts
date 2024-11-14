@@ -56,6 +56,8 @@ const conversations = new Hono<{
       .where(eq(Conversations.id, parseInt(c.req.param('id'))))
       .prepare();
     const data = ps.get();
+    if (data === undefined) return c.text('Conversation not found.', 404);
+
     return c.json(data);
   })
   .patch(

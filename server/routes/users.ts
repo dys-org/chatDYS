@@ -27,16 +27,5 @@ const users = new Hono<{
 
     return c.json(data);
   });
-// .get('/:id', async (c) => {
-//   const ps = db
-//     .select()
-//     .from(Users)
-//     .where(eq(Users.id, c.req.param('id')))
-//     .prepare();
-//   const data = ps.get();
-//   if (data === undefined) return c.text('User not found.', 404);
-
-//   return c.json(data);
-// });
 
 export default users;
