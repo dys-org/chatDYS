@@ -180,7 +180,7 @@ export const useChatStore = defineStore('chat', () => {
   async function fetchChat(id: string) {
     loading.value = true;
     const res = await client.api.conversations[':id'].$get({ param: { id } });
-    // TODO this isn't getting inferred correctly after updating to >
+    // This isn't getting inferred correctly after updating to hono >=4.5.2
     const convo: ConversationsInsert = await res.json();
     try {
       if (convo.messages) messages.value = JSON.parse(convo.messages) as MessagesList;
