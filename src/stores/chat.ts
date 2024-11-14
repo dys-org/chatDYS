@@ -8,6 +8,7 @@ import type {
   ChatCompletionMessageParam,
 } from 'openai/resources/index.mjs';
 import { defineStore } from 'pinia';
+import { ConversationsInsert } from 'server/drizzle/schema';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -179,16 +180,16 @@ export const useChatStore = defineStore('chat', () => {
   async function fetchChat(id: string) {
     loading.value = true;
     const res = await client.api.conversations[':id'].$get({ param: { id } });
-    const convo = await res.json();
-    // TODO can i validate the JSON before parsing?
+    // TODO this isn't getting inferred correctly after updating to >
+    const convo: ConversationsInsert = await res.json();
     try {
       if (convo.messages) messages.value = JSON.parse(convo.messages) as MessagesList;
     } catch (err) {
       console.error(err);
     }
-    // @ts-expect-error provider is not returning the union type
+    // @ts-expect-error typed as a string
     provider.value = convo.provider;
-    // @ts-expect-error model is not returning the union type
+    // @ts-expect-error typed as a string
     model.value = convo.model;
     systemMessage.value = convo.system_message;
     temperature.value = convo.temperature;
