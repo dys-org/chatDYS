@@ -1,0 +1,12 @@
+services:
+  chatdys:
+    build:
+      context: .
+    ports:
+      - "6969:6969"
+    volumes:
+      - ./db-data:/app/db-data
+    env_file:
+      - .env
+    command: 'pm2-runtime dist/server/index.js'
+    restart: unless-stopped
