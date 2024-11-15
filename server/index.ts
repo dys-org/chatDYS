@@ -25,7 +25,7 @@ const app = new Hono<{
     session: Session | null;
   };
 }>()
-  .use(csrf())
+  .use(csrf({ origin: process.env.CSRF_ORIGIN }))
   .use('*', async (c, next) => {
     const sessionId = getCookie(c, lucia.sessionCookieName) ?? null;
     if (!sessionId) {
