@@ -8,7 +8,7 @@ import type {
   ChatCompletionMessageParam,
 } from 'openai/resources/index.mjs';
 import { defineStore } from 'pinia';
-import { ConversationsInsert } from 'server/drizzle/schema';
+import { Conversation } from 'server/drizzle/schema';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -181,7 +181,7 @@ export const useChatStore = defineStore('chat', () => {
     loading.value = true;
     const res = await client.api.conversations[':id'].$get({ param: { id } });
     // This isn't getting inferred correctly after updating to hono >=4.5.2
-    const convo: ConversationsInsert = await res.json();
+    const convo: Conversation = await res.json();
     try {
       if (convo.messages) messages.value = JSON.parse(convo.messages) as MessagesList;
     } catch (err) {

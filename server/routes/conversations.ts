@@ -1,10 +1,10 @@
 import { zValidator } from '@hono/zod-validator';
 import { desc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
-import type { Session, User } from 'lucia';
 
 import { db } from '../drizzle/db.js';
 import { Conversations, insertConversationsSchema } from '../drizzle/schema.js';
+import type { Session, User } from '../drizzle/schema.js';
 import { formatZodError, userCanEdit } from '../utils.js';
 
 const conversations = new Hono<{

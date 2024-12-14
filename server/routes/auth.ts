@@ -1,13 +1,20 @@
-import { OAuth2RequestError, generateState } from 'arctic';
+import { GitHub, OAuth2RequestError, generateState } from 'arctic';
 import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { getCookie, setCookie } from 'hono/cookie';
-import { generateIdFromEntropySize } from 'lucia';
 
 import { db } from '../drizzle/db.js';
 import { Users } from '../drizzle/schema.js';
-import { github, lucia } from '../lucia.js';
+import {
+  createSession,
+  createSessionCookie,
+  generateIdFromEntropySize,
+  generateSessionToken,
+  invalidateSession,
+} from '../drizzle/session.js';
 import type { GithubUser } from '../types.js';
+
+export const github = new GitHub(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!);
 
 const auth = new Hono()
   .get('/login/github', async (c) => {
@@ -31,6 +38,7 @@ const auth = new Hono()
     if (!stateCookie || !state || !code || stateCookie !== state) {
       return c.json({ message: "States don't match" }, 400);
     }
+    const token = generateSessionToken();
 
     try {
       const tokens = await github.validateAuthorizationCode(code);
@@ -45,10 +53,11 @@ const auth = new Hono()
         .where(eq(Users.github_id, githubUserResult.id))
         .prepare()
         .get();
+
       if (existingUser) {
-        const session = await lucia.createSession(existingUser.id, {});
-        const sessionCookie = lucia.createSessionCookie(session.id);
-        return c.body(null, 302, { Location: '/chat', 'Set-Cookie': sessionCookie.serialize() });
+        const session = await createSession(token, existingUser.id);
+        const sessionCookie = createSessionCookie(token, session);
+        return c.body(null, 302, { Location: '/chat', 'Set-Cookie': sessionCookie });
       }
 
       const userId = generateIdFromEntropySize(10);
@@ -63,9 +72,9 @@ const auth = new Hono()
         })
         .prepare()
         .run();
-      const session = await lucia.createSession(userId, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-      return c.body(null, 302, { Location: '/chat', 'Set-Cookie': sessionCookie.serialize() });
+      const session = await createSession(token, userId);
+      const sessionCookie = createSessionCookie(token, session);
+      return c.body(null, 302, { Location: '/chat', 'Set-Cookie': sessionCookie });
     } catch (err) {
       console.log(err);
       if (err instanceof OAuth2RequestError) {
@@ -76,8 +85,8 @@ const auth = new Hono()
     }
   })
   .get('/logout', async (c) => {
-    const sessionId = getCookie(c, lucia.sessionCookieName);
-    await lucia.invalidateSession(sessionId ?? ''); // succeeds even if session ID is invalid
+    const sessionId = getCookie(c, 'auth_session');
+    await invalidateSession(sessionId ?? ''); // succeeds even if session ID is invalid
     return c.body(null, 204);
   });
 

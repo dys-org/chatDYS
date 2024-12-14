@@ -7,10 +7,14 @@ import { getCookie } from 'hono/cookie';
 import { csrf } from 'hono/csrf';
 import { HTTPException } from 'hono/http-exception';
 import type { StatusCode } from 'hono/utils/http-status';
-import type { Session, User } from 'lucia';
 import OpenAI from 'openai';
 
-import { lucia } from './lucia.js';
+import { type Session, type User } from './drizzle/schema.js';
+import {
+  createBlankSessionCookie,
+  createSessionCookie,
+  validateSessionToken,
+} from './drizzle/session.js';
 import auth from './routes/auth.js';
 import chat from './routes/chat.js';
 import claude from './routes/claude.js';
@@ -27,21 +31,21 @@ const app = new Hono<{
 }>()
   .use(csrf({ origin: process.env.CSRF_ORIGIN }))
   .use('*', async (c, next) => {
-    const sessionId = getCookie(c, lucia.sessionCookieName) ?? null;
-    if (!sessionId) {
+    const token = getCookie(c, 'auth_session') ?? null;
+    if (!token) {
       c.set('user', null);
       c.set('session', null);
       // throw new HTTPException(401, { message: 'No authorization included in request.' });
       return next();
     }
-    const { user, session } = await lucia.validateSession(sessionId);
-    if (session && session.fresh) {
-      c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), {
+    const { user, session } = await validateSessionToken(token);
+    if (session) {
+      c.header('Set-Cookie', createSessionCookie(token, session), {
         append: true,
       });
     }
     if (!session) {
-      c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), {
+      c.header('Set-Cookie', createBlankSessionCookie(), {
         append: true,
       });
     }

@@ -13,7 +13,8 @@ export const Users = sqliteTable('Users', {
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type UsersInsert = typeof Users.$inferInsert;
+export type User = typeof Users.$inferSelect;
+
 export const insertUsersSchema = createInsertSchema(Users).omit({
   created_at: true,
   updated_at: true,
@@ -25,10 +26,13 @@ export const Sessions = sqliteTable('Session', {
   userId: text('user_id')
     .notNull()
     .references(() => Users.id),
-  expiresAt: integer('expires_at').notNull(),
+  // expiresAt: integer('expires_at').notNull(),
+  expiresAt: integer('expires_at', {
+    mode: 'timestamp',
+  }).notNull(),
 });
 
-export type SessionsInsert = typeof Sessions.$inferInsert;
+export type Session = typeof Sessions.$inferSelect;
 
 export const Conversations = sqliteTable('Conversations', {
   id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
@@ -46,7 +50,7 @@ export const Conversations = sqliteTable('Conversations', {
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type ConversationsInsert = typeof Conversations.$inferInsert;
+export type Conversation = typeof Conversations.$inferSelect;
 export const insertConversationsSchema = createInsertSchema(Conversations).omit({
   user_id: true,
   created_at: true,
@@ -65,7 +69,7 @@ export const System_Presets = sqliteTable('System_Presets', {
   updated_at: numeric('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
 });
 
-export type SystemPresetsInsert = typeof System_Presets.$inferInsert;
+export type SystemPreset = typeof System_Presets.$inferSelect;
 export const insertSystemPresetsSchema = createInsertSchema(System_Presets).omit({
   user_id: true,
   created_at: true,

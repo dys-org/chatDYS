@@ -1,10 +1,10 @@
 import { zValidator } from '@hono/zod-validator';
 import { asc, eq, sql } from 'drizzle-orm';
 import { Hono } from 'hono';
-import type { Session, User } from 'lucia';
 
 import { db } from '../drizzle/db.js';
 import { System_Presets, insertSystemPresetsSchema } from '../drizzle/schema.js';
+import type { Session, User } from '../drizzle/schema.js';
 import { formatZodError, userCanEdit } from '../utils.js';
 
 const systemPresets = new Hono<{
