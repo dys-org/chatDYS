@@ -11,6 +11,7 @@ import OpenAI from 'openai';
 
 import { type Session, type User } from './drizzle/schema.js';
 import {
+  SESSION_COOKIE_NAME,
   createBlankSessionCookie,
   createSessionCookie,
   validateSessionToken,
@@ -31,7 +32,7 @@ const app = new Hono<{
 }>()
   .use(csrf({ origin: process.env.CSRF_ORIGIN }))
   .use('*', async (c, next) => {
-    const token = getCookie(c, 'auth_session') ?? null;
+    const token = getCookie(c, SESSION_COOKIE_NAME) ?? null;
     if (!token) {
       c.set('user', null);
       c.set('session', null);

@@ -6,6 +6,7 @@ import { getCookie, setCookie } from 'hono/cookie';
 import { db } from '../drizzle/db.js';
 import { Users } from '../drizzle/schema.js';
 import {
+  SESSION_COOKIE_NAME,
   createSession,
   createSessionCookie,
   generateIdFromEntropySize,
@@ -85,7 +86,7 @@ const auth = new Hono()
     }
   })
   .get('/logout', async (c) => {
-    const sessionId = getCookie(c, 'auth_session');
+    const sessionId = getCookie(c, SESSION_COOKIE_NAME);
     await invalidateSession(sessionId ?? ''); // succeeds even if session ID is invalid
     return c.body(null, 204);
   });

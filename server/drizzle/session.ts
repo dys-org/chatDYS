@@ -5,6 +5,8 @@ import { eq } from 'drizzle-orm';
 import { db } from './db.js';
 import { type Session, Sessions, type User, Users } from './schema.js';
 
+export const SESSION_COOKIE_NAME = 'auth_session';
+
 export function generateSessionToken() {
   const bytes = new Uint8Array(20);
   crypto.getRandomValues(bytes);
