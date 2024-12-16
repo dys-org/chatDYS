@@ -15,12 +15,16 @@ import {
 } from '../drizzle/session.js';
 import type { GithubUser } from '../types.js';
 
-export const github = new GitHub(process.env.GITHUB_CLIENT_ID!, process.env.GITHUB_CLIENT_SECRET!);
+export const github = new GitHub(
+  process.env.GITHUB_CLIENT_ID!,
+  process.env.GITHUB_CLIENT_SECRET!,
+  null,
+);
 
 const auth = new Hono()
   .get('/login/github', async (c) => {
     const state = generateState();
-    const url = await github.createAuthorizationURL(state);
+    const url = await github.createAuthorizationURL(state, []);
     setCookie(c, 'github_oauth_state', state, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'PRODUCTION', // set `Secure` flag in HTTPS
