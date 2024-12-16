@@ -23,6 +23,3 @@ coverage
 db-data
 
 .env
-
-# Cursor rules
-.cursorrules

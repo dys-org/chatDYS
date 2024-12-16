@@ -21,7 +21,7 @@ const name = ref('');
 const text = ref('');
 let confirmPresetName = '';
 
-watch(selectedPreset, (newVal, _) => {
+watch(selectedPreset, (newVal) => {
   name.value = newVal?.name || '';
   text.value = newVal?.text || '';
 });
