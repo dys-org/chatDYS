@@ -48,7 +48,7 @@ const auth = new Hono()
     try {
       const tokens = await github.validateAuthorizationCode(code);
       const githubUserResponse = await fetch('https://api.github.com/user', {
-        headers: { Authorization: 'Bearer ' + tokens.accessToken },
+        headers: { Authorization: 'Bearer ' + tokens.accessToken() },
       });
       const githubUserResult: GithubUser = await githubUserResponse.json();
 
