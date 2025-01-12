@@ -46,6 +46,9 @@ const providerOptions = computed(() => [
 watch(
   () => chatStore.provider,
   (newVal) => {
+    // Only set default models when there's no conversation ID (new chat)
+    if (route.params.id) return;
+
     if (newVal === 'anthropic') chatStore.model = ANTHROPIC_MODELS[0];
     if (newVal === 'openai') chatStore.model = OPENAI_MODELS[0];
   },
