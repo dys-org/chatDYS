@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ImageBlockParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { DButton, DTextarea } from 'deez-components';
 import { ref } from 'vue';
 
+import { ImageMedia } from '@/stores/chat';
 import { useToastStore } from '@/stores/toast';
 
 const toastStore = useToastStore();
@@ -10,7 +10,7 @@ const toastStore = useToastStore();
 const model = defineModel<string>({ required: true });
 const base64Img = defineModel<{
   data: string;
-  type?: ImageBlockParam.Source['media_type'];
+  type?: ImageMedia;
 }>('base64Img', {
   default: { data: '' },
 });
@@ -43,7 +43,7 @@ function handleImageSelected(e: Event) {
     // console.log('fileReader.onload', e.target?.result);
     base64Img.value = {
       data: e.target?.result as string,
-      type: file.type as ImageBlockParam.Source['media_type'],
+      type: file.type as ImageMedia,
     };
   };
   fileReader.readAsDataURL(file);

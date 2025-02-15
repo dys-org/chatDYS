@@ -9,8 +9,6 @@ interface TokenizeRequest {
     | 'gpt-4o-mini'
     // 'o1-mini',
     // 'o1-preview',
-    | 'gpt-4-turbo'
-    | 'gpt-3.5-turbo'
     | 'gpt-4'
     | 'gpt-4-1106-preview';
 }

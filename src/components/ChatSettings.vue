@@ -6,7 +6,9 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useSystemPresets } from '@/composables/queries';
 import { useApiKeyStore } from '@/stores/apiKey';
-import { ANTHROPIC_MODELS, OPENAI_MODELS, useChatStore } from '@/stores/chat';
+import { useChatStore } from '@/stores/chat';
+
+import { ANTHROPIC_MODELS, OPENAI_MODELS } from '../../shared/aiModels';
 
 const router = useRouter();
 const route = useRoute();

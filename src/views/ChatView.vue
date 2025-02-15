@@ -33,12 +33,8 @@ async function handleSend() {
     return;
   }
   try {
-    if (chatStore.provider === 'openai') {
-      await chatStore.sendOpenAiPrompt();
-    }
-    if (chatStore.provider === 'anthropic') {
-      await chatStore.sendAnthropicPrompt();
-    }
+    await chatStore.sendPrompt();
+
     if (route.params.id) {
       const id = typeof route.params.id === 'string' ? route.params.id : route.params.id[0];
       updateConversation.mutate({
@@ -115,7 +111,7 @@ onMounted(() => {
         <ChatMessage v-for="(message, i) in chatStore.messages" :key="i" :message="message" />
         <div v-if="chatStore.loading" class="mt-6 flex w-full flex-col items-center gap-2">
           <DSpinner />
-          <div v-if="chatStore.tokenLength" class="text-xs">{{ chatStore.tokenLength }} tokens</div>
+          <!-- <div v-if="chatStore.tokenLength" class="text-xs">{{ chatStore.tokenLength }} tokens</div> -->
         </div>
       </div>
       <!-- INPUT -->

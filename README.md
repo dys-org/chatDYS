@@ -34,7 +34,7 @@ cd packages/client
 pnpm run dev
 ```
 
-This app is my own personal version of Chat GPT. It's somewhat of a hybrid of Chat GPT and the Open AI Playground. It has options to pick different models (currently only `gpt-4o`, `gpt-4-turbo`, `gpt-3.5-turbo`, `gpt-4`, and `gpt-4-1106-preview` but I will be adding more), control Temperature, control Max Token Length, and enter a custom System Message.
+This app is my own personal version of Chat GPT. It's somewhat of a hybrid of Chat GPT and the Open AI Playground. It has options to pick different models (currently only `gpt-4o`, `gpt-4-turbo`, `gpt-4`, and `gpt-4-1106-preview` but I will be adding more), control Temperature, control Max Token Length, and enter a custom System Message.
 
 Currently it only supports text chat, but I plan to add support for images and audio. Everything uses Open AI atm, but I would like to add other OS models also.
 

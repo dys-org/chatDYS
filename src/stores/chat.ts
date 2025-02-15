@@ -1,44 +1,23 @@
-import type {
-  ImageBlockParam,
-  MessageCreateParamsBase,
-  MessageParam,
-} from '@anthropic-ai/sdk/resources/messages.mjs';
-import type {
-  ChatCompletionCreateParams,
-  ChatCompletionMessageParam,
-} from 'openai/resources/index.mjs';
+import type { CoreMessage } from 'ai';
+import { InferRequestType } from 'hono';
 import { defineStore } from 'pinia';
 import { Conversation } from 'server/drizzle/schema';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { useTokenize } from '@/composables/useTokenize';
+// import { useTokenize } from '@/composables/useTokenize';
 import { client } from '@/lib/apiClient';
 
 import { useApiKeyStore } from './apiKey';
 
-type MessagesList = (ChatCompletionMessageParam | MessageParam)[];
+type Provider = 'openai' | 'anthropic';
+export type ImageMedia = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp';
 
-export const OPENAI_MODELS = [
-  'gpt-4o',
-  'gpt-4o-mini',
-  // 'o1-mini',
-  // 'o1-preview',
-  'gpt-4-turbo',
-  'gpt-3.5-turbo',
-  'gpt-4',
-  'gpt-4-1106-preview',
-] as const;
-export const ANTHROPIC_MODELS = [
-  'claude-3-5-sonnet-latest',
-  'claude-3-haiku-latest',
-  'claude-3-5-sonnet-20240620',
-  'claude-3-haiku-20240307',
-] as const;
-type OpenAiModel = (typeof OPENAI_MODELS)[number];
-type AnthropicModel = (typeof ANTHROPIC_MODELS)[number];
+const $post = client.api.chat.$post;
 
-function get1stTextValue(content: ChatCompletionMessageParam['content'] | MessageParam['content']) {
+export type Model = InferRequestType<typeof $post>['json']['chatCompletionParams']['model'];
+
+function get1stTextValue(content: CoreMessage['content']) {
   if (!Array.isArray(content)) return content;
   for (const part of content) {
     if (part.type === 'text') return part.text;
@@ -47,43 +26,63 @@ function get1stTextValue(content: ChatCompletionMessageParam['content'] | Messag
 
 export const useChatStore = defineStore('chat', () => {
   const route = useRoute();
-  const { checkTokens, tokenLength } = useTokenize();
+  // const { checkTokens, tokenLength } = useTokenize();
 
   const loading = ref(false);
   const maxTokens = ref(1024);
-  const messages = ref<MessagesList>([]);
-  const model = ref<OpenAiModel | AnthropicModel>('claude-3-5-sonnet-latest');
-  const systemMessage = ref('');
+  const messages = ref<CoreMessage[]>([]);
+  const model = ref<Model>('claude-3-5-sonnet-latest');
+  const systemMessage = ref('You are a helpful assistant.');
   const temperature = ref(0);
   const userMessage = ref('');
-  const base64ImgUpload = ref<{ data: string; type?: ImageBlockParam.Source['media_type'] }>();
+  const base64ImgUpload = ref<{ data: string; type?: ImageMedia }>();
   const isApiKeyModalOpen = ref(false);
   const id = ref('');
-  const provider = ref<'openai' | 'anthropic'>('anthropic');
+  const provider = ref<Provider>('anthropic');
 
-  const getSystemMessage = computed(() => systemMessage.value || 'You are a helpful assistant.');
   const currentChat = computed(() => ({
     provider: provider.value,
     model: model.value,
     temperature: temperature.value,
     max_tokens: maxTokens.value,
-    system_message: getSystemMessage.value,
+    system_message: systemMessage.value,
     messages: JSON.stringify(messages.value),
     title: get1stTextValue(messages.value[0].content) ?? '',
   }));
 
-  async function streamResponse(
-    chatCompletionParams: ChatCompletionCreateParams | MessageCreateParamsBase,
-  ) {
+  async function sendPrompt() {
+    // add the first user message
+    messages.value.push({
+      role: 'user',
+      content: base64ImgUpload.value
+        ? [
+            { type: 'image', image: base64ImgUpload.value.data },
+            { type: 'text', text: userMessage.value },
+          ]
+        : userMessage.value,
+    });
+
+    // create the full prompt with the system message
+    // const prompt = [{ role: 'system', content: systemMessage.value }, ...messages.value];
+    // const stringToTokenize = prompt.map((m) => m.content).join('');
+    // checkTokens({ stringToTokenize, model: model.value as OpenAiModel });
+
+    userMessage.value = '';
+    base64ImgUpload.value = undefined;
+
+    loading.value = true;
+
+    const chatCompletionParams: InferRequestType<typeof $post>['json']['chatCompletionParams'] = {
+      model: model.value,
+      system: systemMessage.value,
+      messages: messages.value,
+      temperature: temperature.value,
+      max_tokens: maxTokens.value,
+    };
     const apiKeyStore = useApiKeyStore();
     const apiKey = provider.value === 'openai' ? apiKeyStore.openAiKey : apiKeyStore.anthropicKey;
-    const url = provider.value === 'openai' ? '/api/chat' : '/api/claude';
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chatCompletionParams, apiKey }),
-    });
+    const res = await $post({ json: { chatCompletionParams, apiKey: apiKey ?? '' } });
 
     if (!res.ok) {
       const error = await res.text();
@@ -106,76 +105,6 @@ export const useChatStore = defineStore('chat', () => {
       messages.value[asstMsgIdx].content += chunk;
     }
   }
-  async function sendOpenAiPrompt() {
-    // add the first user message
-    messages.value.push({
-      role: 'user',
-      content: base64ImgUpload.value
-        ? [
-            { type: 'image_url', image_url: { url: base64ImgUpload.value.data } },
-            { type: 'text', text: userMessage.value },
-          ]
-        : userMessage.value,
-    });
-
-    // create the full prompt with the system message
-    const prompt: ChatCompletionMessageParam[] = [
-      { role: 'system', content: getSystemMessage.value },
-      ...(messages.value as ChatCompletionMessageParam[]),
-    ];
-    const stringToTokenize = prompt.map((m) => m.content).join('');
-    checkTokens({ stringToTokenize, model: model.value as OpenAiModel });
-
-    userMessage.value = '';
-    base64ImgUpload.value = undefined;
-
-    loading.value = true;
-    const params: ChatCompletionCreateParams = {
-      model: model.value,
-      messages: prompt,
-      temperature: temperature.value,
-      max_tokens: maxTokens.value,
-    };
-    await streamResponse(params);
-    loading.value = false;
-  }
-
-  async function sendAnthropicPrompt() {
-    // add first user message
-    messages.value.push({
-      role: 'user',
-      content: base64ImgUpload.value?.data
-        ? [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: base64ImgUpload.value?.type ?? 'image/jpeg',
-                data: base64ImgUpload.value?.data.split(',')[1] ?? '',
-              },
-            },
-            { type: 'text', text: userMessage.value },
-          ]
-        : userMessage.value,
-    });
-
-    // TODO check tokens, maybe from usage returned in response?
-
-    userMessage.value = '';
-    base64ImgUpload.value = undefined;
-
-    loading.value = true;
-    const params: MessageCreateParamsBase = {
-      model: model.value,
-      max_tokens: maxTokens.value,
-      temperature: temperature.value,
-      system: systemMessage.value,
-      // @ts-expect-error - it's yelling about possible "system" type messages
-      messages: messages.value,
-    };
-    await streamResponse(params);
-    loading.value = false;
-  }
 
   async function fetchChat(id: string) {
     loading.value = true;
@@ -183,14 +112,12 @@ export const useChatStore = defineStore('chat', () => {
     // This isn't getting inferred correctly after updating to hono >=4.5.2
     const convo: Conversation = await res.json();
     try {
-      if (convo.messages) messages.value = JSON.parse(convo.messages) as MessagesList;
+      if (convo.messages) messages.value = JSON.parse(convo.messages) as CoreMessage[];
     } catch (err) {
       console.error(err);
     }
-    // @ts-expect-error typed as a string
-    provider.value = convo.provider;
-    // @ts-expect-error typed as a string
-    model.value = convo.model;
+    provider.value = convo.provider as Provider;
+    model.value = convo.model as Model;
     systemMessage.value = convo.system_message;
     temperature.value = convo.temperature;
     maxTokens.value = convo.max_tokens;
@@ -211,11 +138,10 @@ export const useChatStore = defineStore('chat', () => {
     maxTokens,
     messages,
     model,
-    sendOpenAiPrompt,
-    sendAnthropicPrompt,
+    sendPrompt,
     systemMessage,
     temperature,
-    tokenLength, // from useTokenize
+    // tokenLength, // from useTokenize
     userMessage,
     base64ImgUpload,
     currentChat,

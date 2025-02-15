@@ -18,8 +18,6 @@ const tokenize = new Hono().post(
         z.literal('gpt-4o-mini'),
         // z.literal('o1-mini'),
         // z.literal('o1-preview'),
-        z.literal('gpt-4-turbo'),
-        z.literal('gpt-3.5-turbo'),
         z.literal('gpt-4'),
         z.literal('gpt-4-1106-preview'),
       ]),

@@ -29,6 +29,8 @@ VueJS
 - Always use the Vue Composition API script setup style.
 - Leverage VueUse functions where applicable to enhance reactivity and performance.
 - Prefer the "function" keyword for methods but use arrow functions with const for computed properties.
+- Prefer the "defineModel" macro for creating two-way model bindings.
+- Use the more succent tuple syntax for emits (e.g. `change: [id: number]`).
 
 Hono
 

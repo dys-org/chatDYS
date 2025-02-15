@@ -6,7 +6,7 @@ import { Hono } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { csrf } from 'hono/csrf';
 import { HTTPException } from 'hono/http-exception';
-import type { StatusCode } from 'hono/utils/http-status';
+import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import OpenAI from 'openai';
 
 import { type Session, type User } from './drizzle/schema.js';
@@ -18,7 +18,6 @@ import {
 } from './drizzle/session.js';
 import auth from './routes/auth.js';
 import chat from './routes/chat.js';
-import claude from './routes/claude.js';
 import conversations from './routes/conversations.js';
 import systemPresets from './routes/systemPresets.js';
 import tokenize from './routes/tokenize.js';
@@ -59,7 +58,7 @@ const app = new Hono<{
     console.log(err);
     if (err instanceof OpenAI.APIError) {
       const { status, message } = err;
-      return c.text(message, (status as StatusCode) ?? 500);
+      return c.text(message, (status as ContentfulStatusCode) ?? 500);
     }
     if (err instanceof HTTPException) {
       console.log(err);
@@ -71,7 +70,6 @@ const app = new Hono<{
 
 const api = new Hono()
   .route('/chat', chat)
-  .route('/claude', claude)
   .route('/conversations', conversations)
   .route('/systemPresets', systemPresets)
   .route('/tokenize', tokenize)
@@ -85,9 +83,10 @@ app.use('/*', serveStatic({ root: './dist/client' }));
 app.use('*', serveStatic({ path: './dist/client/index.html' })); // app.use('*', serveStatic({ root: './dist/client', rewriteRequestPath: () => '/index.html' }));
 
 const port = 6969;
-console.log(`Server is running on port ${port}`);
 
 serve({ fetch: app.fetch, port });
+
+console.log(`Server is running on port ${port}`);
 
 export default app;
 export type AppType = typeof routes;
