@@ -7,7 +7,7 @@ import { getCookie } from 'hono/cookie';
 import { csrf } from 'hono/csrf';
 import { HTTPException } from 'hono/http-exception';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
-import OpenAI from 'openai';
+import { APICallError } from 'ai';
 
 import { type Session, type User } from './drizzle/schema.js';
 import {
@@ -56,9 +56,9 @@ const app = new Hono<{
   .notFound((c) => c.json(`Not Found - ${c.req.url}`, 404))
   .onError((err, c) => {
     console.log(err);
-    if (err instanceof OpenAI.APIError) {
-      const { status, message } = err;
-      return c.text(message, (status as ContentfulStatusCode) ?? 500);
+    if (APICallError.isInstance(err)) {
+      const { statusCode, message } = err;
+      return c.text(message, (statusCode as ContentfulStatusCode) ?? 500);
     }
     if (err instanceof HTTPException) {
       console.log(err);

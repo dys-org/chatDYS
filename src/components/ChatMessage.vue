@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import type { MessageParam } from '@anthropic-ai/sdk/resources/messages.mjs';
 import { DAvatar, DButton } from 'deez-components';
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/es/highlight.min.js';
 import MarkdownIt from 'markdown-it';
-import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { computed, ref } from 'vue';
 
 import { sleep } from '@/lib';
 import { hljsDefineVue } from '@/lib/highlightjs-vue';
 import { useUserStore } from '@/stores/user';
+import { CoreMessage } from 'ai';
 
 const props = withDefaults(
   defineProps<{
-    message: ChatCompletionMessageParam | MessageParam;
+    message: CoreMessage;
     disableCopy?: boolean;
   }>(),
   { disableCopy: false },
@@ -73,8 +72,7 @@ const imgContent = computed(() => {
   if (Array.isArray(props.message.content)) {
     for (const part of props.message.content) {
       // OpenAI returns image_url, Anthropic returns image
-      if (part.type === 'image_url') return part.image_url.url;
-      if (part.type === 'image') return `data:${part.source.media_type};base64,${part.source.data}`;
+      if (part.type === 'image') return part.image;
     }
   }
   return undefined;
@@ -153,7 +151,7 @@ const vAttachCopyHandlers = {
       <div class="w-full max-w-[60ch] flex-1">
         <img
           v-if="imgContent"
-          :src="imgContent"
+          :src="(imgContent as string | undefined)"
           alt="Uploaded Image"
           class="mb-2 block max-h-80 w-auto rounded-lg"
         />
