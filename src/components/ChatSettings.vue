@@ -8,7 +8,7 @@ import { useSystemPresets } from '@/composables/queries';
 import { useApiKeyStore } from '@/stores/apiKey';
 import { useChatStore } from '@/stores/chat';
 
-import { ANTHROPIC_MODELS, OPENAI_MODELS } from '../../shared/aiModels';
+import { ANTHROPIC_MODELS, OPENAI_MODELS } from '../../server/aiModels';
 
 const router = useRouter();
 const route = useRoute();

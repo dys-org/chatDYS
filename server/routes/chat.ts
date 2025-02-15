@@ -6,7 +6,7 @@ import { Hono } from 'hono';
 import { stream } from 'hono/streaming';
 import { z } from 'zod';
 
-import { ANTHROPIC_MODELS, OPENAI_MODELS } from '../../shared/aiModels.js';
+import { ANTHROPIC_MODELS, OPENAI_MODELS } from '../aiModels.js';
 import { formatZodError } from '../utils.js';
 
 type OpenAiModel = (typeof OPENAI_MODELS)[number];
